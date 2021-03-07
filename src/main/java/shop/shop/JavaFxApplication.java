@@ -8,9 +8,12 @@ import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import shop.ShopApplication;
+
 
 public class JavaFxApplication extends Application {
     private ConfigurableApplicationContext applicationContext;
+
 
     @Override
     public void init() {
@@ -21,6 +24,8 @@ public class JavaFxApplication extends Application {
                 .run(args);
     }
 
+
+
     @Override
     public void start(Stage stage) {
         FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
@@ -29,6 +34,7 @@ public class JavaFxApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
     @Override
     public void stop() {
         this.applicationContext.close();
