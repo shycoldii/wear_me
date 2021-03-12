@@ -1,8 +1,9 @@
 package shop.model;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "Positions",uniqueConstraints = {@UniqueConstraint(columnNames={"name"})})
+@Table(name = "positions",uniqueConstraints = {@UniqueConstraint(columnNames={"name"})})
 public class Position {
     public Position() {}
 
@@ -14,6 +15,9 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    //@OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+    //private List<Employee> employees;
 
 
     @Column(name = "name", length = 128, nullable = false)
@@ -35,4 +39,11 @@ public class Position {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "Position{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

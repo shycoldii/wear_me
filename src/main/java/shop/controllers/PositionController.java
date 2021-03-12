@@ -1,5 +1,5 @@
 package shop.controllers;
-import shop.dao.PositionRepository;
+import shop.repository.PositionRepository;
 import shop.model.Position;
 import org.springframework.web.bind.annotation.*;
 
