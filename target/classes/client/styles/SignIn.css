@@ -1,0 +1,15 @@
+.sidebar{
+    -fx-background-color: #2d2d30;
+}
+.loginBtn{
+    -fx-background-color: #d7d7db;
+}
+.loginBtn:hover{
+    -fx-background-color: transparent;
+    -fx-border-style: solid;
+    -fx-border-color: #b7b6c2;
+    -fx-text-fill: #c7c6cf;
+}
+.emailBtn{
+    -fx-text-fill: white;
+}

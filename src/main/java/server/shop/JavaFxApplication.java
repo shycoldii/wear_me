@@ -19,9 +19,9 @@ public class JavaFxApplication extends Application {
     public void init() {
         String[] args = getParameters().getRaw().toArray(new String[0]);
 
-        this.applicationContext = new SpringApplicationBuilder()
-                .sources(ShopApplication.class)
-                .run(args);
+        //this.applicationContext = new SpringApplicationBuilder()
+            //    .sources(ShopApplication.class)
+           //     .run(args);
     }
 
 
