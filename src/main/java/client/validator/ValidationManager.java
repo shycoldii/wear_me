@@ -1,4 +1,4 @@
-package client.validators;
+package client.validator;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.base.ValidatorBase;
 

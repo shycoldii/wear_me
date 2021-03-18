@@ -1,4 +1,4 @@
-package client.validators;
+package client.validator;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.base.ValidatorBase;
 
@@ -10,6 +10,7 @@ public class CustomValidator extends ValidatorBase{
     @Override
     protected void eval() {
     }
+
 
     public void showMessage() {
         this.hasErrors.set(true);

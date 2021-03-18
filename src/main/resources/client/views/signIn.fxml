@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" styleClass="sidebar" stylesheets="@../styles/SignIn.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.SignInController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" styleClass="sidebar" stylesheets="@../styles/SignIn.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.SignInController">
     <children>
         <Label prefHeight="0.0" prefWidth="187.0" text="darerror's store" textFill="WHITE">
             <font>
                 <Font name="Arial Black" size="22.0" />
             </font>
         </Label>
-        <JFXTextField fx:id="emailTextField" focusColor="#bcc2d5" layoutX="41.0" layoutY="141.0" prefHeight="25.0" prefWidth="216.0" promptText="Login" styleClass="emailBtn" stylesheets="@../styles/SignIn.css" />
+        <JFXTextField fx:id="emailField" focusColor="#bcc2d5" layoutX="41.0" layoutY="141.0" prefHeight="25.0" prefWidth="216.0" promptText="Email" styleClass="emailBtn" stylesheets="@../styles/SignIn.css" />
         <JFXPasswordField fx:id="passwordField" focusColor="#bcc2d5" layoutX="42.0" layoutY="200.0" prefHeight="25.0" prefWidth="216.0" promptText="Password" styleClass="emailBtn" stylesheets="@../styles/SignIn.css" />
         <JFXButton buttonType="RAISED" layoutX="40.0" layoutY="271.0" onAction="#handleSignInButtonAction" prefHeight="37.0" prefWidth="222.0" ripplerFill="#9493ad" styleClass="loginBtn" stylesheets="@../styles/SignIn.css" text="login">
             <font>

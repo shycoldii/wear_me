@@ -5,16 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "employees",uniqueConstraints = {@UniqueConstraint(columnNames={"login","phoneNumber"})})
+@Table(name = "employees",uniqueConstraints = {@UniqueConstraint(columnNames={"email","phoneNumber","passport"})})
 public class Employee {
     public Employee(){};
 
-
-    public Employee(String FirstName, String SecondName, String Login,String Patronymic, String Password,
-                    String PhoneNumber, String Passport, String Email,LocalDateTime regday,LocalDate birthday){
+    public Employee(String FirstName, String SecondName, String Patronymic,String Email, String Password,
+                    String PhoneNumber, String Passport, LocalDateTime regday,LocalDate birthday){
         this.firstName = FirstName;
         this.secondName = SecondName;
-        this.login = Login;
         this.password = Password;
         this.phoneNumber = PhoneNumber;
         this.passport = Passport;
@@ -39,9 +37,6 @@ public class Employee {
     @Column(name = "patronymic", length = 128)
     private String patronymic;
 
-    @Column(name = "login", length = 128, nullable = false)
-    private String login;
-
     @Column(name = "password", length = 128, nullable = false)
     private String password;
 
@@ -62,11 +57,11 @@ public class Employee {
     @Column(name="regDay",length = 60)
     private LocalDateTime regDay;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "positionId")
     private Position positionId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "officeId")
     private Office officeId;
 
@@ -77,7 +72,6 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
-                ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", birthday=" + birthday +
@@ -103,10 +97,6 @@ public class Employee {
 
     public String getPatronymic() {
         return patronymic;
-    }
-
-    public String getLogin() {
-        return login;
     }
 
     public String getPassword() {

@@ -46,7 +46,7 @@ public class Product {
     @Column(name = "description", length = 128)
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier")
     private Supplier supplier;
 

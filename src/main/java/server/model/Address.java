@@ -33,9 +33,6 @@ public class Address {
     private Integer streetCode;
     @Column(name = "apartment", nullable = false)
     private Integer apartment;
-    //@OneToOne( cascade = CascadeType.ALL, orphanRemoval = true)
-    //private Office office;
-
 
     public Long getId() {
         return id;

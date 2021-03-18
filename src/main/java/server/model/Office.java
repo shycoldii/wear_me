@@ -42,7 +42,7 @@ public class Office {
     @Column(name = "phoneNumber", length = 128, nullable = false)
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "addressId")
     private Address addressId;
 
