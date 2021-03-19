@@ -1,0 +1,27 @@
+.myDialog{
+    -fx-background-color: #2d2d30;
+}
+.myDialog.dialog-pane>.header-panel>.label{
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial Black";
+}
+
+.myDialog.dialog-pane>.header-panel{
+    -fx-background-color: #2d2d30;
+
+}
+.myDialog>.label{
+    -fx-font-size: 14px;
+    -fx-text-fill: #d7d7db;
+    -fx-font-family: "System Bold";
+}
+
+.button:default {
+    -fx-font-family: "System Bold";
+    -fx-background-color: #d7d7db;
+}
+.button:hover {
+    -fx-text-fill: #c7c6cf;
+    -fx-background-color: #656469;
+}

@@ -1,14 +1,15 @@
 package client.controller;
 
 import client.JavaFXApplication;
-import client.service.SignInService;
+import client.api.MyAPI;
+import client.exception.ResponceStatusException;
+import client.utils.MyLogger;
 import client.validator.CustomValidator;
 import client.validator.ValidationManager;
-import client.validator.WordValidator;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import java.io.IOException;
 import com.jfoenix.validation.RequiredFieldValidator;
 
 public class SignInController {
@@ -17,13 +18,13 @@ public class SignInController {
     private RequiredFieldValidator requiredValidator;
     private CustomValidator emailValidator;
     private CustomValidator passwordValidator;
-    private Long employeeId;
     private JavaFXApplication mainApp;
+    private MyAPI API;
 
     @FXML
     public void initialize() {
         this.requiredValidator = new RequiredFieldValidator();
-        this.emailValidator    = new CustomValidator("Incorrect login or account doesn't exist");
+        this.emailValidator    = new CustomValidator("Account doesn't exist");
         this.passwordValidator = new CustomValidator("Incorrect password");
         ValidationManager.addValidator(true, requiredValidator, emailField, passwordField);
         ValidationManager.addValidator(true, emailValidator, emailField);
@@ -31,34 +32,36 @@ public class SignInController {
     }
 
     @FXML
-    public void handleSignInButtonAction() throws IOException {
+    public void handleSignInButtonAction() {
+        this.API = new MyAPI(this.mainApp);
+        MyLogger.logger.info("Нажатие на кнопку авторизации работника");
         emailField.validate();
         passwordField.validate();
         if (!requiredValidator.getHasErrors()) {
             if(!passwordField.getText().isEmpty() && !emailField.getText().isEmpty()){
-                if(!WordValidator.check(emailField.getText())){
-                    emailValidator.showMessage();
-                    if(!WordValidator.check(passwordField.getText())){
-                        passwordValidator.showMessage();
+                    try{
+                        if(API.is_email(emailField.getText())){
+                            Long res =this.API.is_password(emailField.getText(),passwordField.getText());
+                            if(res == null){
+                                MyLogger.logger.info("Неправильный пароль при авторизации");
+                                passwordValidator.showMessage();
+                            }
+                            else{
+                                MyLogger.logger.info("Успешная авторизация");
+                                this.API.setEmployeeId(res);
+                                resetSignInView();
+                                this.mainApp.setAPI(this.API);
+                                this.mainApp.initRoot();
+                            }
+                        }
+                        else{
+                            MyLogger.logger.info("Не найден пользователь с такой почтой");
+                            emailValidator.showMessage();
+                        }
                     }
-                }
-                else if(!WordValidator.check(passwordField.getText())){
-                    passwordValidator.showMessage();
-                }
-                else if(SignInService.is_email(emailField.getText())){
-                    Long res = SignInService.is_password(emailField.getText(),passwordField.getText());
-                    if(res == null){
-                        passwordValidator.showMessage();
+                    catch (ResponceStatusException e){
+                        Platform.runLater(mainApp::connectionError);
                     }
-                    else{
-                        this.employeeId = res;
-                        resetSignInView();
-                        this.mainApp.initRoot();
-                    }
-                }
-                else{
-                    emailValidator.showMessage();
-                }
             }
         }
     }
@@ -66,9 +69,6 @@ public class SignInController {
         this.mainApp = mainApp;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
 
     private void resetSignInView() {
         emailField.setText(null);

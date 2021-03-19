@@ -3,6 +3,8 @@ package server.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("shop/login")
+@RequestMapping("shop")
 public class MyController {
     private final PositionRepository PosRepository;
     private final AddressRepository addressRepository;
@@ -57,40 +59,20 @@ public class MyController {
         this.checkRepository = checkRepository;
         this.promocodeRepository = promocodeRepository;
     }
-    @FXML
-    private Label weatherLabel;
 
-    @GetMapping("/clients")
-    public void loadWeatherForecast() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Position pos = new Position("Cashier");
-        EmployeeRepository.deleteAll();
-        //java.sql.SQLIntegrityConstraintViolationException
-        //PosRepository.save(pos);
-        Employee emp = new Employee("Dasha","Alexandrova","Igorevna","alex@mail.ru","666","8980544444","4444 444444",
-                LocalDateTime.now(), LocalDate.parse("2001-12-03",formatter));
-        emp.setOfficeId(officeRepository.findByAddressId_City("Moscow"));
-        emp.setPosition(PosRepository.findPositionByName("Cashier"));
-
-        EmployeeRepository.save(emp);
-
-    }
-    @GetMapping("/{email}")
-    boolean login(@PathVariable String email){
+    @GetMapping("/login/{email}")
+    public ResponseEntity<Boolean> login(@PathVariable String email){
         Employee res = EmployeeRepository.findEmployeeByEmail(email);
-        return res != null;
+        return res != null ? new ResponseEntity<>(true, HttpStatus.OK) :
+                new ResponseEntity<>(false,HttpStatus.OK);
     }
 
-    @GetMapping("/{email}/{password}")
-    Long login(@PathVariable String email,@PathVariable String password){
-        Employee res = EmployeeRepository.findEmployeeByEmailAndPassword(email,password);
-        if(res != null){
-            return res.getId();
-        }
-       return null;
-        }
+    @GetMapping("/login/{email}/{password}")
+    public ResponseEntity<Long> login(@PathVariable String email,@PathVariable int password) {
+        Employee res = EmployeeRepository.findEmployeeByEmail(email);
+        return res != null && res.getPassword().hashCode() == password ? new ResponseEntity<>(res.getId(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.OK);
 
-
+    }
 
 
 
