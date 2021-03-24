@@ -1,6 +1,7 @@
 package client;
 
 import client.api.MyAPI;
+import client.controller.RootController;
 import client.controller.SignInController;
 import client.utils.MyLogger;
 import javafx.application.Application;
@@ -11,6 +12,8 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.json.JSONException;
+
 import java.io.IOException;
 
 
@@ -34,13 +37,14 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("store app");
+        this.primaryStage.setTitle("wear me");
         this.primaryStage.getIcons().add(new Image("client/images/icon.png"));
         initSignIn();
     }
 
     public void initSignIn() {
         try {
+            this.primaryStage.setMaximized(false);
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/signIn.fxml"));
             VBox rootLayout = loader.load();
@@ -64,10 +68,15 @@ public class JavaFXApplication extends Application {
             this.primaryStage.close();
             this.primaryStage.setScene(scene);
             this.primaryStage.setMaximized(true);
+            this.primaryStage.setResizable(false);
             this.primaryStage.show();
+            RootController controller = loader.getController();
+            controller.setMainApp(this);
+            controller.setAPI(this.API);
+            controller.setView();
             //root controller
 
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             MyLogger.logger.error("Ошибка при загрузке основной сцены");
             e.printStackTrace();
         }
@@ -87,6 +96,25 @@ public class JavaFXApplication extends Application {
         }
          catch (NullPointerException e) {
              MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
+            e.printStackTrace();
+        }
+    }
+    public void noDataError() {
+        try {
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.initOwner(this.getPrimaryStage());
+            a.setTitle("store app");
+            DialogPane dialogPane = a.getDialogPane();
+            dialogPane.getStylesheets().add(
+                    getClass().getResource("styles/ConnectionError.css").toExternalForm());
+            dialogPane.getStyleClass().add("myDialog");
+            a.setHeaderText("Server not responding");
+            a.setContentText("No data for app");
+            a.show();
+            this.primaryStage.close();
+        }
+        catch (NullPointerException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
             e.printStackTrace();
         }
     }

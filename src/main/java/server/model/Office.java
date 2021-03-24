@@ -39,11 +39,11 @@ public class Office {
     @Column(name = "name", length = 128, nullable = false)
     private String name;
 
-    @Column(name = "phoneNumber", length = 128, nullable = false)
+    @Column(name = "phoneNumber", length = 128, nullable = false,unique = true)
     private String phoneNumber;
 
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "addressId")
+    @JoinColumn(name = "addressId",nullable = false,unique = true)
     private Address addressId;
 
     @Override

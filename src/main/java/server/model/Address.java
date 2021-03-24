@@ -31,7 +31,7 @@ public class Address {
     private String floor;
     @Column(name = "streetCode", nullable = false)
     private Integer streetCode;
-    @Column(name = "apartment", nullable = false)
+    @Column(name = "apartment")
     private Integer apartment;
 
     public Long getId() {

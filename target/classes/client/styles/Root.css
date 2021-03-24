@@ -1,0 +1,25 @@
+.background{
+    -fx-background-color: #2d2d30;
+}
+.label{
+    -fx-font-family: "Arial Black";
+}
+.labeladress{
+    -fx-font-family: "Myriad Pro";
+}
+.labelemp{
+    -fx-font-family: "Myriad Pro";
+    -fx-label-alignment: right;
+    -fx-font-size: 20px;
+}
+.hyperlink{
+    -fx-font-family: "Myriad Pro";
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+}
+.hbox{
+    -fx-background-color: #d7d7d7;
+}
+.price{
+    -fx-background-color: #d7d7d7;
+}

@@ -8,4 +8,5 @@ import server.model.Address;
 public interface AddressRepository extends JpaRepository<Address,Long> {
     Address findAddressByStreetCode(Integer street_code);
     Address findAddressByStreetAndApartment(String street, Integer apartment);
+    Address findAddressById(Long id);
 }

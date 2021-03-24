@@ -7,4 +7,5 @@ import server.model.Office;
 @Repository
 public interface OfficeRepository extends JpaRepository<Office,Long> {
    Office findByAddressId_City(String city);
+   Office findOfficeById(Long id);
 }

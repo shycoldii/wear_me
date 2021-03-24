@@ -43,7 +43,7 @@ public class Employee {
     @Column(name = "phoneNumber", length = 128, nullable = false)
     private String phoneNumber;
 
-    @Column(name="birthday",length = 60)
+    @Column(name="birthday",length = 60,nullable = false)
     private LocalDate birthday;
 
     @Column(name = "passport", length = 128, nullable = false)
@@ -54,15 +54,15 @@ public class Employee {
 
     //photo
 
-    @Column(name="regDay",length = 60)
+    @Column(name="regDay",length = 60,nullable = false)
     private LocalDateTime regDay;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "positionId")
+    @JoinColumn(name = "positionId",nullable = false)
     private Position positionId;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "officeId")
+    @JoinColumn(name = "officeId",nullable = false)
     private Office officeId;
 
     @Override

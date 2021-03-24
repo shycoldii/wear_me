@@ -1,23 +1,14 @@
 package server.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.model.*;
 import server.repository.*;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 
 @RestController
 @RequestMapping("shop")
@@ -60,21 +51,55 @@ public class MyController {
         this.promocodeRepository = promocodeRepository;
     }
 
-    @GetMapping("/login/{email}")
-    public ResponseEntity<Boolean> login(@PathVariable String email){
+    @GetMapping("/login")
+    @ResponseBody
+    public ResponseEntity<Long> login(@RequestParam String email,
+                                         @RequestParam(required = false)
+                                                 Integer password){
         Employee res = EmployeeRepository.findEmployeeByEmail(email);
-        return res != null ? new ResponseEntity<>(true, HttpStatus.OK) :
-                new ResponseEntity<>(false,HttpStatus.OK);
+        if(password != null){
+            return res != null && res.getPassword().hashCode() == password ? new ResponseEntity<>(res.getId(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return res != null ? new ResponseEntity<>(res.getId(), HttpStatus.OK) :
+                    new ResponseEntity<>(HttpStatus.OK);
+        }
     }
-
-    @GetMapping("/login/{email}/{password}")
-    public ResponseEntity<Long> login(@PathVariable String email,@PathVariable int password) {
-        Employee res = EmployeeRepository.findEmployeeByEmail(email);
-        return res != null && res.getPassword().hashCode() == password ? new ResponseEntity<>(res.getId(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.OK);
-
+    @GetMapping("/employee")
+    @ResponseBody
+    public ResponseEntity<Employee> getEmployee(@RequestParam Long id){
+        Employee res = EmployeeRepository.findEmployeeById(id);
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
+    @GetMapping("/office")
+    @ResponseBody
+    public ResponseEntity<Office> getOffice(@RequestParam Long id){
+        Office res = officeRepository.findOfficeById(id);
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/address")
+    @ResponseBody
+    public ResponseEntity<Address> getAddress(@RequestParam Long id){
+        Address res = addressRepository.findAddressById(id);
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/position")
+    @ResponseBody
+    public ResponseEntity<String> getPosition(@RequestParam Long id){
+        Position res = PosRepository.findPositionById(id);
+        if(res!=null){
+            return new ResponseEntity<>(res.getName(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@../styles/Root.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.RootController">
+
+         <children>
+                  <Label alignment="CENTER" layoutX="1.0" layoutY="-3.0" prefHeight="27.0" prefWidth="126.0" stylesheets="@../styles/Root.css" text="wear me" textFill="#d7d7d7" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="-3.0">
+                     <font>
+                        <Font name="Arial Black" size="23.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="address" alignment="CENTER" layoutX="-3.0" layoutY="25.0" prefHeight="30.0" prefWidth="126.0" styleClass="labeladress" stylesheets="@../styles/Root.css" textFill="#d7d7d7" AnchorPane.leftAnchor="-3.0">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="employeeLabel" alignment="CENTER_RIGHT" layoutX="1152.0" prefHeight="30.0" prefWidth="217.0" styleClass="labelemp" stylesheets="@../styles/Root.css" textAlignment="RIGHT" textFill="#d7d7d7" AnchorPane.leftAnchor="1152.0" AnchorPane.rightAnchor="3.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+      </Label>
+      <HBox layoutX="127.0" layoutY="-1.0" prefHeight="30.0" prefWidth="682.0" styleClass="hbox" AnchorPane.leftAnchor="127.0" AnchorPane.rightAnchor="563.0" AnchorPane.topAnchor="-1.0" />
+                  <Hyperlink alignment="CENTER_RIGHT" layoutX="1273.6" layoutY="20.0" onAction="#logout" prefHeight="22.0" prefWidth="98.0" stylesheets="@../styles/Root.css" text="logout" textFill="#d7d7d7" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+      <HBox layoutX="11.0" layoutY="116.0" prefHeight="56.0" prefWidth="1192.0" spacing="20.0" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="116.0">
+         <children>
+            <Label prefHeight="56.0" prefWidth="356.0" text="amount without discount" textFill="#d7d7d7">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label prefHeight="56.0" prefWidth="217.0" text="discount" textFill="#d7d7d7">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label prefHeight="56.0" prefWidth="290.0" text="amount with discount" textFill="#d7d7d7">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label prefHeight="56.0" prefWidth="272.0" text="number of bonuses" textFill="#d7d7d7">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Label alignment="CENTER" layoutX="28.0" layoutY="172.0" prefHeight="68.0" prefWidth="263.0" styleClass="price" text="0" AnchorPane.rightAnchor="1108.0" />
+      <Label alignment="CENTER" layoutX="914.0" layoutY="172.0" prefHeight="68.0" prefWidth="271.0" styleClass="price" text="0" AnchorPane.rightAnchor="187.0" />
+      <Label alignment="CENTER" layoutX="603.0" layoutY="172.0" prefHeight="68.0" prefWidth="263.0" styleClass="price" text="0" AnchorPane.rightAnchor="505.79999999999995" />
+      <Label alignment="CENTER" layoutX="305.0" layoutY="172.0" prefHeight="68.0" prefWidth="263.0" styleClass="price" text="0" AnchorPane.rightAnchor="803.8" />
+      <TableView layoutX="1.0" layoutY="296.0" prefHeight="350.0" prefWidth="1182.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="189.0">
+        <columns>
+          <TableColumn prefWidth="99.39999079704285" text="Articul" />
+          <TableColumn prefWidth="518.4000091552734" text="Name" />
+            <TableColumn minWidth="0.0" prefWidth="237.0" text="Amount" />
+            <TableColumn minWidth="0.0" prefWidth="324.4000244140625" text="Price" />
+        </columns>
+      </TableView>
+         </children>
+</AnchorPane>

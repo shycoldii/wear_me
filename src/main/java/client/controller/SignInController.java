@@ -40,8 +40,8 @@ public class SignInController {
         if (!requiredValidator.getHasErrors()) {
             if(!passwordField.getText().isEmpty() && !emailField.getText().isEmpty()){
                     try{
-                        if(API.is_email(emailField.getText())){
-                            Long res =this.API.is_password(emailField.getText(),passwordField.getText());
+                        if(API.isEmail(emailField.getText())){
+                            Long res =this.API.isPassword(emailField.getText(),passwordField.getText());
                             if(res == null){
                                 MyLogger.logger.info("Неправильный пароль при авторизации");
                                 passwordValidator.showMessage();
