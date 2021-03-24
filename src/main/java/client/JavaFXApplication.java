@@ -3,8 +3,12 @@ package client;
 import client.api.MyAPI;
 import client.controller.RootController;
 import client.controller.SignInController;
+import client.utils.CheckStructure;
 import client.utils.MyLogger;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,14 +17,18 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.json.JSONException;
+import server.model.Check;
 
 import java.io.IOException;
 
 
 public class JavaFXApplication extends Application {
     private Stage primaryStage;
-
+    private ObservableList<CheckStructure> checkData = FXCollections.observableArrayList();
     private MyAPI API;
+    public void updateCheckData(CheckStructure check){
+          this.checkData.add(check);
+    }
 
     public void setAPI(MyAPI API) {
         this.API = API;
@@ -70,6 +78,10 @@ public class JavaFXApplication extends Application {
             this.primaryStage.setMaximized(true);
             this.primaryStage.setResizable(false);
             this.primaryStage.show();
+            for(int i =0;i<50;i++){
+                this.updateCheckData(new CheckStructure(1L,"dfgh",120,200,300));
+            }
+
             RootController controller = loader.getController();
             controller.setMainApp(this);
             controller.setAPI(this.API);
@@ -117,6 +129,9 @@ public class JavaFXApplication extends Application {
             MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
             e.printStackTrace();
         }
+    }
+    public ObservableList<CheckStructure> getPersonData(){
+        return checkData;
     }
 
     public static void main(String[] args) {

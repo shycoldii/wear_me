@@ -23,3 +23,10 @@
 .price{
     -fx-background-color: #d7d7d7;
 }
+.addLabel{
+    -fx-background-color: #d7d7d7;
+
+}
+.addLabel:hover{
+    -fx-background-color: #c7c6cf;
+}
