@@ -2,6 +2,7 @@ package client.controller;
 
 import client.JavaFXApplication;
 import client.api.MyAPI;
+import client.exception.NoStoreProductException;
 import client.exception.ResponceStatusException;
 import client.utils.MyLogger;
 import javafx.application.Platform;
@@ -72,10 +73,15 @@ public class AddingToCheckController {
                     alert.showAndWait();
                     MyLogger.logger.error("Не введено в поле ничего");
                 }
-
-                //тащим данные из АПИ (Store Product) - храним в checkTable
                 //находим - добавляем в список (при подтверждении чека меняем товарам статусы и сбрасываем список) + закрываем окно
-                //не находим - алерт и сброс полей
+            }
+            catch (NoStoreProductException e){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.initOwner(this.mainApp.getPrimaryStage());
+                alert.setTitle("wear me");
+                alert.setHeaderText("Store product wasn't found");
+                alert.setContentText("Please change options");
+                alert.showAndWait();
             }
 
             catch(NumberFormatException e){
@@ -88,6 +94,7 @@ public class AddingToCheckController {
                 alert.showAndWait();
             }
             catch(ResponceStatusException e){
+                //logoutTODO: изменить логин форму
                 Platform.runLater(mainApp::connectionError);
                 this.stage.close();
             }

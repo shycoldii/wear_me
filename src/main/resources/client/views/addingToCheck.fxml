@@ -13,7 +13,7 @@
                   <Font name="Arial Black" size="22.0" />
                </font>
             </Label>
-            <TextField fx:id="textArticul" focusTraversable="false" prefHeight="70.0" prefWidth="303.0" promptText="write the articul" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" />
+            <TextField fx:id="textArticul" focusTraversable="false" prefHeight="70.0" prefWidth="234.0" promptText="write the articul" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <AnchorPane prefHeight="104.0" prefWidth="327.0">

@@ -2,6 +2,7 @@ package client.api;
 
 import client.JavaFXApplication;
 import client.exception.NoAppDataException;
+import client.exception.NoStoreProductException;
 import client.exception.ResponceStatusException;
 import client.utils.CheckStructure;
 import client.utils.HTTPRequest;
@@ -131,41 +132,46 @@ public class MyAPI {
         }
         return false;
     }
-    public void getStoreProduct(Long id,String size) throws ResponceStatusException, JSONException {
+    public void getStoreProduct(Long id,String size) throws ResponceStatusException, JSONException, NoStoreProductException {
         String url = "http://localhost:8080/shop/storeProduct?articul="+URLEncoder.encode(String.valueOf(id))+
                 "&productSize="+size+"&officeId="+ officeId;
         String result = HTTPRequest.Get(url);
+        int checker = 0;
         if(result!=null){
-            JSONObject jsonStoreProduct = new JSONObject(result);
-            Long id1 = Long.valueOf(jsonStoreProduct.get("id").toString());
-            JSONObject product = (JSONObject) jsonStoreProduct.get("product");
-            Integer articul = Integer.parseInt(product.get("articul").toString());
-            String name = product.get("name").toString();
-            Integer retailPrice =  Integer.parseInt(product.get("retailPrice").toString());
-            if(this.isInProducts(id1)){
-
-                //бросаем что товар уже есть в списке
-                //todo: сделать перебор уже тут и выбирать из массива
-           }
-           else {
-                this.ListOfProducts.add(id1);
-
-                if (this.isInCheckData(articul, name, retailPrice)) {
-                    System.out.println("dfghj");
-                    for (CheckStructure ch : this.checkData) {
-                        if (ch.getArticul() == articul) {
-                            ch.setAmount(ch.getAmount() + 1);
-                            ch.setTotal(ch.getPrice() * ch.getAmount());
-                        }
+            if (!result.equals("")){
+                JSONArray jsonStoreProducts = new JSONArray(result);
+                for (int i=0;i< jsonStoreProducts.length();i++){
+                    Long id1 = Long.valueOf(jsonStoreProducts.getJSONObject(i).get("id").toString());
+                    if(this.isInProducts(id1) | jsonStoreProducts.getJSONObject(i).has("checkId")){
+                        checker+=1;
                     }
-                } else {
-                    this.checkData.add(new CheckStructure(articul, name, 1, retailPrice, retailPrice));
-                    System.out.println(this.checkData);
+                    else {
+                        JSONObject product = (JSONObject) jsonStoreProducts.getJSONObject(i).get("product");
+                        int articul = Integer.parseInt(product.get("articul").toString());
+                        String name = product.get("name").toString();
+                        Integer retailPrice =  Integer.parseInt(product.get("retailPrice").toString());
+                        this.ListOfProducts.add(id1);
+                        if (this.isInCheckData(articul, name, retailPrice)) {
+                            for (CheckStructure ch : this.checkData) {
+                                if (ch.getArticul() == articul) {
+                                    ch.setAmount(ch.getAmount() + 1);
+                                    ch.setTotal(ch.getPrice() * ch.getAmount());
+                                }
+                            }
+                        } else {
+                            this.checkData.add(new CheckStructure(articul, name, 1, retailPrice, retailPrice));
+                        }
+                        break;
+                    }
+                }
+                if(checker==jsonStoreProducts.length()){
+                    throw new NoStoreProductException(this.mainApp,"Не найден товар");
                 }
             }
+            else{
+                throw new NoStoreProductException(this.mainApp,"Не найден товар");
+            }
 
-
-            //TODO: мб обработать незапаршенное
 
         }
         else{

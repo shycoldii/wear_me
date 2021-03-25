@@ -108,7 +108,7 @@ public class MyController {
     }
     @GetMapping("/test")
     public void test(){
-
+        /*
         Address adr = new Address("Москва","Семеновская","1","2",554433,null);
         addressRepository.save(adr);
         Office of = new Office("Wear me","80007775555");
@@ -121,21 +121,19 @@ public class MyController {
         emp.setOfficeId(officeRepository.findByAddressId_City("Москва"));
         emp.setPosition(PosRepository.findPositionByName("Программист"));
         EmployeeRepository.save(emp);
-
-
-
-
         Supplier sup = new Supplier("CalF","88007775553","CalF@mail.ru");
         supplierRepository.save(sup);
         Product pr = new Product(1,"California Jeans",300,1999,"Jeans","M","Blue",null);
         pr.setSupplier(supplierRepository.findSupplierByName("CalF"));
         productRepository.save(pr);
-
+         */
 
         StoreProduct st = new StoreProduct();
         st.setProduct(productRepository.findProductByName("California Jeans"));
         st.setOffice(officeRepository.findOfficeById(1L));
-        System.out.println(st.toString());
+        //TODO: в storeProduct должно быть такое же количество товара, как и в product или сделать в product amount
+        //решение: делать связь 1-1 и чекать на юник продукта иначе - нельзя добавить такой в продажу
+        //лучше: оставить только storeProduct и убрать product, но добавить status-поле
         storeProductRepository.save(st);
 
 
@@ -144,10 +142,10 @@ public class MyController {
     }
     @GetMapping("/storeProduct")
     @ResponseBody
-    public ResponseEntity<StoreProduct> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
+    public ResponseEntity<List<StoreProduct>> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
         List<StoreProduct> res = storeProductRepository.findStoreProductByProduct_ArticulAndOffice_IdAndProduct_Size(articul,officeId,productSize);
         if(res!=null){
-            return new ResponseEntity<>(res.get(0),HttpStatus.OK);
+            return new ResponseEntity<>(res,HttpStatus.OK);
         }
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);

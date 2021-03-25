@@ -147,6 +147,7 @@ public class JavaFXApplication extends Application {
             loader.setLocation(JavaFXApplication.class.getResource("views/addingToCheck.fxml"));
             AnchorPane rootLayout = loader.load();
             Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image("client/images/icon.png"));
             dialogStage.setTitle("wear me");
             dialogStage.initOwner(this.primaryStage);
             dialogStage.setResizable(false);
