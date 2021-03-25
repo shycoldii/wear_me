@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import java.time.LocalDate;
 
 public class CheckStructure {
-    private SimpleLongProperty articul;
+    private IntegerProperty articul;
     private SimpleStringProperty name;
     private IntegerProperty amount;
     private IntegerProperty price;
@@ -14,19 +14,27 @@ public class CheckStructure {
         this(null,null,null,null,null);
     }
 
-    public CheckStructure(Long articul,String name,Integer amount,Integer price,Integer total){
-        this.articul = new SimpleLongProperty(articul);
+    public CheckStructure(Integer articul,String name,Integer amount,Integer price,Integer total){
+        this.articul = new SimpleIntegerProperty(articul);
         this.name = new SimpleStringProperty(name);
         this.amount = new SimpleIntegerProperty(amount);
         this.price = new SimpleIntegerProperty(price);
         this.total = new SimpleIntegerProperty(total);
     }
 
+    public void setAmount(int amount) {
+        this.amount.set(amount);
+    }
+
+    public void setTotal(int total) {
+        this.total.set(total);
+    }
+
     public long getArticul() {
         return articul.get();
     }
 
-    public SimpleLongProperty articulProperty() {
+    public IntegerProperty articulProperty() {
         return articul;
     }
 

@@ -28,8 +28,8 @@ public class Check {
     @JoinColumn(name = "client",nullable = false)
     private Client client;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "storeProducts",nullable = false)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "check")
+    //@JoinColumn(name = "storeProducts",nullable = false)
     private List<StoreProduct> storeProducts;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)

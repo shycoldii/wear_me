@@ -7,9 +7,10 @@ import javax.persistence.*;
 @Table(name = "products")
 public class Product {
     public Product(){};
-    public Product(String name, Integer tradePrice, Integer retailPrice, String type, String size,
+    public Product(Integer articul,String name, Integer tradePrice, Integer retailPrice, String type, String size,
                     String color, String description){
         this.name = name;
+        this.articul = articul;
         this.tradePrice = tradePrice;
         this.retailPrice = retailPrice;
         this.type = type;
@@ -21,8 +22,11 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "articul", nullable = false)
-    private Long articul;
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Column(name = "articul", length = 128, nullable = false)
+    private Integer articul;
 
     @Column(name = "name", length = 128, nullable = false)
     private String name;
@@ -47,7 +51,7 @@ public class Product {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "supplier")
+    @JoinColumn(name = "supplier",nullable = false)
     private Supplier supplier;
 
     public void setSupplier(Supplier supplier) {
@@ -57,7 +61,8 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "articul=" + articul +
+                "id=" + id +
+                ", articul=" + articul +
                 ", name='" + name + '\'' +
                 ", tradePrice=" + tradePrice +
                 ", retailPrice=" + retailPrice +
@@ -69,7 +74,11 @@ public class Product {
                 '}';
     }
 
-    public Long getArticul() {
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getArticul() {
         return articul;
     }
 

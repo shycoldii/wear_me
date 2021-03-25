@@ -16,7 +16,7 @@ import org.json.JSONException;
 public class RootController {
     @FXML
     private Label address;
-    @FXML private TableColumn<CheckStructure, Long> articulColumn;
+    @FXML private TableColumn<CheckStructure, Integer> articulColumn;
     @FXML private TableColumn<CheckStructure,String> nameColumn;
     @FXML private TableColumn<CheckStructure,Integer> priceColumn;
     @FXML private TableColumn<CheckStructure,Integer> amountColumn;
@@ -24,7 +24,7 @@ public class RootController {
     @FXML
     private Label employeeLabel;
     @FXML private Label addLabel;
-    @FXML private TableView checkTable;
+    @FXML private TableView<CheckStructure> checkTable;
 
     private JavaFXApplication mainApp;
     private MyAPI API;
@@ -41,7 +41,9 @@ public class RootController {
     public void initialize() {
         articulColumn.setCellValueFactory(cellData -> cellData.getValue().articulProperty().asObject());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-
+        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty().asObject());
+        priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+        amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
     }
     @FXML
     public void logout(){
@@ -70,8 +72,9 @@ public class RootController {
     }
     @FXML
     public void addCheck(){
-        this.checkTable.setItems(this.mainApp.getPersonData());
-        System.out.println("успешно");
-
+        this.mainApp.initAddingToCheck();
+    }
+    public void updateCheck(){
+        this.checkTable.setItems(this.API.getCheckData());
     }
 }

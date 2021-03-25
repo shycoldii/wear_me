@@ -30,3 +30,6 @@
 .addLabel:hover{
     -fx-background-color: #c7c6cf;
 }
+.checkStructure{
+    -fx-font-family: Arial;
+}

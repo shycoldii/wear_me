@@ -3,12 +3,17 @@ package server.controller;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.model.*;
 import server.repository.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("shop")
@@ -99,6 +104,52 @@ public class MyController {
         if(res!=null){
             return new ResponseEntity<>(res.getName(),HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/test")
+    public void test(){
+
+        Address adr = new Address("Москва","Семеновская","1","2",554433,null);
+        addressRepository.save(adr);
+        Office of = new Office("Wear me","80007775555");
+        of.setAddress_id(addressRepository.findAddressByStreetCode(554433));
+        officeRepository.save(of);
+        Position pos = new Position("Программист");
+        PosRepository.save(pos);
+        Employee emp = new Employee("Дарья","Александрова","Игоревна","a@mail.ru","1","8800775543","222113 3333",
+                LocalDateTime.now(), LocalDate.of(2001,12,3));
+        emp.setOfficeId(officeRepository.findByAddressId_City("Москва"));
+        emp.setPosition(PosRepository.findPositionByName("Программист"));
+        EmployeeRepository.save(emp);
+
+
+
+
+        Supplier sup = new Supplier("CalF","88007775553","CalF@mail.ru");
+        supplierRepository.save(sup);
+        Product pr = new Product(1,"California Jeans",300,1999,"Jeans","M","Blue",null);
+        pr.setSupplier(supplierRepository.findSupplierByName("CalF"));
+        productRepository.save(pr);
+
+
+        StoreProduct st = new StoreProduct();
+        st.setProduct(productRepository.findProductByName("California Jeans"));
+        st.setOffice(officeRepository.findOfficeById(1L));
+        System.out.println(st.toString());
+        storeProductRepository.save(st);
+
+
+
+
+    }
+    @GetMapping("/storeProduct")
+    @ResponseBody
+    public ResponseEntity<StoreProduct> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
+        List<StoreProduct> res = storeProductRepository.findStoreProductByProduct_ArticulAndOffice_IdAndProduct_Size(articul,officeId,productSize);
+        if(res!=null){
+            return new ResponseEntity<>(res.get(0),HttpStatus.OK);
+        }
+        //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

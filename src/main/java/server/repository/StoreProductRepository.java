@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface StoreProductRepository extends JpaRepository<StoreProduct,Long> {
     StoreProduct findStoreProductById(Long id);
-    List<StoreProduct> findAll();
+
+    List<StoreProduct> findStoreProductByProduct_ArticulAndOffice_IdAndProduct_Size(Integer articul,
+                                                                                    Long officeId,String size);
 }

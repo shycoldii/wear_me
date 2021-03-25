@@ -36,10 +36,10 @@ public class Supplier {
     @Column(name = "name", length = 128, nullable = false)
     private String name;
 
-    @Column(name = "phoneNumber", length = 128, nullable = false)
+    @Column(name = "phoneNumber", length = 128, nullable = false,unique = true)
     private String phoneNumber;
 
-    @Column(name = "email", length = 128, nullable = false)
+    @Column(name = "email", length = 128, nullable = false,unique = true)
     private String email;
 
 
