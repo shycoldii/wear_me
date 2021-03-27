@@ -7,16 +7,18 @@ import java.time.LocalDate;
 public class CheckStructure {
     private IntegerProperty articul;
     private SimpleStringProperty name;
+    private SimpleStringProperty color;
     private IntegerProperty amount;
     private IntegerProperty price;
     private IntegerProperty total;
     public CheckStructure(){
-        this(null,null,null,null,null);
+        this(null,null,null,null,null,null);
     }
 
-    public CheckStructure(Integer articul,String name,Integer amount,Integer price,Integer total){
+    public CheckStructure(Integer articul,String name,String color,Integer amount,Integer price,Integer total){
         this.articul = new SimpleIntegerProperty(articul);
         this.name = new SimpleStringProperty(name);
+        this.color = new SimpleStringProperty(color);
         this.amount = new SimpleIntegerProperty(amount);
         this.price = new SimpleIntegerProperty(price);
         this.total = new SimpleIntegerProperty(total);
@@ -26,11 +28,23 @@ public class CheckStructure {
         this.amount.set(amount);
     }
 
+    public String getColor() {
+        return color.get();
+    }
+
+    public void setColor(String color) {
+        this.color.set(color);
+    }
+
+    public SimpleStringProperty colorProperty() {
+        return color;
+    }
+
     public void setTotal(int total) {
         this.total.set(total);
     }
 
-    public long getArticul() {
+    public int getArticul() {
         return articul.get();
     }
 

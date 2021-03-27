@@ -5,28 +5,56 @@ import javax.persistence.*;
 @Entity
 @Table(name = "storeProducts")
 public class StoreProduct {
-
     public StoreProduct(){};
 
-   // public StoreProduct(){
-        //this.supplyId = supplyId;
-        //this.status = status;
-   // };
+    public StoreProduct(Integer articul,String name,Integer tradePrice,Integer retailPrice,
+                        String type,String size,String color,String description,Integer status){
+        this.articul = articul;
+        this.name = name;
+        this.tradePrice = tradePrice;
+        this.retailPrice= retailPrice;
+        this.type=type;
+        this.size = size;
+        this.color = color;
+        this.description = description;
+        this.status = status;
+    };
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    //@Column(name = "status", nullable = false)
-    //private Integer status;
+    @Column(name = "articul", nullable = false)
+    private Integer articul;
 
-    //@Column(name = "supplyId", nullable = false)
-    //private Integer supplyId;
+    @Column(name = "name", length = 128, nullable = false)
+    private String name;
+
+    @Column(name = "tradePrice", nullable = false)
+    private Integer tradePrice;
+
+    @Column(name = "retailPrice", nullable = false)
+    private Integer retailPrice;
+
+    @Column(name = "type", length = 128, nullable = false)
+    private String type;
+
+    @Column(name = "size", length = 3, nullable = false)
+    private String size;
+
+    @Column(name = "color", length = 128,nullable=false)
+    private String color;
+
+    @Column(name = "description", length = 128,nullable = false)
+    private String description;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "product",nullable = false)
-    private Product product;
+    @JoinColumn(name = "supplierId",nullable = false)
+    private Supplier supplierId;
+
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "checkId")
@@ -36,21 +64,18 @@ public class StoreProduct {
     @JoinColumn(name = "office",nullable = false)
     private Office office;
 
+    public void setCheck(Check check) {
+        this.check = check;
+    }
+
+    public void setSupplierId(Supplier supplierId) {
+        this.supplierId = supplierId;
+    }
+
     public Long getId() {
         return id;
     }
 
-    //public Integer getStatus() {
-       // return status;
-   // }
-
-    //public Integer getSupplyId() {
-       // return supplyId;
-   // }
-
-    public Product getProduct() {
-        return product;
-    }
 
     public Office getOffice() {
         return office;
@@ -60,15 +85,65 @@ public class StoreProduct {
         this.office = office;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public Integer getArticul() {
+        return articul;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getTradePrice() {
+        return tradePrice;
+    }
+
+    public Integer getRetailPrice() {
+        return retailPrice;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Supplier getSupplierId() {
+        return supplierId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public Check getCheck() {
+        return check;
     }
 
     @Override
     public String toString() {
         return "StoreProduct{" +
                 "id=" + id +
-                ", product=" + product +
+                ", articul=" + articul +
+                ", name='" + name + '\'' +
+                ", tradePrice=" + tradePrice +
+                ", retailPrice=" + retailPrice +
+                ", type='" + type + '\'' +
+                ", size='" + size + '\'' +
+                ", color='" + color + '\'' +
+                ", description='" + description + '\'' +
+                ", supplierId=" + supplierId +
+                ", status=" + status +
+                ", check=" + check +
                 ", office=" + office +
                 '}';
     }

@@ -3,6 +3,7 @@
 }
 .search{
     -fx-background-color: #d7d7d7;
+    -fx-font-family: "Arial Black";
 }
 .vBox{
     -fx-background-color: #2d2d30;

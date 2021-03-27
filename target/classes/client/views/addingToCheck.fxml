@@ -4,27 +4,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="244.0" prefWidth="298.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.AddingToCheckController">
+<AnchorPane prefHeight="300.0" prefWidth="298.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.AddingToCheckController">
    <children>
-      <VBox prefHeight="251.0" prefWidth="321.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" AnchorPane.rightAnchor="-6.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Label alignment="CENTER" prefHeight="85.0" prefWidth="319.0" text="add item to check" textFill="#e5e3e3">
-               <font>
-                  <Font name="Arial Black" size="22.0" />
-               </font>
-            </Label>
-            <TextField fx:id="textArticul" focusTraversable="false" prefHeight="70.0" prefWidth="303.0" promptText="write the articul" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" />
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <AnchorPane prefHeight="104.0" prefWidth="327.0">
-                     <children>
-                        <ComboBox fx:id="combobox" prefWidth="150.0" promptText="size" styleClass="search" AnchorPane.rightAnchor="171.99999999999997" AnchorPane.topAnchor="0.0" />
-                        <Button layoutX="192.0" layoutY="39.0" mnemonicParsing="false" onAction="#add" prefHeight="38.0" prefWidth="108.0" styleClass="addLabel" stylesheets="@../styles/AddingtoCheck.css" text="add" textFill="#f0e9e9" AnchorPane.rightAnchor="22.399999999999977" AnchorPane.topAnchor="39.0" />
-                     </children>
-                  </AnchorPane>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+      <Label alignment="CENTER" prefHeight="85.0" prefWidth="319.0" text="add item to check" textFill="#e5e3e3" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <font>
+            <Font name="Arial Black" size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="textArticul" focusTraversable="false" layoutX="31.0" layoutY="66.0" prefHeight="38.0" prefWidth="234.0" promptText="write the articul" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="32.599999999999994" AnchorPane.topAnchor="66.0" />
+      <ComboBox fx:id="combobox" layoutX="31.0" layoutY="122.0" prefWidth="150.0" promptText="size" styleClass="search" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="116.6" AnchorPane.topAnchor="122.0" />
+      <Button layoutX="157.0" layoutY="234.0" mnemonicParsing="false" onAction="#add" prefHeight="38.0" prefWidth="108.0" styleClass="addLabel" stylesheets="@../styles/AddingtoCheck.css" text="add" textFill="#f0e9e9" AnchorPane.leftAnchor="157.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="234.0" />
+      <TextField fx:id="textColor" focusTraversable="false" layoutX="29.99999999999997" layoutY="167.0" prefHeight="38.0" prefWidth="234.0" promptText="write the color" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" AnchorPane.leftAnchor="29.99999999999997" AnchorPane.rightAnchor="33.60000000000002" AnchorPane.topAnchor="167.0" />
    </children>
 </AnchorPane>

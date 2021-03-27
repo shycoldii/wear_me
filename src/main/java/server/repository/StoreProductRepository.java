@@ -10,6 +10,6 @@ import java.util.List;
 public interface StoreProductRepository extends JpaRepository<StoreProduct,Long> {
     StoreProduct findStoreProductById(Long id);
 
-    List<StoreProduct> findStoreProductByProduct_ArticulAndOffice_IdAndProduct_Size(Integer articul,
-                                                                                    Long officeId,String size);
+    List<StoreProduct> findStoreProductByArticulAndOffice_IdAndSizeAndStatus(Integer articul, Long officeId,String size,
+                                                                             Integer status);
 }

@@ -22,7 +22,6 @@ public class MyController {
     private final AddressRepository addressRepository;
     private final OfficeRepository officeRepository;
     private final SupplierRepository supplierRepository;
-    private final ProductRepository productRepository;
     private final StoreProductRepository storeProductRepository;
     private final SupplyHistoryRepository supplyHistoryRepository;
     private final ClientRepository clientRepository;
@@ -37,7 +36,6 @@ public class MyController {
                         AddressRepository addressRepository,
                         OfficeRepository officeRepository,
                         SupplierRepository supplierRepository,
-                        ProductRepository productRepository,
                         StoreProductRepository storeProductRepository,
                         SupplyHistoryRepository supplyHistoryRepository,
                         ClientRepository clientRepository, ClientHistoryRepository clientHistoryRepository,
@@ -47,7 +45,6 @@ public class MyController {
         this.addressRepository = addressRepository;
         this.officeRepository = officeRepository;
         this.supplierRepository = supplierRepository;
-        this.productRepository = productRepository;
         this.storeProductRepository = storeProductRepository;
         this.supplyHistoryRepository =  supplyHistoryRepository;
         this.clientRepository = clientRepository;
@@ -123,27 +120,18 @@ public class MyController {
         EmployeeRepository.save(emp);
         Supplier sup = new Supplier("CalF","88007775553","CalF@mail.ru");
         supplierRepository.save(sup);
-        Product pr = new Product(1,"California Jeans",300,1999,"Jeans","M","Blue",null);
-        pr.setSupplier(supplierRepository.findSupplierByName("CalF"));
-        productRepository.save(pr);
+
          */
-
-        StoreProduct st = new StoreProduct();
-        st.setProduct(productRepository.findProductByName("California Jeans"));
+        StoreProduct st = new StoreProduct(1,"Базовые джинсы mom fit",300,2999,"джинсы",
+                "M","белый","Базовые джинсы mom fit",2);
         st.setOffice(officeRepository.findOfficeById(1L));
-        //TODO: в storeProduct должно быть такое же количество товара, как и в product или сделать в product amount
-        //решение: делать связь 1-1 и чекать на юник продукта иначе - нельзя добавить такой в продажу
-        //лучше: оставить только storeProduct и убрать product, но добавить status-поле
+        st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
-
-
-
-
     }
     @GetMapping("/storeProduct")
     @ResponseBody
     public ResponseEntity<List<StoreProduct>> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
-        List<StoreProduct> res = storeProductRepository.findStoreProductByProduct_ArticulAndOffice_IdAndProduct_Size(articul,officeId,productSize);
+        List<StoreProduct> res = storeProductRepository.findStoreProductByArticulAndOffice_IdAndSizeAndStatus(articul,officeId,productSize,2);
         if(res!=null){
             return new ResponseEntity<>(res,HttpStatus.OK);
         }

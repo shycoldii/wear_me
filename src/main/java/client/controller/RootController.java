@@ -8,9 +8,7 @@ import client.utils.MyLogger;
 import javafx.application.Platform;
 import javafx.beans.property.LongProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import org.json.JSONException;
 
 public class RootController {
@@ -21,9 +19,12 @@ public class RootController {
     @FXML private TableColumn<CheckStructure,Integer> priceColumn;
     @FXML private TableColumn<CheckStructure,Integer> amountColumn;
     @FXML private TableColumn<CheckStructure,Integer> totalColumn;
-    @FXML
-    private Label employeeLabel;
-    @FXML private Label addLabel;
+    @FXML private TableColumn<CheckStructure,String> colorColumn;
+    @FXML private Label employeeLabel;
+    @FXML private Label withDiscount;
+    @FXML private Label withoutDiscount;
+    @FXML private Label discount;
+    @FXML private Label bonuses;
     @FXML private TableView<CheckStructure> checkTable;
 
     private JavaFXApplication mainApp;
@@ -41,6 +42,7 @@ public class RootController {
     public void initialize() {
         articulColumn.setCellValueFactory(cellData -> cellData.getValue().articulProperty().asObject());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        colorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty().asObject());
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
         amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
@@ -75,6 +77,49 @@ public class RootController {
         this.mainApp.initAddingToCheck();
     }
     public void updateCheck(){
+        MyLogger.logger.info("Обновлен чек");
         this.checkTable.setItems(this.API.getCheckData());
+        this.withoutDiscount.setText(String.valueOf(this.API.getTotalPrice()));
+        this.withDiscount.setText(String.valueOf(this.API.getTotalPrice()-Integer.parseInt(this.discount.getText())));
+    }
+    @FXML
+    private void deleteProduct() {
+
+        int selectedIndex = this.checkTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >= 0) {
+            int articul = this.checkTable.getItems().get(selectedIndex).getArticul();
+            String color = this.checkTable.getItems().get(selectedIndex).getColor();
+            this.API.deleteProduct(articul,color);
+            this.checkTable.setItems(this.API.getCheckData());
+            MyLogger.logger.info("Удален продукт из таблицы");
+        } else {
+            Alert alert = this.getAlert();
+            alert.initOwner(this.mainApp.getPrimaryStage());
+            alert.setTitle("No selection");
+            alert.setHeaderText("No product selected");
+            alert.setContentText("Please, select the line in the table");
+            alert.show();
+            MyLogger.logger.error("Ошибка при удалении продукта. Не выделено!");
+        }
+    }
+    private Alert getAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(this.mainApp.getPrimaryStage());
+        alert.setTitle("wear me");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("../styles/ConnectionError.css").toExternalForm());
+        dialogPane.getStyleClass().add("myDialog");
+        return alert;
+    }
+    @FXML
+    private void createCheck(){
+        this.API.deleteAllProducts();
+        this.checkTable.setItems(this.API.getCheckData());
+        this.withoutDiscount.setText("0");
+        this.withDiscount.setText("0");
+        this.discount.setText("0");
+        this.bonuses.setText("0");
+        MyLogger.logger.info("Создан новый чек");
     }
 }
