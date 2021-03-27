@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import server.model.*;
 import server.repository.*;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -122,8 +124,10 @@ public class MyController {
         supplierRepository.save(sup);
 
          */
+        Promocode pr = new Promocode("ВЕСНА",20);
+        promocodeRepository.save(pr);
         StoreProduct st = new StoreProduct(1,"Базовые джинсы mom fit",300,2999,"джинсы",
-                "M","белый","Базовые джинсы mom fit",2);
+                "M","голубой","Базовые джинсы mom fit",2);
         st.setOffice(officeRepository.findOfficeById(1L));
         st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
@@ -138,5 +142,16 @@ public class MyController {
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/promocode")
+    @ResponseBody
+    public ResponseEntity<Promocode> getPromocode(@RequestParam String name){
+        Promocode res = promocodeRepository.findPromocodeByName(URLDecoder.decode(name));
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        //не найден такой
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }

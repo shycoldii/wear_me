@@ -83,4 +83,16 @@ public class CheckStructure {
     public IntegerProperty totalProperty() {
         return total;
     }
+
+    @Override
+    public String toString() {
+        return "CheckStructure{" +
+                "articul=" + articul +
+                ", name=" + name +
+                ", color=" + color +
+                ", amount=" + amount +
+                ", price=" + price +
+                ", total=" + total +
+                '}';
+    }
 }

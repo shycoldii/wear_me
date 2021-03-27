@@ -1,15 +1,12 @@
 package client;
 
 import client.api.MyAPI;
+import client.controller.AddingPromocodeController;
 import client.controller.AddingToCheckController;
 import client.controller.RootController;
 import client.controller.SignInController;
-import client.utils.CheckStructure;
 import client.utils.MyLogger;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,10 +17,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.JSONException;
-import server.model.Check;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class JavaFXApplication extends Application {
@@ -159,12 +153,11 @@ public class JavaFXApplication extends Application {
             controller.setCombobox();
             controller.setStage(dialogStage);
             MyLogger.logger.info("Запущено окно добавления товара в чек");
-            dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                public void handle(WindowEvent we) {
-                    MyLogger.logger.info("Окно закрыто");
-                    dialogStage.close();
-                }
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
             });
+
             dialogStage.show();
 
         } catch (IOException e) {
@@ -177,5 +170,34 @@ public class JavaFXApplication extends Application {
         MyLogger log = new MyLogger();
         if (log.deploy())
             launch(args);
+    }
+
+    public void initAddingPromocode() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingPromocode.fxml"));
+            AnchorPane rootLayout = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image("client/images/icon.png"));
+            dialogStage.setTitle("wear me");
+            dialogStage.initOwner(this.primaryStage);
+            dialogStage.setResizable(false);
+            Scene scene = new Scene(rootLayout);
+            dialogStage.setScene(scene);
+            AddingPromocodeController controller = loader.getController();
+            controller.setAPI(this.API);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно промокода");
+            dialogStage.show();
+
+        } catch (IOException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены добавления товара в чек");
+            e.printStackTrace();
+        }
     }
 }

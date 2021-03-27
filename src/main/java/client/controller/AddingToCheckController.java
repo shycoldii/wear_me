@@ -99,7 +99,7 @@ public class AddingToCheckController {
                         res.append(".");
                     }
                     else{
-                        res.append(",");
+                        res.append(", ");
                     }
                     r+=1;
                 }

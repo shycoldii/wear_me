@@ -78,8 +78,11 @@ public class RootController {
     }
     public void updateCheck(){
         MyLogger.logger.info("Обновлен чек");
+        System.out.println(this.API.getListOfProducts().toString());
         this.checkTable.setItems(this.API.getCheckData());
         this.withoutDiscount.setText(String.valueOf(this.API.getTotalPrice()));
+        int discount = this.API.getPromocodeDiscount()*this.API.getTotalPrice()/100;
+        this.discount.setText(Integer.toString(discount));
         this.withDiscount.setText(String.valueOf(this.API.getTotalPrice()-Integer.parseInt(this.discount.getText())));
     }
     @FXML
@@ -90,7 +93,7 @@ public class RootController {
             int articul = this.checkTable.getItems().get(selectedIndex).getArticul();
             String color = this.checkTable.getItems().get(selectedIndex).getColor();
             this.API.deleteProduct(articul,color);
-            this.checkTable.setItems(this.API.getCheckData());
+            this.updateCheck();
             MyLogger.logger.info("Удален продукт из таблицы");
         } else {
             Alert alert = this.getAlert();
@@ -121,5 +124,9 @@ public class RootController {
         this.discount.setText("0");
         this.bonuses.setText("0");
         MyLogger.logger.info("Создан новый чек");
+    }
+    @FXML
+    private void addPromocode(){
+        this.mainApp.initAddingPromocode();
     }
 }

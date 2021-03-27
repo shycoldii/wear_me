@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "clients",uniqueConstraints = {@UniqueConstraint(columnNames={"email","phoneNumber"})})
 public class Client {
     public Client(){};
     public Client(String FirstName, String SecondName,String Patronymic,

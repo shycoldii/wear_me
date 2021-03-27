@@ -1,10 +1,7 @@
 package client.api;
 
 import client.JavaFXApplication;
-import client.exception.NoAppDataException;
-import client.exception.NoColorException;
-import client.exception.NoStoreProductException;
-import client.exception.ResponceStatusException;
+import client.exception.*;
 import client.utils.CheckStructure;
 import client.utils.HTTPRequest;
 import client.utils.MyLogger;
@@ -27,6 +24,7 @@ public class MyAPI {
     private Long employeeId;
     private Long officeId;
     private Long addressId;
+    private HashMap<String,Integer> promocode = new HashMap<>();
     private List<String> listOfColors = new ArrayList<>();
     public JSONObject jsonAddress;
     public JSONObject jsonEmployee;
@@ -79,6 +77,10 @@ public class MyAPI {
         }
     }
 
+    public HashMap<Long, ArrayList<String>> getListOfProducts() {
+        return ListOfProducts;
+    }
+
     public void setOfficeId(Long officeId) {
         this.officeId = officeId;
     }
@@ -98,11 +100,12 @@ public class MyAPI {
     public void deleteAllProducts(){
         this.checkData.clear();
         this.ListOfProducts.clear();
+        this.promocode.clear();
     }
 
     //блок SIGN IN
     public Boolean isEmail(String email) throws ResponceStatusException {
-        String url = "http://localhost:8181/shop/login?email="+ URLEncoder.encode(email);
+        String url = "http://localhost:8282/shop/login?email="+ URLEncoder.encode(email);
         String response = HTTPRequest.Get(url);
         if(response!=null){
             return !response.equals("");
@@ -112,7 +115,7 @@ public class MyAPI {
         throw  new ResponceStatusException(this.mainApp, "Проверка на email - пустой ответ от сервера");
     }
     public  Long isPassword(String email, String password) throws ResponceStatusException {
-        String url = "http://localhost:8181/shop/login?email="+URLEncoder.encode(email)+"&password="+password.hashCode();
+        String url = "http://localhost:8282/shop/login?email="+URLEncoder.encode(email)+"&password="+password.hashCode();
         String response = HTTPRequest.Get(url);
         if(response!=null){
             if(response.equals("")){
@@ -125,22 +128,22 @@ public class MyAPI {
         throw new ResponceStatusException(this.mainApp, "Проверка на password - пустой ответ от сервера");
     }
     public void getData() throws JSONException, NoAppDataException {
-        String url = "http://localhost:8181/shop/employee?id="+URLEncoder.encode(String.valueOf(employeeId));
+        String url = "http://localhost:8282/shop/employee?id="+URLEncoder.encode(String.valueOf(employeeId));
         String result = HTTPRequest.Get(url);
         this.jsonEmployee = new JSONObject(result);
         JSONObject office = (JSONObject) jsonEmployee.get("officeId");
         this.setOfficeId(Long.valueOf(office.get("id").toString()));
-        url = "http://localhost:8181/shop/office?id="+URLEncoder.encode(String.valueOf(this.officeId));
+        url = "http://localhost:8282/shop/office?id="+URLEncoder.encode(String.valueOf(this.officeId));
         result = HTTPRequest.Get(url);
         this.jsonOffice = new JSONObject(result);
         office = (JSONObject) jsonOffice.get("addressId");
         this.addressId = Long.valueOf(office.get("id").toString());
-        url = "http://localhost:8181/shop/address?id="+URLEncoder.encode(String.valueOf(this.addressId));
+        url = "http://localhost:8282/shop/address?id="+URLEncoder.encode(String.valueOf(this.addressId));
         result = HTTPRequest.Get(url);
         this.jsonAddress = new JSONObject(result);
         JSONObject pos = (JSONObject) jsonEmployee.get("positionId");
         Long positionId = Long.valueOf(pos.get("id").toString());
-        url = "http://localhost:8181/shop/position?id="+URLEncoder.encode(String.valueOf(positionId));
+        url = "http://localhost:8282/shop/position?id="+URLEncoder.encode(String.valueOf(positionId));
         this.position = HTTPRequest.Get(url);
         if (this.position==null || this.position.equals("") | this.getEmployeeInfo().equals("") | this.getAddress().equals("")){
             throw new NoAppDataException(mainApp,"Данные не были загружены");
@@ -150,7 +153,7 @@ public class MyAPI {
         for(CheckStructure c: this.checkData){
             if(c.articulProperty().getValue().equals(articul) &&
                     c.nameProperty().getValue().equals(name) &&
-                    c.getPrice() == retailPrice){
+                    c.getPrice() == retailPrice && c.getColor().equals(color)){
                 return true;
             }
         }
@@ -169,13 +172,14 @@ public class MyAPI {
     public void getStoreProduct(Integer articul,String size,String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
 
-        String url = "http://localhost:8181/shop/storeProduct?articul="+URLEncoder.encode(String.valueOf(articul))+
+        String url = "http://localhost:8282/shop/storeProduct?articul="+URLEncoder.encode(String.valueOf(articul))+
                 "&productSize="+size+"&officeId="+ officeId;
         String result = HTTPRequest.Get(url);
         int checker = 0;
         if(result!=null){
             if (!result.equals("")){
                 JSONArray jsonStoreProducts = new JSONArray(result);
+                System.out.println(jsonStoreProducts.toString());
                 for (int i=0;i< jsonStoreProducts.length();i++){
                     Long id = Long.valueOf(jsonStoreProducts.getJSONObject(i).get("id").toString());
                     if(this.isInProducts(id) | jsonStoreProducts.getJSONObject(i).has("checkId")){
@@ -190,16 +194,17 @@ public class MyAPI {
                             s.add(color);
                             Integer retailPrice =  Integer.parseInt(jsonStoreProducts.getJSONObject(i).get("retailPrice").toString());
                             this.ListOfProducts.put(id,s);
-                            if (this.isInCheckData(articul, name, retailPrice,color)) {
+                            this.listOfColors.clear();
+                            if (this.isInCheckData(articul, name, retailPrice,color1)) {
                                 for (CheckStructure ch : this.checkData) {
-                                    if (ch.getArticul() == articul) {
+                                    if (ch.getArticul() == articul & ch.getColor().equals(color1)) {
                                         ch.setAmount(ch.getAmount() + 1);
                                         ch.setTotal(ch.getPrice() * ch.getAmount());
+                                        break;
                                     }
-                                    break;
                                 }
                             } else {
-                                this.checkData.add(new CheckStructure(articul, name, color,1, retailPrice, retailPrice));
+                                this.checkData.add(new CheckStructure(articul, name, color1,1, retailPrice, retailPrice));
                             }
                             break;
                         }
@@ -230,5 +235,31 @@ public class MyAPI {
 
     public List<String> getListOfColors() {
         return listOfColors;
+    }
+
+    public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException {
+        String url = "http://localhost:8282/shop/promocode?name="+URLEncoder.encode(name);
+        String result = HTTPRequest.Get(url);
+        if(result!=null){
+            if(!result.equals("")){
+                this.promocode.clear();
+                JSONObject jsonPromocode = new JSONObject(result);
+                this.promocode.put(jsonPromocode.get("name").toString(),jsonPromocode.getInt("discount"));
+                MyLogger.logger.info("Промокод установлен");
+            }
+            else{
+                throw new NoPromocodeException(this.mainApp,"Получение промокода - не найден");
+            }
+
+        }
+        else{
+            throw new ResponceStatusException(this.mainApp, "Получение промокода- нет ответа от сервера");
+        }
+    }
+
+    public Integer getPromocodeDiscount() {
+        for(Integer k: this.promocode.values())
+            return k;
+        return 0;
     }
 }
