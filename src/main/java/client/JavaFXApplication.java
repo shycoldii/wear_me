@@ -1,10 +1,7 @@
 package client;
 
 import client.api.MyAPI;
-import client.controller.AddingPromocodeController;
-import client.controller.AddingToCheckController;
-import client.controller.RootController;
-import client.controller.SignInController;
+import client.controller.*;
 import client.utils.MyLogger;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -17,6 +14,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+
 import java.io.IOException;
 
 
@@ -196,7 +198,36 @@ public class JavaFXApplication extends Application {
             dialogStage.show();
 
         } catch (IOException e) {
-            MyLogger.logger.error("Ошибка при загрузке сцены добавления товара в чек");
+            MyLogger.logger.error("Ошибка при загрузке сцены добавления промокода");
+            e.printStackTrace();
+        }
+    }
+
+    public void initAddingLoyaltyCard() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingLoyaltyCard.fxml"));
+            AnchorPane rootLayout = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image("client/images/icon.png"));
+            dialogStage.setTitle("wear me");
+            dialogStage.initOwner(this.primaryStage);
+            dialogStage.setResizable(false);
+            Scene scene = new Scene(rootLayout);
+            dialogStage.setScene(scene);
+            AddingLoyaltyCardController controller = loader.getController();
+            controller.setAPI(this.API);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно добавления карты клиента");
+            dialogStage.show();
+
+        } catch (IOException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены добавления карты клиента");
             e.printStackTrace();
         }
     }

@@ -123,7 +123,7 @@ public class MyController {
         Supplier sup = new Supplier("CalF","88007775553","CalF@mail.ru");
         supplierRepository.save(sup);
 
-         */
+
         Promocode pr = new Promocode("ВЕСНА",20);
         promocodeRepository.save(pr);
         StoreProduct st = new StoreProduct(1,"Базовые джинсы mom fit",300,2999,"джинсы",
@@ -131,6 +131,11 @@ public class MyController {
         st.setOffice(officeRepository.findOfficeById(1L));
         st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
+
+
+        Client cl = new Client("Александр","Бибик","Васильевич","89104567756","biba@rua",LocalDate.now(),
+                LocalDate.of(2001,4,23),15000);
+        clientRepository.save(cl); */
     }
     @GetMapping("/storeProduct")
     @ResponseBody
@@ -146,6 +151,27 @@ public class MyController {
     @ResponseBody
     public ResponseEntity<Promocode> getPromocode(@RequestParam String name){
         Promocode res = promocodeRepository.findPromocodeByName(URLDecoder.decode(name));
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        //не найден такой
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/client")
+    @ResponseBody
+    public ResponseEntity<Client> getClient(@RequestParam(required = false) String email,
+                                            @RequestParam(required = false) String phone){
+        Client res = null;
+        if (email == null){
+            res = clientRepository.findClientByPhoneNumber(phone);
+        }
+        else if(phone == null){
+            res = clientRepository.findClientByEmail(email);
+
+        }
+        if (phone!=null & email !=null){
+            res = clientRepository.findClientByPhoneNumberAndEmail(phone,email);
+        }
         if(res!=null){
             return new ResponseEntity<>(res,HttpStatus.OK);
         }

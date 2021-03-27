@@ -3,9 +3,9 @@ package client.api;
 import client.JavaFXApplication;
 import client.exception.*;
 import client.utils.CheckStructure;
+
 import client.utils.HTTPRequest;
 import client.utils.MyLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
@@ -19,17 +19,39 @@ public class MyAPI {
     private JavaFXApplication mainApp;
     private boolean isAuthenticated=false;
     private ObservableList<CheckStructure> checkData = FXCollections.observableArrayList();
-    //private ArrayList<Long> ListOfProducts = new ArrayList<>();
     private HashMap<Long,ArrayList<String>> ListOfProducts = new HashMap<>();
     private Long employeeId;
     private Long officeId;
     private Long addressId;
+    private Long clientId;
+    private Integer currentBonuses = 0;
+    private Integer bonuses = 0;
     private HashMap<String,Integer> promocode = new HashMap<>();
     private List<String> listOfColors = new ArrayList<>();
     public JSONObject jsonAddress;
     public JSONObject jsonEmployee;
     public JSONObject jsonOffice;
     private String position;
+
+    public Integer getCurrentBonuses() {
+        return currentBonuses;
+    }
+
+    public HashMap<String, Integer> getPromocode() {
+        return promocode;
+    }
+
+    public void setCurrentBonuses(Integer currentBonuses) {
+        this.currentBonuses = currentBonuses;
+    }
+
+    public Integer getBonuses() {
+        return bonuses;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
 
     public ObservableList<CheckStructure> getCheckData() {
         return checkData;
@@ -96,16 +118,30 @@ public class MyAPI {
         this.mainApp = mainApp;
         MyLogger.logger.info("Инициализирован MyAPI");
     }
+    public void removePromocode(){
+        this.promocode.clear();
+    }
+    public void removeLoyaltyCard(){
+        this.bonuses = 0;
+        this.clientId = null;
+    }
 
     public void deleteAllProducts(){
         this.checkData.clear();
         this.ListOfProducts.clear();
         this.promocode.clear();
+        this.bonuses = 0;
+        this.currentBonuses = 0;
+        this.clientId = null;
+
+    }
+    public String getLocalHost(){
+        return "http://localhost:8282/shop/";
     }
 
     //блок SIGN IN
     public Boolean isEmail(String email) throws ResponceStatusException {
-        String url = "http://localhost:8282/shop/login?email="+ URLEncoder.encode(email);
+        String url = this.getLocalHost()+"login?email="+ URLEncoder.encode(email);
         String response = HTTPRequest.Get(url);
         if(response!=null){
             return !response.equals("");
@@ -115,7 +151,7 @@ public class MyAPI {
         throw  new ResponceStatusException(this.mainApp, "Проверка на email - пустой ответ от сервера");
     }
     public  Long isPassword(String email, String password) throws ResponceStatusException {
-        String url = "http://localhost:8282/shop/login?email="+URLEncoder.encode(email)+"&password="+password.hashCode();
+        String url = this.getLocalHost()+"login?email="+URLEncoder.encode(email)+"&password="+password.hashCode();
         String response = HTTPRequest.Get(url);
         if(response!=null){
             if(response.equals("")){
@@ -128,22 +164,22 @@ public class MyAPI {
         throw new ResponceStatusException(this.mainApp, "Проверка на password - пустой ответ от сервера");
     }
     public void getData() throws JSONException, NoAppDataException {
-        String url = "http://localhost:8282/shop/employee?id="+URLEncoder.encode(String.valueOf(employeeId));
+        String url = this.getLocalHost()+"employee?id="+URLEncoder.encode(String.valueOf(employeeId));
         String result = HTTPRequest.Get(url);
         this.jsonEmployee = new JSONObject(result);
         JSONObject office = (JSONObject) jsonEmployee.get("officeId");
         this.setOfficeId(Long.valueOf(office.get("id").toString()));
-        url = "http://localhost:8282/shop/office?id="+URLEncoder.encode(String.valueOf(this.officeId));
+        url = this.getLocalHost()+"office?id="+URLEncoder.encode(String.valueOf(this.officeId));
         result = HTTPRequest.Get(url);
         this.jsonOffice = new JSONObject(result);
         office = (JSONObject) jsonOffice.get("addressId");
         this.addressId = Long.valueOf(office.get("id").toString());
-        url = "http://localhost:8282/shop/address?id="+URLEncoder.encode(String.valueOf(this.addressId));
+        url = this.getLocalHost()+"address?id="+URLEncoder.encode(String.valueOf(this.addressId));
         result = HTTPRequest.Get(url);
         this.jsonAddress = new JSONObject(result);
         JSONObject pos = (JSONObject) jsonEmployee.get("positionId");
         Long positionId = Long.valueOf(pos.get("id").toString());
-        url = "http://localhost:8282/shop/position?id="+URLEncoder.encode(String.valueOf(positionId));
+        url = this.getLocalHost()+"position?id="+URLEncoder.encode(String.valueOf(positionId));
         this.position = HTTPRequest.Get(url);
         if (this.position==null || this.position.equals("") | this.getEmployeeInfo().equals("") | this.getAddress().equals("")){
             throw new NoAppDataException(mainApp,"Данные не были загружены");
@@ -172,7 +208,7 @@ public class MyAPI {
     public void getStoreProduct(Integer articul,String size,String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
 
-        String url = "http://localhost:8282/shop/storeProduct?articul="+URLEncoder.encode(String.valueOf(articul))+
+        String url =this.getLocalHost()+"storeProduct?articul="+URLEncoder.encode(String.valueOf(articul))+
                 "&productSize="+size+"&officeId="+ officeId;
         String result = HTTPRequest.Get(url);
         int checker = 0;
@@ -238,7 +274,7 @@ public class MyAPI {
     }
 
     public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException {
-        String url = "http://localhost:8282/shop/promocode?name="+URLEncoder.encode(name);
+        String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(name);
         String result = HTTPRequest.Get(url);
         if(result!=null){
             if(!result.equals("")){
@@ -261,5 +297,53 @@ public class MyAPI {
         for(Integer k: this.promocode.values())
             return k;
         return 0;
+    }
+    public Integer getLoyaltyDiscount(){
+            int discount = 0;
+            int bonuses = this.getBonuses();
+            if(bonuses <1000 & bonuses>=500){
+                discount = 5;
+            }
+            else if(bonuses>=1000 & bonuses<5000){
+                discount = 10;
+            }
+            else if(bonuses>=5000 & bonuses<10000){
+                discount = 15;
+            }
+            else if(bonuses>=10000){
+                discount = 20;
+            }
+            return discount;
+    }
+
+    public void getLoyaltyCard(String phoneNumber,String email) throws ResponceStatusException, NoClientException, JSONException {
+        String url = "";
+            if(phoneNumber==null){
+                url =this.getLocalHost()+ "client?email="+URLEncoder.encode(email);
+            }
+            else if(email == null){
+                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber);
+            }
+            else{
+                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber)+"&email="+URLEncoder.encode(email);
+            }
+            String result = HTTPRequest.Get(url);
+            if(result!=null){
+                if(!result.equals("")){
+                    this.bonuses = null;
+                    this.clientId = null;
+                    JSONObject jsonClient = new JSONObject(result);
+                    this.clientId = Long.parseLong(jsonClient.get("id").toString());
+                    this.bonuses = jsonClient.getInt("numberOfBonuses");
+                    MyLogger.logger.info("Клиент установлен");
+                }
+                else{
+                    throw new NoClientException(this.mainApp,"Получение клиента - не найден");
+                }
+
+            }
+            else{
+                throw new ResponceStatusException(this.mainApp, "Получение клиента- нет ответа от сервера");
+            }
     }
 }

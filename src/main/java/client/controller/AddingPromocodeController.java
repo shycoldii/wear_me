@@ -4,6 +4,7 @@ import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoPromocodeException;
 import client.exception.ResponceStatusException;
+import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -30,9 +31,10 @@ public class AddingPromocodeController {
 
     @FXML
     public void initialize() {}
+
     @FXML public void addPr() {
         if(textPromocode.getText().equals("")){
-            Alert alert = getAlert();
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.setHeaderText("No promocode selected");
             alert.setContentText("Please write the promocode");
             alert.showAndWait();
@@ -42,16 +44,23 @@ public class AddingPromocodeController {
             try{
                 this.API.getPromocode(textPromocode.getText());
                 this.mainApp.getRootController().updateCheck();
+                Alert alert = AlertInfo.getOkAlert(mainApp);
+                alert.setHeaderText("Successfully");
+                alert.setContentText("Promocode has been added");
+                alert.show();
+                MyLogger.logger.info("Добавлен промокод");
                 this.stage.close();
             }
             catch (NoPromocodeException e){
-                Alert a = getAlert();
+                Alert a = AlertInfo.getWarningAlert(mainApp);
+                MyLogger.logger.error("Промокод не найден");
                 a.setHeaderText("Promocode not found");
                 a.show();
             }
            catch (ResponceStatusException | JSONException e){
-               Alert a = getAlert();
+               Alert a = AlertInfo.getWarningAlert(mainApp);
                a.setHeaderText("Server not responding");
+               MyLogger.logger.error("Промокод не найден");
                a.setContentText("Product hasn't been added");
                a.show();
                this.stage.close();
@@ -59,14 +68,4 @@ public class AddingPromocodeController {
         }
     }
 
-    private Alert getAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.initOwner(this.mainApp.getPrimaryStage());
-        alert.setTitle("wear me");
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("../styles/ConnectionError.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        return alert;
-    }
 }

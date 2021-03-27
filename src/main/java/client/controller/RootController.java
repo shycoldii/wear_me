@@ -2,11 +2,11 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoAppDataException;
+import client.utils.AlertInfo;
 import client.utils.CheckStructure;
 import client.utils.MyLogger;
 
 import javafx.application.Platform;
-import javafx.beans.property.LongProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.json.JSONException;
@@ -78,13 +78,18 @@ public class RootController {
     }
     public void updateCheck(){
         MyLogger.logger.info("Обновлен чек");
-        System.out.println(this.API.getListOfProducts().toString());
         this.checkTable.setItems(this.API.getCheckData());
         this.withoutDiscount.setText(String.valueOf(this.API.getTotalPrice()));
         int discount = this.API.getPromocodeDiscount()*this.API.getTotalPrice()/100;
+        if(discount == 0){
+            discount = this.API.getLoyaltyDiscount()*this.API.getTotalPrice()/100;
+        }
         this.discount.setText(Integer.toString(discount));
         this.withDiscount.setText(String.valueOf(this.API.getTotalPrice()-Integer.parseInt(this.discount.getText())));
-    }
+        this.API.setCurrentBonuses(Integer.parseInt(this.withoutDiscount.getText())/100);
+        this.bonuses.setText(String.valueOf(this.API.getCurrentBonuses()));
+        }
+
     @FXML
     private void deleteProduct() {
 
@@ -96,7 +101,7 @@ public class RootController {
             this.updateCheck();
             MyLogger.logger.info("Удален продукт из таблицы");
         } else {
-            Alert alert = this.getAlert();
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.initOwner(this.mainApp.getPrimaryStage());
             alert.setTitle("No selection");
             alert.setHeaderText("No product selected");
@@ -105,16 +110,7 @@ public class RootController {
             MyLogger.logger.error("Ошибка при удалении продукта. Не выделено!");
         }
     }
-    private Alert getAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.initOwner(this.mainApp.getPrimaryStage());
-        alert.setTitle("wear me");
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("../styles/ConnectionError.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        return alert;
-    }
+
     @FXML
     private void createCheck(){
         this.API.deleteAllProducts();
@@ -127,6 +123,68 @@ public class RootController {
     }
     @FXML
     private void addPromocode(){
-        this.mainApp.initAddingPromocode();
+        if(this.API.getLoyaltyDiscount() ==0){
+            this.mainApp.initAddingPromocode();
+        }
+        else{
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.initOwner(this.mainApp.getPrimaryStage());
+            alert.setTitle("Unable to add promocode");
+            alert.setHeaderText("You have already entered a loyalty card");
+            alert.show();
+            MyLogger.logger.error("Попытка ввести промокод при карте лояльности");
+        }
     }
+    @FXML
+    private void addLoyaltyCard(){
+        if (this.API.getPromocodeDiscount() == 0){
+            this.mainApp.initAddingLoyaltyCard();
+        }
+        else{
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.initOwner(this.mainApp.getPrimaryStage());
+            alert.setTitle("Unable to add loyalty card");
+            alert.setHeaderText("You have already entered a promocode");
+            alert.show();
+            MyLogger.logger.error("Попытка ввести карту клиента при промокоде");
+        }
+
+
+
+    }
+    @FXML public void removePromocode(){
+        if(this.API.getPromocode().isEmpty()){
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("No promocode");
+            alert.show();
+        }
+        else{
+            this.API.removePromocode();
+            Alert alert =AlertInfo.getOkAlert(mainApp);
+            alert.setHeaderText("Successfully");
+            alert.setContentText("Promocode has been removed");
+            alert.show();
+        }
+        MyLogger.logger.info("Удаление промокода");
+
+
+    }
+    @FXML public void removeLoaltyCard(){
+        if(this.API.getClientId() == null){
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("No loaylty card");
+            alert.show();
+            MyLogger.logger.info("Удаление карты");
+        }
+        else{
+            this.API.removeLoyaltyCard();
+            Alert alert = AlertInfo.getOkAlert(mainApp);
+            alert.setHeaderText("Successfully");
+            alert.setContentText("Loyalty card has been removed");
+            alert.show();
+            MyLogger.logger.info("Удаление карты клиента");
+        }
+
+    }
+
 }

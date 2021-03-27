@@ -7,4 +7,7 @@ import server.model.Client;
 @Repository
 public interface ClientRepository extends JpaRepository<Client,Long> {
       Client findClientById(Long id);
+      Client findClientByEmail(String email);
+      Client findClientByPhoneNumber(String phone);
+      Client findClientByPhoneNumberAndEmail(String phone,String email);
 }

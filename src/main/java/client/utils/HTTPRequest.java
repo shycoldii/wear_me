@@ -23,7 +23,6 @@ public class HTTPRequest {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }

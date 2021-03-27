@@ -5,6 +5,7 @@ import client.api.MyAPI;
 import client.exception.NoColorException;
 import client.exception.NoStoreProductException;
 import client.exception.ResponceStatusException;
+import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -50,100 +51,80 @@ public class AddingToCheckController {
     @FXML
     public void initialize() {}
     @FXML
-    public void add(){
-        if(textArticul.getText().equals("")){
-            Alert alert = getAlert();
+    public void add() {
+        if (textArticul.getText().equals("")) {
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.setHeaderText("No articul selected");
             alert.setContentText("Please write the articul");
             alert.showAndWait();
             MyLogger.logger.error("Не введено в поле ничего");
-        }
-        else{
-            try{
+        } else {
+            try {
                 Integer articul = Integer.parseInt(textArticul.getText());
                 String text = combobox.getValue();
-                if (text!=null){
+                if (text != null) {
                     String color = textColor.getText();
-                    if(!color.equals("")){
-                        this.API.getStoreProduct(articul,text,color);
+                    if (!color.equals("")) {
+                        this.API.getStoreProduct(articul, text, color);
                         this.mainApp.getRootController().updateCheck();
                         MyLogger.logger.info("Добавлен товар");
                         this.stage.close();
-                    }
-                    else{
-                        Alert alert = getAlert();
+                    } else {
+                        Alert alert = AlertInfo.getWarningAlert(mainApp);
                         alert.setHeaderText("No color selected");
                         alert.setContentText("Please write the color");
-                        alert.showAndWait();
+                        alert.show();
                         MyLogger.logger.error("Не введено в поле ничего");
                     }
-                }
-                else{
-                    Alert alert = getAlert();
+                } else {
+                    Alert alert = AlertInfo.getWarningAlert(mainApp);
                     alert.setHeaderText("No size selected");
                     alert.setContentText("Please select the size");
-                    alert.showAndWait();
+                    alert.show();
                     MyLogger.logger.error("Не введено в поле ничего");
                 }
                 //TODO: находим - добавляем в список (при подтверждении чека меняем товарам статусы и сбрасываем список) + закрываем окно
-            }
-            catch(NoColorException e){
-                Alert alert = getAlert();
+            } catch (NoColorException e) {
+                Alert alert = AlertInfo.getWarningAlert(mainApp);
                 alert.setHeaderText("Store product with current color wasn't found");
                 Set<String> set = new HashSet<String>(this.API.getListOfColors());
                 StringBuilder res = new StringBuilder();
                 int r = 0;
-                for(String s: set){
+                for (String s : set) {
                     res.append(s);
-                    if(r==set.size()-1){
+                    if (r == set.size() - 1) {
                         res.append(".");
-                    }
-                    else{
+                    } else {
                         res.append(", ");
                     }
-                    r+=1;
+                    r += 1;
                 }
-                alert.setContentText("Available colors: "+res.toString());
+                alert.setContentText("Available colors: " + res.toString());
                 alert.show();
 
-            }
-            catch (NoStoreProductException e){
-                Alert alert = getAlert();
+            } catch (NoStoreProductException e) {
+                Alert alert = AlertInfo.getWarningAlert(mainApp);
                 alert.setHeaderText("Store product wasn't found");
                 alert.setContentText("Please change options");
                 alert.showAndWait();
-            }
-
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 MyLogger.logger.error("Введен не артикул");
-                Alert alert = getAlert();
+                Alert alert = AlertInfo.getWarningAlert(mainApp);
                 alert.setHeaderText("This is not an articul");
                 alert.setContentText("Please write the number");
                 alert.showAndWait();
-            }
-            catch(ResponceStatusException e){
-                Alert a = getAlert();
+            } catch (ResponceStatusException e) {
+                Alert a = AlertInfo.getWarningAlert(mainApp);
                 a.setHeaderText("Server not responding");
                 a.setContentText("Product hasn't been added");
                 a.show();
                 this.stage.close();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 MyLogger.logger.error("Ошибка при добавлении товара");
                 e.printStackTrace();
                 this.stage.close();
             }
         }
 
-    }
-    private Alert getAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.initOwner(this.mainApp.getPrimaryStage());
-        alert.setTitle("wear me");
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("../styles/ConnectionError.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        return alert;
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="308.0" prefWidth="299.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.AddingLoyaltyCardController">
+    <children>
+        <Label alignment="CENTER" prefHeight="85.0" prefWidth="319.0" text="find loyalty card" textFill="#e5e3e3" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font name="Arial Black" size="22.0" />
+            </font>
+        </Label>
+        <TextField fx:id="textPhoneNumber" focusTraversable="false" layoutX="31.0" layoutY="70.0" prefHeight="38.0" prefWidth="234.0" promptText="89706004546" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="32.60000000000002" AnchorPane.topAnchor="70.0" />
+        <Button layoutX="157.0" layoutY="230.0" mnemonicParsing="false" onAction="#add" prefHeight="38.0" prefWidth="108.0" styleClass="addLabel" stylesheets="@../styles/AddingtoCheck.css" text="add" textFill="#f0e9e9" AnchorPane.leftAnchor="157.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="230.0" />
+      <TextField fx:id="textEmail" focusTraversable="false" layoutX="31.0" layoutY="135.0" prefHeight="38.0" prefWidth="234.0" promptText="write the email" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" />
+    </children>
+</AnchorPane>

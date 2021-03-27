@@ -88,5 +88,8 @@
          </font></Label>
       <Label alignment="CENTER" layoutX="162.0" layoutY="235.0" onMouseClicked="#deleteProduct" prefHeight="42.0" prefWidth="119.0" styleClass="remove" text="remove" textFill="#343131" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="235.0" />
       <Label alignment="CENTER" layoutX="307.0" layoutY="235.0" onMouseClicked="#createCheck" prefHeight="42.0" prefWidth="119.0" styleClass="check" text="new check" textFill="#343131" AnchorPane.leftAnchor="307.0" AnchorPane.topAnchor="235.0" />
+      <Label alignment="CENTER" layoutX="255.0" layoutY="663.0" onMouseClicked="#addLoyaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="check" text="add loyalty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="255.0" />
+      <Label alignment="CENTER" layoutX="489.0" layoutY="663.0" onMouseClicked="#removePromocode" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove promocode" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="489.0" />
+      <Label alignment="CENTER" layoutX="722.0" layoutY="663.0" onMouseClicked="#removeLoaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove loaylty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000023" AnchorPane.leftAnchor="722.0" />
          </children>
 </AnchorPane>
