@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@../styles/Root.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.RootController">
 
          <children>
-      <Label alignment="CENTER" layoutX="26.0" layoutY="663.0" onMouseClicked="#addPromocode" prefHeight="42.0" prefWidth="201.0" styleClass="check" text="add promocode" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000023" AnchorPane.leftAnchor="20.0" />
+      <Label alignment="CENTER" layoutX="26.0" layoutY="663.0" onMouseClicked="#addPromocode" prefHeight="42.0" prefWidth="201.0" styleClass="add" text="add promocode" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000023" AnchorPane.leftAnchor="20.0" />
                   <Label alignment="CENTER" layoutX="2.0" layoutY="-3.0" prefHeight="35.0" prefWidth="125.0" stylesheets="@../styles/Root.css" text="wear me" textFill="#d7d7d7" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="-3.0">
                      <font>
                         <Font name="Arial Black" size="23.0" />
@@ -53,7 +53,7 @@
                         <Font size="19.0" />
                      </font>
                   </Label>
-                  <Label fx:id="withDiscount" alignment="CENTER" prefHeight="82.0" prefWidth="431.0" styleClass="price" text="0" />
+                  <Label fx:id="withDiscount" alignment="CENTER" prefHeight="82.0" prefWidth="431.0" styleClass="totalAmount" text="0" />
                </children>
             </VBox>
             <VBox layoutX="812.0" layoutY="10.0" prefHeight="58.0" prefWidth="422.0">
@@ -88,8 +88,10 @@
          </font></Label>
       <Label alignment="CENTER" layoutX="162.0" layoutY="235.0" onMouseClicked="#deleteProduct" prefHeight="42.0" prefWidth="119.0" styleClass="remove" text="remove" textFill="#343131" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="235.0" />
       <Label alignment="CENTER" layoutX="307.0" layoutY="235.0" onMouseClicked="#createCheck" prefHeight="42.0" prefWidth="119.0" styleClass="check" text="new check" textFill="#343131" AnchorPane.leftAnchor="307.0" AnchorPane.topAnchor="235.0" />
-      <Label alignment="CENTER" layoutX="255.0" layoutY="663.0" onMouseClicked="#addLoyaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="check" text="add loyalty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="255.0" />
+      <Label alignment="CENTER" layoutX="255.0" layoutY="663.0" onMouseClicked="#addLoyaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="add" text="add loyalty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="255.0" />
       <Label alignment="CENTER" layoutX="489.0" layoutY="663.0" onMouseClicked="#removePromocode" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove promocode" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="489.0" />
-      <Label alignment="CENTER" layoutX="720.0" layoutY="663.0" onMouseClicked="#removeLoaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove loaylty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000001" AnchorPane.leftAnchor="720.0" />
+      <Label alignment="CENTER" layoutX="722.0" layoutY="663.0" onMouseClicked="#removeLoaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove loaylty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000023" AnchorPane.leftAnchor="722.0" />
+      <Label alignment="CENTER" layoutX="452.0" layoutY="235.0" onMouseClicked="#getCardInfo" prefHeight="42.0" prefWidth="119.0" styleClass="info" text="card info" textFill="#343131" />
+      <Label alignment="CENTER" layoutX="696.6" layoutY="655.0" onMouseClicked="#sell" prefHeight="56.0" prefWidth="554.0" styleClass="sell" text="sell" textFill="#343131" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="29.0" />
          </children>
 </AnchorPane>

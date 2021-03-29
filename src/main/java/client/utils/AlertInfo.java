@@ -25,4 +25,15 @@ public class AlertInfo {
         dialogPane.getStyleClass().add("myDialog");
         return alert;
     }
+    public static Alert getConfirmationAlert(JavaFXApplication mainApp) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initOwner(mainApp.getPrimaryStage());
+        alert.setTitle("wear me");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                AlertInfo.class.getResource("../styles/ConnectionError.css").toExternalForm());
+        dialogPane.getStyleClass().add("myDialog");
+        return alert;
+    }
+
 }

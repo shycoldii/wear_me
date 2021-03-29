@@ -20,19 +20,19 @@ public class Check {
     @Column(name="dateTime", nullable = false)
     private LocalDateTime dateTime;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee",nullable = false)
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "client",nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @JoinColumn(name = "client")
     private Client client;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "check")
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE,mappedBy = "check")
     //@JoinColumn(name = "storeProducts",nullable = false)
     private List<StoreProduct> storeProducts;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "promocode")
     private Promocode promocode;
 

@@ -87,6 +87,46 @@ public class Employee {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRegDay(LocalDateTime regDay) {
+        this.regDay = regDay;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -135,7 +175,7 @@ public class Employee {
         this.officeId = officeId;
     }
 
-    public void setPosition(Position position) {
+    public void setPositionId(Position position) {
         this.positionId = position;
     }
 }

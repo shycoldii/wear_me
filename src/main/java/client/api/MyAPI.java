@@ -12,7 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class MyAPI {
@@ -32,6 +34,10 @@ public class MyAPI {
     public JSONObject jsonEmployee;
     public JSONObject jsonOffice;
     private String position;
+    private JSONObject jsonClient;
+    private JSONObject jsonPromocode;
+    private JSONArray jsonStoreProducts = new JSONArray();
+    //TODO: чистка всех полей при обновлениях
 
     public Integer getCurrentBonuses() {
         return currentBonuses;
@@ -76,6 +82,24 @@ public class MyAPI {
             z+=i.getTotal();
         }
         return z;
+    }
+    public int getPriceWithDiscount(){
+        int disc = this.getPromocodeDiscount();
+        int total = 0;
+        if (disc==0){
+            disc = this.getLoyaltyDiscount();
+            if(disc!=0){
+                for(CheckStructure i: checkData){
+                    total+=i.getAmount()*i.getPrice()*disc/100;
+                }
+            }
+        }
+        else{
+            for(CheckStructure i: checkData){
+                total+=i.getAmount()*i.getPrice()*disc/100;
+            }
+        }
+        return total;
     }
     public void deleteProduct(Integer articul,String color){
         for(CheckStructure i: checkData){
@@ -215,7 +239,6 @@ public class MyAPI {
         if(result!=null){
             if (!result.equals("")){
                 JSONArray jsonStoreProducts = new JSONArray(result);
-                System.out.println(jsonStoreProducts.toString());
                 for (int i=0;i< jsonStoreProducts.length();i++){
                     Long id = Long.valueOf(jsonStoreProducts.getJSONObject(i).get("id").toString());
                     if(this.isInProducts(id) | jsonStoreProducts.getJSONObject(i).has("checkId")){
@@ -231,6 +254,8 @@ public class MyAPI {
                             Integer retailPrice =  Integer.parseInt(jsonStoreProducts.getJSONObject(i).get("retailPrice").toString());
                             this.ListOfProducts.put(id,s);
                             this.listOfColors.clear();
+                            //TODO: добавить в ARRAYLIST
+                            this.jsonStoreProducts.put( jsonStoreProducts.getJSONObject(i));
                             if (this.isInCheckData(articul, name, retailPrice,color1)) {
                                 for (CheckStructure ch : this.checkData) {
                                     if (ch.getArticul() == articul & ch.getColor().equals(color1)) {
@@ -280,6 +305,7 @@ public class MyAPI {
             if(!result.equals("")){
                 this.promocode.clear();
                 JSONObject jsonPromocode = new JSONObject(result);
+                this.jsonPromocode = jsonPromocode;
                 this.promocode.put(jsonPromocode.get("name").toString(),jsonPromocode.getInt("discount"));
                 MyLogger.logger.info("Промокод установлен");
             }
@@ -333,6 +359,7 @@ public class MyAPI {
                     this.bonuses = null;
                     this.clientId = null;
                     JSONObject jsonClient = new JSONObject(result);
+                    this.jsonClient = jsonClient;
                     this.clientId = Long.parseLong(jsonClient.get("id").toString());
                     this.bonuses = jsonClient.getInt("numberOfBonuses");
                     MyLogger.logger.info("Клиент установлен");
@@ -345,5 +372,30 @@ public class MyAPI {
             else{
                 throw new ResponceStatusException(this.mainApp, "Получение клиента- нет ответа от сервера");
             }
+    }
+    public boolean sellProducts() {
+        try{
+            String url =this.getLocalHost()+ "checks";
+            JSONObject jsonCheck = new JSONObject();
+            jsonCheck.put("dateTime",LocalDateTime.now());
+            if(clientId !=null){
+                jsonCheck.put("client", this.jsonClient);
+            }
+            else if(promocode!=null){
+                jsonCheck.put("promocode",this.jsonPromocode);
+                System.out.println(this.jsonPromocode);
+            }
+            jsonCheck.put("employee",this.jsonEmployee);
+            jsonCheck.put("storeProducts",this.jsonStoreProducts);
+            String result = HTTPRequest.Post(url,jsonCheck);
+            //TODO: patch
+            return  true;
+
+        }
+        catch(JSONException | IOException e){
+            e.printStackTrace();
+            //TODO: сервер не отвечает или проверить на плохие запросы
+            return false;
+        }
     }
 }

@@ -45,30 +45,56 @@ public class AddingLoyaltyCardController {
                 alert.setContentText("Please write the email / phone number");
                 alert.show();
             }
-            else if(email.equals("")){
-                if( NumberValidator.isNumber(phone)){
-                    this.API.getLoyaltyCard(phone.replaceAll("[^0-9]", ""),null);
+            else{
+                if(email.equals("")){
+                    if( NumberValidator.isNumber(phone)){
+                        this.API.getLoyaltyCard(phone.replaceAll("[^0-9]", ""),null);
+                        this.mainApp.getRootController().updateCheck();
+                        Alert alert = AlertInfo.getOkAlert(mainApp);
+                        alert.setHeaderText("Successfully");
+                        alert.setContentText("Loyalty card has been added");
+                        alert.show();
+                        MyLogger.logger.info("Прикреплена карта лояльности");
+                        this.stage.close();
+                    }
+                    else{
+                        Alert alert = AlertInfo.getWarningAlert(mainApp);
+                        alert.setHeaderText("Number is incorrect");
+                        alert.setContentText("Please write the correct number");
+                        alert.show();
+                    }
                 }
-                else{
-                    Alert alert = AlertInfo.getWarningAlert(mainApp);
-                    alert.setHeaderText("Number is incorrect");
-                    alert.setContentText("Please write the correct number");
+                else if(phone.equals("")){
+                    this.API.getLoyaltyCard(null,email);
+                    this.mainApp.getRootController().updateCheck();
+                    Alert alert = AlertInfo.getOkAlert(mainApp);
+                    alert.setHeaderText("Successfully");
+                    alert.setContentText("Loyalty card has been added");
                     alert.show();
+                    MyLogger.logger.info("Прикреплена карта лояльности");
+                    this.stage.close();
                 }
+                if(!phone.equals("") & !email.equals("")){
+                    if( NumberValidator.isNumber(phone)){
+                        this.API.getLoyaltyCard(phone.replaceAll("[^0-9]", ""),email);
+                        this.mainApp.getRootController().updateCheck();
+                        Alert alert = AlertInfo.getOkAlert(mainApp);
+                        alert.setHeaderText("Successfully");
+                        alert.setContentText("Loyalty card has been added");
+                        alert.show();
+                        MyLogger.logger.info("Прикреплена карта лояльности");
+                        this.stage.close();
+                    }
+                    else{
+                        Alert alert = AlertInfo.getWarningAlert(mainApp);
+                        alert.setHeaderText("Number is incorrect");
+                        alert.setContentText("Please write the correct number");
+                        alert.show();
+                    }
+                }
+
             }
-            else if(phone.equals("")){
-                this.API.getLoyaltyCard(null,email);
-            }
-            else {
-                this.API.getLoyaltyCard(phone.replaceAll("[^0-9]", ""),email);
-            }
-            this.mainApp.getRootController().updateCheck();
-            Alert alert = AlertInfo.getOkAlert(mainApp);
-            alert.setHeaderText("Successfully");
-            alert.setContentText("Loyalty card has been added");
-            alert.show();
-            MyLogger.logger.info("Прикреплена карта лояльности");
-            this.stage.close();
+
         }
         catch(ResponceStatusException | JSONException e){
             e.printStackTrace();

@@ -30,7 +30,7 @@
     -fx-background-color: #c7c6cf;
 }
 .add{
-    -fx-background-color: #618070;
+    -fx-background-color: #9eada4;
 
 }
 .add:hover{
@@ -55,4 +55,19 @@
 }
 .remove:hover{
    -fx-background-color: #614d4d;
+}
+.info{
+    -fx-background-color: #9bb1ba;
+}
+.info:hover{
+    -fx-background-color: #6a7980;
+}
+.totalAmount{
+    -fx-background-color: #9eada4;
+}
+.sell{
+    -fx-background-color: #e3cb8f;
+}
+.sell:hover{
+    -fx-background-color: #a1894d;
 }

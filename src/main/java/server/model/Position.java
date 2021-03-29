@@ -31,7 +31,7 @@ public class Position {
     }
 
     public void setName(String name) {
-        name = name;
+        this.name = name;
     }
 
     public String getName() {
@@ -45,5 +45,6 @@ public class Position {
                 ", name='" + name + '\'' +
                 '}';
     }
+
 
 }

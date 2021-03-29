@@ -83,7 +83,6 @@ public class AddingToCheckController {
                     alert.show();
                     MyLogger.logger.error("Не введено в поле ничего");
                 }
-                //TODO: находим - добавляем в список (при подтверждении чека меняем товарам статусы и сбрасываем список) + закрываем окно
             } catch (NoColorException e) {
                 Alert alert = AlertInfo.getWarningAlert(mainApp);
                 alert.setHeaderText("Store product with current color wasn't found");

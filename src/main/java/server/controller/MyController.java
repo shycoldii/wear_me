@@ -1,9 +1,5 @@
 package server.controller;
 
-import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import server.model.*;
 import server.repository.*;
 
+import javax.validation.Valid;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -126,16 +121,20 @@ public class MyController {
 
         Promocode pr = new Promocode("ВЕСНА",20);
         promocodeRepository.save(pr);
+         Client cl = new Client("Александр","Бибик","Васильевич","89104567756","biba@rua",LocalDate.now(),
+                LocalDate.of(2001,4,23),15000);
+        clientRepository.save(cl);
+         */
+
         StoreProduct st = new StoreProduct(1,"Базовые джинсы mom fit",300,2999,"джинсы",
                 "M","голубой","Базовые джинсы mom fit",2);
         st.setOffice(officeRepository.findOfficeById(1L));
         st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
+        checkRepository.deleteAll();
 
 
-        Client cl = new Client("Александр","Бибик","Васильевич","89104567756","biba@rua",LocalDate.now(),
-                LocalDate.of(2001,4,23),15000);
-        clientRepository.save(cl); */
+
     }
     @GetMapping("/storeProduct")
     @ResponseBody
@@ -157,6 +156,32 @@ public class MyController {
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/employees/{id}")
+    @ResponseBody
+    public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "id") Long empId,
+                                                   @Valid @RequestBody Employee EmployeeDetails) throws Exception {
+        Employee employee = EmployeeRepository.findById(empId)
+                .orElseThrow(() -> new Exception("Employee not found on :: "+ empId));
+        employee.setFirstName(EmployeeDetails.getFirstName());
+        employee.setPositionId(EmployeeDetails.getPositionId());
+        employee.setSecondName(EmployeeDetails.getSecondName());
+        System.out.println(EmployeeDetails.getPositionId());
+        final Employee updatedEmployee = EmployeeRepository.save(employee);
+        return ResponseEntity.ok(updatedEmployee);
+
+    }
+    @PostMapping("/checks")
+    Check newCheck(@RequestBody Check newCheck){
+        System.out.println(newCheck);
+        System.out.println(newCheck.getEmployee());
+        return checkRepository.save(newCheck);
+    }
+    @DeleteMapping("/employees/{id}")
+    void deleteEmployee(@PathVariable Long id) {
+        EmployeeRepository.deleteById(id);
+    }
+
     @GetMapping("/client")
     @ResponseBody
     public ResponseEntity<Client> getClient(@RequestParam(required = false) String email,
@@ -178,6 +203,8 @@ public class MyController {
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
 
 }

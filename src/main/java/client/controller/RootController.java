@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.json.JSONException;
 
+import java.util.Optional;
+
 public class RootController {
     @FXML
     private Label address;
@@ -77,17 +79,15 @@ public class RootController {
         this.mainApp.initAddingToCheck();
     }
     public void updateCheck(){
-        MyLogger.logger.info("Обновлен чек");
+
         this.checkTable.setItems(this.API.getCheckData());
         this.withoutDiscount.setText(String.valueOf(this.API.getTotalPrice()));
-        int discount = this.API.getPromocodeDiscount()*this.API.getTotalPrice()/100;
-        if(discount == 0){
-            discount = this.API.getLoyaltyDiscount()*this.API.getTotalPrice()/100;
-        }
+        int discount = this.API.getPriceWithDiscount();
         this.discount.setText(Integer.toString(discount));
         this.withDiscount.setText(String.valueOf(this.API.getTotalPrice()-Integer.parseInt(this.discount.getText())));
         this.API.setCurrentBonuses(Integer.parseInt(this.withoutDiscount.getText())/100);
         this.bonuses.setText(String.valueOf(this.API.getCurrentBonuses()));
+        MyLogger.logger.info("Обновлен чек");
         }
 
     @FXML
@@ -160,6 +160,7 @@ public class RootController {
         }
         else{
             this.API.removePromocode();
+            this.updateCheck();
             Alert alert =AlertInfo.getOkAlert(mainApp);
             alert.setHeaderText("Successfully");
             alert.setContentText("Promocode has been removed");
@@ -172,17 +173,64 @@ public class RootController {
     @FXML public void removeLoaltyCard(){
         if(this.API.getClientId() == null){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
-            alert.setHeaderText("No loaylty card");
+            alert.setHeaderText("No loyalty card");
             alert.show();
-            MyLogger.logger.info("Удаление карты");
+            MyLogger.logger.error("Удаление карты");
         }
         else{
             this.API.removeLoyaltyCard();
+            this.updateCheck();
             Alert alert = AlertInfo.getOkAlert(mainApp);
             alert.setHeaderText("Successfully");
             alert.setContentText("Loyalty card has been removed");
             alert.show();
             MyLogger.logger.info("Удаление карты клиента");
+        }
+
+    }
+    @FXML public void getCardInfo(){
+        if(this.API.getClientId() == null){
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("No loyalty card");
+            alert.setContentText("First, enter loyalty card");
+            alert.show();
+            MyLogger.logger.error("Попытка узнать информацию о клиенте");
+        }
+        else{
+            Alert alert = AlertInfo.getOkAlert(mainApp);
+            alert.setHeaderText("Loyalty Card info");
+            alert.setContentText("Bonuses = "+this.API.getBonuses()+" | Discount = "+this.API.getLoyaltyDiscount()+"%");
+            alert.show();
+            MyLogger.logger.info("Информация о клиенте");
+        }
+    }
+    @FXML public void sell(){
+        MyLogger.logger.info("Запущено окно расчета");
+        if(this.API.getEmployeeId() ==null || this.API.getCheckData().isEmpty() ||
+        this.API.getListOfProducts().isEmpty()){
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("Unable to complete the operation");
+            alert.setContentText("Make sure the products are listed in the table");
+            alert.show();
+        }
+        else{
+            Alert alert = AlertInfo.getConfirmationAlert(mainApp);
+            alert.setHeaderText("Selling the product");
+            alert.setContentText("Are you ready to complete the operation?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK){
+                boolean response = this.API.sellProducts();
+                if(response){
+                    System.out.println("успешно");
+                    //если уверены, то отправляем данные
+                    //успешно - печатаем чек и удаляем данные
+                    //иначе алерт
+                }
+                else{
+                    System.out.println("не успешно");
+                }
+
+            }
         }
 
     }
