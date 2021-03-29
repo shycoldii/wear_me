@@ -60,7 +60,7 @@ public class StoreProduct {
     @JoinColumn(name = "checkId")
     private Check check;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "office",nullable = false)
     private Office office;
 
@@ -127,6 +127,46 @@ public class StoreProduct {
 
     public Check getCheck() {
         return check;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setArticul(Integer articul) {
+        this.articul = articul;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTradePrice(Integer tradePrice) {
+        this.tradePrice = tradePrice;
+    }
+
+    public void setRetailPrice(Integer retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override

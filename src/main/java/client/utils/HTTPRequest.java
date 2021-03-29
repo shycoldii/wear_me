@@ -37,7 +37,6 @@ public class HTTPRequest {
         httpURLConnection.setRequestProperty("Content-Type", "application/json; utf-8");
         httpURLConnection.setRequestProperty("Accept", "application/json");
         httpURLConnection.setDoOutput(true);
-        System.out.println(jsonObject);
         try(OutputStream os = httpURLConnection.getOutputStream()) {
             byte[] input = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
@@ -49,10 +48,29 @@ public class HTTPRequest {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
             return response.toString();
         }
     }
-
+    public static String Put(String link, JSONObject jsonObject) throws IOException {
+        URL url = new URL(link);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("PUT");
+        httpURLConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+        httpURLConnection.setRequestProperty("Accept", "application/json");
+        httpURLConnection.setDoOutput(true);
+        try(OutputStream os = httpURLConnection.getOutputStream()) {
+            byte[] input = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+        try(BufferedReader br = new BufferedReader(
+                new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine = "";
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
+    }
 
 }

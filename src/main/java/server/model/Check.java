@@ -8,8 +8,10 @@ import java.util.List;
 @Table(name = "checks")
 public class Check {
     public Check(){};
-    public Check(LocalDateTime dateTime){
+    public Check(LocalDateTime dateTime,Integer total){
+
         this.dateTime = dateTime;
+        this.total = total;
     }
 
     @Id
@@ -20,6 +22,25 @@ public class Check {
     @Column(name="dateTime", nullable = false)
     private LocalDateTime dateTime;
 
+    @Column(name="total", nullable = false)
+    private Integer total;
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee",nullable = false)
     private Employee employee;
@@ -28,9 +49,21 @@ public class Check {
     @JoinColumn(name = "client")
     private Client client;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE,mappedBy = "check")
+    @Override
+    public String toString() {
+        return "Check{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", total=" + total +
+                ", employee=" + employee +
+                ", client=" + client +
+                ", promocode=" + promocode +
+                '}';
+    }
+
+    //@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE,mappedBy = "check")
     //@JoinColumn(name = "storeProducts",nullable = false)
-    private List<StoreProduct> storeProducts;
+    //private List<StoreProduct> storeProducts;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "promocode")
@@ -46,22 +79,6 @@ public class Check {
 
     public void setPromocode(Promocode promocode) {
         this.promocode = promocode;
-    }
-
-    public void setStoreProducts(List<StoreProduct> storeProducts) {
-        this.storeProducts = storeProducts;
-    }
-
-    @Override
-    public String toString() {
-        return "Check{" +
-                "id=" + id +
-                ", dateTime=" + dateTime +
-                ", employee=" + employee +
-                ", client=" + client +
-                ", storeProducts=" + storeProducts +
-                ", promocode=" + promocode +
-                '}';
     }
 
     public Long getId() {
@@ -80,9 +97,7 @@ public class Check {
         return client;
     }
 
-    public List<StoreProduct> getStoreProducts() {
-        return storeProducts;
-    }
+
 
     public Promocode getPromocode() {
         return promocode;

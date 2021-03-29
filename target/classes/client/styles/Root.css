@@ -67,6 +67,7 @@
 }
 .sell{
     -fx-background-color: #e3cb8f;
+    -fx-font-size: 15px;
 }
 .sell:hover{
     -fx-background-color: #a1894d;

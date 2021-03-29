@@ -37,7 +37,20 @@ public class MyAPI {
     private JSONObject jsonClient;
     private JSONObject jsonPromocode;
     private JSONArray jsonStoreProducts = new JSONArray();
-    //TODO: чистка всех полей при обновлениях
+    private JSONObject updatedCheck;
+    public void deleteAllProducts(){
+        this.checkData.clear();
+        this.ListOfProducts.clear();
+        this.promocode.clear();
+        this.listOfColors.clear();
+        this.jsonClient = new JSONObject();
+        this.jsonPromocode = new JSONObject();
+        this.jsonStoreProducts = new JSONArray();
+        this.updatedCheck = new JSONObject();
+        this.bonuses = 0;
+        this.currentBonuses = 0;
+        this.clientId = null;
+    }
 
     public Integer getCurrentBonuses() {
         return currentBonuses;
@@ -150,15 +163,7 @@ public class MyAPI {
         this.clientId = null;
     }
 
-    public void deleteAllProducts(){
-        this.checkData.clear();
-        this.ListOfProducts.clear();
-        this.promocode.clear();
-        this.bonuses = 0;
-        this.currentBonuses = 0;
-        this.clientId = null;
 
-    }
     public String getLocalHost(){
         return "http://localhost:8282/shop/";
     }
@@ -254,7 +259,6 @@ public class MyAPI {
                             Integer retailPrice =  Integer.parseInt(jsonStoreProducts.getJSONObject(i).get("retailPrice").toString());
                             this.ListOfProducts.put(id,s);
                             this.listOfColors.clear();
-                            //TODO: добавить в ARRAYLIST
                             this.jsonStoreProducts.put( jsonStoreProducts.getJSONObject(i));
                             if (this.isInCheckData(articul, name, retailPrice,color1)) {
                                 for (CheckStructure ch : this.checkData) {
@@ -373,29 +377,51 @@ public class MyAPI {
                 throw new ResponceStatusException(this.mainApp, "Получение клиента- нет ответа от сервера");
             }
     }
-    public boolean sellProducts() {
-        try{
-            String url =this.getLocalHost()+ "checks";
+    public void sellProducts() throws JSONException, IOException, SellProductException {
             JSONObject jsonCheck = new JSONObject();
             jsonCheck.put("dateTime",LocalDateTime.now());
             if(clientId !=null){
-                jsonCheck.put("client", this.jsonClient);
+                jsonClient.put("numberOfBonuses",this.currentBonuses);
+                String url = this.getLocalHost()+"clients/"+Long.parseLong(jsonClient.get("id").toString());
+                String updatedClient = HTTPRequest.Put(url,jsonClient);
+                if(!updatedClient.equals("")){
+                    jsonCheck.put("client", new JSONObject(updatedClient));
+                }
+                else{
+                    throw new SellProductException(this.mainApp,"Ошибка при отправке данных клиента: "+jsonClient.get("id").toString());
+                }
+
             }
             else if(promocode!=null){
                 jsonCheck.put("promocode",this.jsonPromocode);
-                System.out.println(this.jsonPromocode);
             }
             jsonCheck.put("employee",this.jsonEmployee);
             jsonCheck.put("storeProducts",this.jsonStoreProducts);
-            String result = HTTPRequest.Post(url,jsonCheck);
-            //TODO: patch
-            return  true;
+            jsonCheck.put("total",this.getTotalPrice()-this.getPriceWithDiscount());
+            String url =this.getLocalHost()+ "checks";
+            String updatedCheck = HTTPRequest.Post(url,jsonCheck);
+
+            JSONObject jsonUpdatedCheck = new JSONObject(updatedCheck);
+            this.updatedCheck =jsonUpdatedCheck;
+            if(!updatedCheck.equals("")){
+                for(int i=0;i<this.jsonStoreProducts.length();i++){
+                    JSONObject toUpdate = this.jsonStoreProducts.getJSONObject(i);
+                    toUpdate.put("status",3);
+                    toUpdate.put("check",jsonUpdatedCheck);
+                    url = this.getLocalHost()+"storeProducts/"+Long.parseLong(toUpdate.get("id").toString());
+                    String updatedStoreProduct = HTTPRequest.Put(url,toUpdate);
+                    if(updatedStoreProduct.equals("")){
+                        throw new SellProductException(this.mainApp,"Ошибка при изменении статуса товара: "+toUpdate.get("id").toString());
+                    }
+                }
+            }
+            else{
+                throw new SellProductException(this.mainApp,"Ошибка при формировании чека");
+            }
 
         }
-        catch(JSONException | IOException e){
-            e.printStackTrace();
-            //TODO: сервер не отвечает или проверить на плохие запросы
-            return false;
-        }
+
+    public JSONObject getUpdatedCheck() {
+        return updatedCheck;
     }
 }

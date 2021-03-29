@@ -225,4 +225,33 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
+    public  void initCheck(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/check.fxml"));
+            AnchorPane rootLayout = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image("client/images/icon.png"));
+            dialogStage.setTitle("wear me");
+            dialogStage.initOwner(this.primaryStage);
+            dialogStage.setResizable(false);
+            Scene scene = new Scene(rootLayout);
+            dialogStage.setScene(scene);
+            CheckController controller = loader.getController();
+            controller.setAPI(this.API);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно запуска чека");
+            controller.setItems();
+            dialogStage.show();
+        }
+        catch (IOException | JSONException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены чека");
+            e.printStackTrace();
+        }
+    }
 }

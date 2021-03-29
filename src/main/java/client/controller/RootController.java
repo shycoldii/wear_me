@@ -2,6 +2,7 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoAppDataException;
+import client.exception.SellProductException;
 import client.utils.AlertInfo;
 import client.utils.CheckStructure;
 import client.utils.MyLogger;
@@ -11,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class RootController {
@@ -112,7 +114,7 @@ public class RootController {
     }
 
     @FXML
-    private void createCheck(){
+    public void createCheck(){
         this.API.deleteAllProducts();
         this.checkTable.setItems(this.API.getCheckData());
         this.withoutDiscount.setText("0");
@@ -219,17 +221,16 @@ public class RootController {
             alert.setContentText("Are you ready to complete the operation?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK){
-                boolean response = this.API.sellProducts();
-                if(response){
-                    System.out.println("успешно");
-                    //если уверены, то отправляем данные
-                    //успешно - печатаем чек и удаляем данные
-                    //иначе алерт
+                try{
+                    this.API.sellProducts();
+                    this.mainApp.initCheck();
                 }
-                else{
-                    System.out.println("не успешно");
+                catch (JSONException | IOException | SellProductException e){
+                    alert = AlertInfo.getWarningAlert(mainApp);
+                    alert.setHeaderText("An error occurred on the server");
+                    alert.setContentText(e.getMessage());
+                    alert.show();
                 }
-
             }
         }
 

@@ -131,7 +131,7 @@ public class MyController {
         st.setOffice(officeRepository.findOfficeById(1L));
         st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
-        checkRepository.deleteAll();
+        //checkRepository.deleteAll();
 
 
 
@@ -157,30 +157,49 @@ public class MyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/employees/{id}")
+    @PutMapping("/storeProducts/{id}")
     @ResponseBody
-    public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "id") Long empId,
-                                                   @Valid @RequestBody Employee EmployeeDetails) throws Exception {
-        Employee employee = EmployeeRepository.findById(empId)
-                .orElseThrow(() -> new Exception("Employee not found on :: "+ empId));
-        employee.setFirstName(EmployeeDetails.getFirstName());
-        employee.setPositionId(EmployeeDetails.getPositionId());
-        employee.setSecondName(EmployeeDetails.getSecondName());
-        System.out.println(EmployeeDetails.getPositionId());
-        final Employee updatedEmployee = EmployeeRepository.save(employee);
-        return ResponseEntity.ok(updatedEmployee);
+    public ResponseEntity<StoreProduct> updateStoreProduct(@PathVariable(value = "id") Long id,
+                                                   @Valid @RequestBody StoreProduct storeProduct){
+
+        StoreProduct storeProduct1 = storeProductRepository.findStoreProductById(id);
+        if(storeProduct1 != null){
+            if (storeProduct1.getStatus() ==2 & storeProduct1.getCheck() == null){
+                storeProduct1.setCheck(storeProduct.getCheck());
+                storeProduct1.setStatus(storeProduct.getStatus());
+                return  new ResponseEntity<>(storeProductRepository.save(storeProduct1),HttpStatus.OK);
+            }
+
+        }
+        return new ResponseEntity<>(storeProductRepository.save(storeProduct),HttpStatus.OK);
 
     }
+    @PutMapping("/clients/{id}")
+    @ResponseBody
+    public ResponseEntity<Client> updateClient(@PathVariable(value = "id") Long id,
+                                                           @Valid @RequestBody Client client){
+
+        Client client1 = clientRepository.findClientById(id);
+        if(client1 != null){
+            client1.setNumberOfBonuses(client1.getNumberOfBonuses()+client.getNumberOfBonuses());
+            return  new ResponseEntity<>(clientRepository.save(client1),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(clientRepository.save(client),HttpStatus.OK);
+
+    }
+
     @PostMapping("/checks")
     Check newCheck(@RequestBody Check newCheck){
-        System.out.println(newCheck);
-        System.out.println(newCheck.getEmployee());
         return checkRepository.save(newCheck);
     }
+
+    /*
     @DeleteMapping("/employees/{id}")
     void deleteEmployee(@PathVariable Long id) {
         EmployeeRepository.deleteById(id);
     }
+
+     */
 
     @GetMapping("/client")
     @ResponseBody

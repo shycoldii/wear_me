@@ -31,6 +31,42 @@ public class Client {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRegDay(LocalDate regDay) {
+        this.regDay = regDay;
+    }
+
+    public void setNumberOfBonuses(Integer numberOfBonuses) {
+        this.numberOfBonuses = numberOfBonuses;
+    }
+
     @Column(name = "firstName", length = 128, nullable = false)
     private String firstName;
 
