@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 
@@ -76,22 +77,18 @@ public class JavaFXApplication extends Application {
             this.primaryStage.setResizable(false);
             MyLogger.logger.info("Запущено главное окно");
             this.primaryStage.show();
-            //for(int i =0;i<50;i++){
-             //   this.updateCheckData(new CheckStructure(1L,"dfgh",120,200,300));
-            //}
-
             RootController controller = loader.getController();
             controller.setMainApp(this);
             controller.setAPI(this.API);
             controller.setView();
             this.rootController = controller;
-            //root controller
 
         } catch (IOException | JSONException e) {
             MyLogger.logger.error("Ошибка при загрузке основной сцены");
             e.printStackTrace();
         }
     }
+
     public void connectionError() {
         try {
             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -103,13 +100,14 @@ public class JavaFXApplication extends Application {
             dialogPane.getStyleClass().add("myDialog");
             a.setHeaderText("Server not responding");
             a.setContentText("Login failed");
-            a.show();
-        }
-         catch (NullPointerException e) {
-             MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
+            a.initModality(Modality.APPLICATION_MODAL);
+            a.showAndWait();
+        } catch (NullPointerException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
             e.printStackTrace();
         }
     }
+
     public void noDataError() {
         try {
             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -121,40 +119,34 @@ public class JavaFXApplication extends Application {
             dialogPane.getStyleClass().add("myDialog");
             a.setHeaderText("Server not responding");
             a.setContentText("No data for app");
-            a.show();
+            a.initModality(Modality.APPLICATION_MODAL);
+            a.showAndWait();
             this.primaryStage.close();
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             MyLogger.logger.error("Ошибка при загрузке сцены ошибки подключения");
             e.printStackTrace();
         }
     }
 
 
-    public void initAddingToCheck(){
+    public void initAddingToCheck() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/addingToCheck.fxml"));
-            AnchorPane rootLayout = loader.load();
-            Stage dialogStage = new Stage();
-            dialogStage.getIcons().add(new Image("client/images/icon.png"));
-            dialogStage.setTitle("wear me");
-            dialogStage.initOwner(this.primaryStage);
-            dialogStage.setResizable(false);
-            Scene scene = new Scene(rootLayout);
-            dialogStage.setScene(scene);
+            Stage dialogStage = getLoader(loader);
             AddingToCheckController controller = loader.getController();
             controller.setAPI(this.API);
             controller.setMainApp(this);
             controller.setCombobox();
             controller.setStage(dialogStage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             MyLogger.logger.info("Запущено окно добавления товара в чек");
             dialogStage.setOnCloseRequest(we -> {
                 MyLogger.logger.info("Окно закрыто");
                 dialogStage.close();
             });
 
-            dialogStage.show();
+            dialogStage.showAndWait();
 
         } catch (IOException e) {
             MyLogger.logger.error("Ошибка при загрузке сцены добавления товара в чек");
@@ -172,24 +164,18 @@ public class JavaFXApplication extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/addingPromocode.fxml"));
-            AnchorPane rootLayout = loader.load();
-            Stage dialogStage = new Stage();
-            dialogStage.getIcons().add(new Image("client/images/icon.png"));
-            dialogStage.setTitle("wear me");
-            dialogStage.initOwner(this.primaryStage);
-            dialogStage.setResizable(false);
-            Scene scene = new Scene(rootLayout);
-            dialogStage.setScene(scene);
+            Stage dialogStage = getLoader(loader);
             AddingPromocodeController controller = loader.getController();
             controller.setAPI(this.API);
             controller.setMainApp(this);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setStage(dialogStage);
             dialogStage.setOnCloseRequest(we -> {
                 MyLogger.logger.info("Окно закрыто");
                 dialogStage.close();
             });
             MyLogger.logger.info("Открыто окно промокода");
-            dialogStage.show();
+            dialogStage.showAndWait();
 
         } catch (IOException e) {
             MyLogger.logger.error("Ошибка при загрузке сцены добавления промокода");
@@ -201,14 +187,8 @@ public class JavaFXApplication extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/addingLoyaltyCard.fxml"));
-            AnchorPane rootLayout = loader.load();
-            Stage dialogStage = new Stage();
-            dialogStage.getIcons().add(new Image("client/images/icon.png"));
-            dialogStage.setTitle("wear me");
-            dialogStage.initOwner(this.primaryStage);
-            dialogStage.setResizable(false);
-            Scene scene = new Scene(rootLayout);
-            dialogStage.setScene(scene);
+            Stage dialogStage = this.getLoader(loader);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             AddingLoyaltyCardController controller = loader.getController();
             controller.setAPI(this.API);
             controller.setMainApp(this);
@@ -218,40 +198,47 @@ public class JavaFXApplication extends Application {
                 dialogStage.close();
             });
             MyLogger.logger.info("Открыто окно добавления карты клиента");
-            dialogStage.show();
+            dialogStage.showAndWait();
 
         } catch (IOException e) {
             MyLogger.logger.error("Ошибка при загрузке сцены добавления карты клиента");
             e.printStackTrace();
         }
     }
-    public  void initCheck(){
-        try{
+
+    public void initCheck() {
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/check.fxml"));
-            AnchorPane rootLayout = loader.load();
-            Stage dialogStage = new Stage();
-            dialogStage.getIcons().add(new Image("client/images/icon.png"));
-            dialogStage.setTitle("wear me");
-            dialogStage.initOwner(this.primaryStage);
-            dialogStage.setResizable(false);
-            Scene scene = new Scene(rootLayout);
-            dialogStage.setScene(scene);
+            Stage dialogStage = getLoader(loader);
             CheckController controller = loader.getController();
             controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setMainApp(this);
             controller.setStage(dialogStage);
             dialogStage.setOnCloseRequest(we -> {
                 MyLogger.logger.info("Окно закрыто");
+                this.getRootController().createCheck();
                 dialogStage.close();
             });
             MyLogger.logger.info("Открыто окно запуска чека");
             controller.setItems();
-            dialogStage.show();
-        }
-        catch (IOException | JSONException e) {
+            dialogStage.showAndWait();
+        } catch (IOException | JSONException e) {
             MyLogger.logger.error("Ошибка при загрузке сцены чека");
             e.printStackTrace();
         }
+    }
+
+    private Stage getLoader(FXMLLoader loader) throws IOException {
+        AnchorPane rootLayout = loader.load();
+        Stage dialogStage = new Stage();
+        dialogStage.getIcons().add(new Image("client/images/icon.png"));
+        dialogStage.setTitle("wear me");
+        dialogStage.initOwner(this.primaryStage);
+        dialogStage.setResizable(false);
+        Scene scene = new Scene(rootLayout);
+        dialogStage.setScene(scene);
+        return dialogStage;
     }
 }

@@ -53,6 +53,7 @@ public class RootController {
     }
     @FXML
     public void logout(){
+        this.mainApp.getRootController().createCheck();
         this.mainApp.getPrimaryStage().close();
         this.mainApp.initSignIn();
         MyLogger.logger.info("Выход из учетной записи");
@@ -126,6 +127,7 @@ public class RootController {
     @FXML
     private void addPromocode(){
         if(this.API.getLoyaltyDiscount() ==0){
+            MyLogger.logger.info("Добавление промокода");
             this.mainApp.initAddingPromocode();
         }
         else{
@@ -140,6 +142,7 @@ public class RootController {
     @FXML
     private void addLoyaltyCard(){
         if (this.API.getPromocodeDiscount() == 0){
+            MyLogger.logger.info("Добавление карты лояльности");
             this.mainApp.initAddingLoyaltyCard();
         }
         else{
@@ -158,6 +161,7 @@ public class RootController {
         if(this.API.getPromocode().isEmpty()){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.setHeaderText("No promocode");
+            MyLogger.logger.error("Попытка удалить несуществующий промокод");
             alert.show();
         }
         else{
@@ -214,6 +218,7 @@ public class RootController {
             alert.setHeaderText("Unable to complete the operation");
             alert.setContentText("Make sure the products are listed in the table");
             alert.show();
+            MyLogger.logger.error("Попытка продать при пустом листе");
         }
         else{
             Alert alert = AlertInfo.getConfirmationAlert(mainApp);
@@ -224,10 +229,12 @@ public class RootController {
                 try{
                     this.API.sellProducts();
                     this.mainApp.initCheck();
+                    MyLogger.logger.info("Продажа товара");
                 }
                 catch (JSONException | IOException | SellProductException e){
                     alert = AlertInfo.getWarningAlert(mainApp);
                     alert.setHeaderText("An error occurred on the server");
+                    MyLogger.logger.error("Ошибка при отправке данных о продаже товара");
                     alert.setContentText(e.getMessage());
                     alert.show();
                 }

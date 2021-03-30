@@ -64,7 +64,7 @@ public class MyController {
                     new ResponseEntity<>(HttpStatus.OK);
         }
     }
-    @GetMapping("/employee")
+    @GetMapping("/employees")
     @ResponseBody
     public ResponseEntity<Employee> getEmployee(@RequestParam Long id){
         Employee res = EmployeeRepository.findEmployeeById(id);
@@ -73,7 +73,7 @@ public class MyController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/office")
+    @GetMapping("/offices")
     @ResponseBody
     public ResponseEntity<Office> getOffice(@RequestParam Long id){
         Office res = officeRepository.findOfficeById(id);
@@ -82,7 +82,7 @@ public class MyController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/address")
+    @GetMapping("/addresses")
     @ResponseBody
     public ResponseEntity<Address> getAddress(@RequestParam Long id){
         Address res = addressRepository.findAddressById(id);
@@ -91,7 +91,7 @@ public class MyController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/position")
+    @GetMapping("/positions")
     @ResponseBody
     public ResponseEntity<String> getPosition(@RequestParam Long id){
         Position res = PosRepository.findPositionById(id);
@@ -136,7 +136,7 @@ public class MyController {
 
 
     }
-    @GetMapping("/storeProduct")
+    @GetMapping("/storeProducts")
     @ResponseBody
     public ResponseEntity<List<StoreProduct>> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
         List<StoreProduct> res = storeProductRepository.findStoreProductByArticulAndOffice_IdAndSizeAndStatus(articul,officeId,productSize,2);
@@ -146,7 +146,7 @@ public class MyController {
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/promocode")
+    @GetMapping("/promocodes")
     @ResponseBody
     public ResponseEntity<Promocode> getPromocode(@RequestParam String name){
         Promocode res = promocodeRepository.findPromocodeByName(URLDecoder.decode(name));
@@ -190,6 +190,7 @@ public class MyController {
 
     @PostMapping("/checks")
     Check newCheck(@RequestBody Check newCheck){
+        System.out.println(newCheck.getPromocode());
         return checkRepository.save(newCheck);
     }
 
@@ -201,7 +202,7 @@ public class MyController {
 
      */
 
-    @GetMapping("/client")
+    @GetMapping("/clients")
     @ResponseBody
     public ResponseEntity<Client> getClient(@RequestParam(required = false) String email,
                                             @RequestParam(required = false) String phone){

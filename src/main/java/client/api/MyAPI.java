@@ -193,22 +193,22 @@ public class MyAPI {
         throw new ResponceStatusException(this.mainApp, "Проверка на password - пустой ответ от сервера");
     }
     public void getData() throws JSONException, NoAppDataException {
-        String url = this.getLocalHost()+"employee?id="+URLEncoder.encode(String.valueOf(employeeId));
+        String url = this.getLocalHost()+"employees?id="+URLEncoder.encode(String.valueOf(employeeId));
         String result = HTTPRequest.Get(url);
         this.jsonEmployee = new JSONObject(result);
         JSONObject office = (JSONObject) jsonEmployee.get("officeId");
         this.setOfficeId(Long.valueOf(office.get("id").toString()));
-        url = this.getLocalHost()+"office?id="+URLEncoder.encode(String.valueOf(this.officeId));
+        url = this.getLocalHost()+"offices?id="+URLEncoder.encode(String.valueOf(this.officeId));
         result = HTTPRequest.Get(url);
         this.jsonOffice = new JSONObject(result);
         office = (JSONObject) jsonOffice.get("addressId");
         this.addressId = Long.valueOf(office.get("id").toString());
-        url = this.getLocalHost()+"address?id="+URLEncoder.encode(String.valueOf(this.addressId));
+        url = this.getLocalHost()+"addresses?id="+URLEncoder.encode(String.valueOf(this.addressId));
         result = HTTPRequest.Get(url);
         this.jsonAddress = new JSONObject(result);
         JSONObject pos = (JSONObject) jsonEmployee.get("positionId");
         Long positionId = Long.valueOf(pos.get("id").toString());
-        url = this.getLocalHost()+"position?id="+URLEncoder.encode(String.valueOf(positionId));
+        url = this.getLocalHost()+"positions?id="+URLEncoder.encode(String.valueOf(positionId));
         this.position = HTTPRequest.Get(url);
         if (this.position==null || this.position.equals("") | this.getEmployeeInfo().equals("") | this.getAddress().equals("")){
             throw new NoAppDataException(mainApp,"Данные не были загружены");
@@ -237,7 +237,7 @@ public class MyAPI {
     public void getStoreProduct(Integer articul,String size,String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
 
-        String url =this.getLocalHost()+"storeProduct?articul="+URLEncoder.encode(String.valueOf(articul))+
+        String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul))+
                 "&productSize="+size+"&officeId="+ officeId;
         String result = HTTPRequest.Get(url);
         int checker = 0;
@@ -303,7 +303,7 @@ public class MyAPI {
     }
 
     public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException {
-        String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(name);
+        String url = this.getLocalHost()+"promocodes?name="+URLEncoder.encode(name);
         String result = HTTPRequest.Get(url);
         if(result!=null){
             if(!result.equals("")){
@@ -349,13 +349,13 @@ public class MyAPI {
     public void getLoyaltyCard(String phoneNumber,String email) throws ResponceStatusException, NoClientException, JSONException {
         String url = "";
             if(phoneNumber==null){
-                url =this.getLocalHost()+ "client?email="+URLEncoder.encode(email);
+                url =this.getLocalHost()+ "clients?email="+URLEncoder.encode(email);
             }
             else if(email == null){
-                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber);
+                url = this.getLocalHost()+"clients?phone="+URLEncoder.encode(phoneNumber);
             }
             else{
-                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber)+"&email="+URLEncoder.encode(email);
+                url = this.getLocalHost()+"clients?phone="+URLEncoder.encode(phoneNumber)+"&email="+URLEncoder.encode(email);
             }
             String result = HTTPRequest.Get(url);
             if(result!=null){
@@ -392,7 +392,8 @@ public class MyAPI {
                 }
 
             }
-            else if(promocode!=null){
+            else if(!promocode.isEmpty()){
+                System.out.println(promocode);
                 jsonCheck.put("promocode",this.jsonPromocode);
             }
             jsonCheck.put("employee",this.jsonEmployee);

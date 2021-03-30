@@ -42,6 +42,7 @@ public class AddingLoyaltyCardController {
             if(phone.equals("") & email.equals("")){
                 Alert alert = AlertInfo.getWarningAlert(mainApp);
                 alert.setHeaderText("Fields are empty");
+                MyLogger.logger.error("Пустые поля при заполнении карты лояльности");
                 alert.setContentText("Please write the email / phone number");
                 alert.show();
             }
@@ -60,6 +61,7 @@ public class AddingLoyaltyCardController {
                     else{
                         Alert alert = AlertInfo.getWarningAlert(mainApp);
                         alert.setHeaderText("Number is incorrect");
+                        MyLogger.logger.error("Некорректный ввод номера телефона");
                         alert.setContentText("Please write the correct number");
                         alert.show();
                     }
@@ -88,6 +90,7 @@ public class AddingLoyaltyCardController {
                     else{
                         Alert alert = AlertInfo.getWarningAlert(mainApp);
                         alert.setHeaderText("Number is incorrect");
+                        MyLogger.logger.error("Некорректный ввод номера телефона");
                         alert.setContentText("Please write the correct number");
                         alert.show();
                     }
@@ -100,6 +103,7 @@ public class AddingLoyaltyCardController {
             e.printStackTrace();
             Alert a = AlertInfo.getWarningAlert(mainApp);
             a.setHeaderText("Server not responding");
+            MyLogger.logger.error("Сервер не отвечает при добавлении карты лояльности");
             a.setContentText("Client hasn't been added");
             a.show();
             this.stage.close();

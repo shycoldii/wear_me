@@ -16,7 +16,7 @@
             <Font name="Arial" size="12.0" />
          </font>
       </Label>
-      <TableView fx:id="checkTable" layoutX="11.0" layoutY="62.0" prefHeight="243.0" prefWidth="287.0" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="62.0">
+      <TableView fx:id="checkTable" layoutX="11.0" layoutY="62.0" prefHeight="214.0" prefWidth="287.0" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="62.0">
         <columns>
           <TableColumn fx:id="articul" prefWidth="62.799991607666016" text="articul" />
             <TableColumn fx:id="name" minWidth="0.0" prefWidth="64.39999389648438" text="name" />
@@ -29,7 +29,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label fx:id="checkInfo" alignment="CENTER" layoutX="10.0" layoutY="312.0" prefHeight="150.0" prefWidth="287.0" textFill="#d7d7d7" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="312.0">
+      <Label fx:id="checkInfo" alignment="CENTER" layoutX="10.0" layoutY="285.0" prefHeight="177.0" prefWidth="287.0" textFill="#d7d7d7" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="285.0">
          <font>
             <Font name="Arial" size="10.0" />
          </font>

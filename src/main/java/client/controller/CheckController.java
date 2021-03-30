@@ -3,6 +3,7 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.utils.CheckStructure;
+import client.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -12,6 +13,9 @@ import org.json.JSONException;
 import javax.swing.text.TableView;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class CheckController {
     @FXML private Label checkInfo;
@@ -51,10 +55,10 @@ public class CheckController {
         this.checkTable.setItems(this.API.getCheckData());
         StringBuilder text = new StringBuilder("Office: " + this.API.getAddress() + "\n");
         String[] emp = this.API.getEmployeeInfo().split(" ");
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for(int i=0;i<emp.length;i++){
             if (i!=0){
-               res+=emp[i]+" ";
+               res.append(emp[i]).append(" ");
             }
         }
 
@@ -71,19 +75,20 @@ public class CheckController {
             text.append("\n");
             text.append("-".repeat(this.API.getEmployeeInfo().length()+10));
         }
-
         text.append("\nCheck ID: ");
         text.append(this.API.getUpdatedCheck().get("id"));
         text.append("\nDiscount: ").append(this.API.getPriceWithDiscount());
         text.append("\n");
         text.append("-".repeat(this.API.getEmployeeInfo().length()+10));
+        text.append("\n");
         text.append("Total: ").append(this.API.getTotalPrice() - this.API.getPriceWithDiscount());
         this.checkInfo.setText(text.toString());
+        MyLogger.logger.info("Выведена информация о покупке");
     }
     @FXML
     public void okClicked(){
-        //очистка данных
         this.mainApp.getRootController().createCheck();
+        MyLogger.logger.info("Закрыто окно печати чека");
         this.stage.close();
     }
 }
