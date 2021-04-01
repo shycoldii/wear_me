@@ -93,5 +93,6 @@
       <Label alignment="CENTER" layoutX="722.0" layoutY="663.0" onMouseClicked="#removeLoaltyCard" prefHeight="42.0" prefWidth="201.0" styleClass="remove" text="remove loaylty card" textFill="#343131" AnchorPane.bottomAnchor="14.600000000000023" AnchorPane.leftAnchor="722.0" />
       <Label alignment="CENTER" layoutX="452.0" layoutY="235.0" onMouseClicked="#getCardInfo" prefHeight="42.0" prefWidth="119.0" styleClass="info" text="card info" textFill="#343131" />
       <Label alignment="CENTER" layoutX="696.6" layoutY="655.0" onMouseClicked="#sell" prefHeight="56.0" prefWidth="554.0" styleClass="sell" text="sell" textFill="#343131" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="29.0" />
+      <Label alignment="CENTER" layoutX="950.0" layoutY="235.0" onMouseClicked="#returnProduct" prefHeight="42.0" prefWidth="119.0" styleClass="return" text="return product" textFill="#343131" AnchorPane.rightAnchor="146.0" AnchorPane.topAnchor="235.0" />
          </children>
 </AnchorPane>

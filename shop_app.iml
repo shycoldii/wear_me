@@ -106,6 +106,10 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.activation:jakarta.activation:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.3.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.23" level="project" />
+    <orderEntry type="library" name="Maven: com.zoepepper:scalajs-jsjoda-as-java-time_sjs0.6_2.11:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.8" level="project" />
+    <orderEntry type="library" name="Maven: com.zoepepper:scalajs-jsjoda_sjs0.6_2.11:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-js:scalajs-library_2.11:0.6.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jpa:2.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.3.4" level="project" />

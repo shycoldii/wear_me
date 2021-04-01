@@ -229,6 +229,75 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
+    public void initReturn() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/returnProduct.fxml"));
+            Stage dialogStage = getLoader(loader);
+            ReturnController controller = loader.getController();
+            controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно запуска возврата");
+            dialogStage.show();
+        } catch (IOException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены возврата");
+            e.printStackTrace();
+        }
+    }
+    public void initReturnInfo() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/returnCheckInfo.fxml"));
+            Stage dialogStage = getLoader(loader);
+            ReturnInfoController controller = loader.getController();
+            controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                this.API.setReturnResult("");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно запуска возврата таблицы");
+            controller.setTable(this.API.getProductData());
+            dialogStage.showAndWait();
+
+        } catch (IOException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены возврата таблицы");
+            e.printStackTrace();
+        }
+    }
+    public void initSucReturn() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/successReturn.fxml"));
+            Stage dialogStage = getLoader(loader);
+            ReturnInfoController controller = loader.getController();
+            controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            controller.getSuccessfullReturn();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                this.API.setReturnResult("");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно успешного возврата");
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            MyLogger.logger.error("Ошибка при загрузке сцены успешного возврата");
+            e.printStackTrace();
+        }
+    }
+
 
     private Stage getLoader(FXMLLoader loader) throws IOException {
         AnchorPane rootLayout = loader.load();

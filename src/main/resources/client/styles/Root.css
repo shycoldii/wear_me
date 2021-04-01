@@ -62,6 +62,12 @@
 .info:hover{
     -fx-background-color: #6a7980;
 }
+.return{
+    -fx-background-color: #7f7182;
+}
+.return:hover{
+    -fx-background-color: #575059;
+}
 .totalAmount{
     -fx-background-color: #9eada4;
 }

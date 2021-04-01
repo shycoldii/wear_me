@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CheckRepository extends JpaRepository<Check,Long> {
     List<Check> findAll();
+    Check findCheckById(Long id);
 }

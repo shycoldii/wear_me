@@ -242,5 +242,9 @@ public class RootController {
         }
 
     }
+    @FXML void returnProduct(){
+        MyLogger.logger.info("Запущено окно возврата");
+        this.mainApp.initReturn();
+    }
 
 }

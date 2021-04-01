@@ -8,10 +8,20 @@ import java.util.List;
 @Table(name = "checks")
 public class Check {
     public Check(){};
-    public Check(LocalDateTime dateTime,Integer total){
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public Check(LocalDateTime dateTime, Integer total, Integer discount){
 
         this.dateTime = dateTime;
         this.total = total;
+        this.discount = discount;
     }
 
     @Id
@@ -24,6 +34,9 @@ public class Check {
 
     @Column(name="total", nullable = false)
     private Integer total;
+
+    @Column(name="discount", nullable = false)
+    private Integer discount;
 
     public Integer getTotal() {
         return total;
@@ -48,6 +61,7 @@ public class Check {
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "client")
     private Client client;
+
 
     @Override
     public String toString() {

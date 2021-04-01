@@ -6,16 +6,21 @@ import client.utils.CheckStructure;
 
 import client.utils.HTTPRequest;
 import client.utils.MyLogger;
+import client.utils.ProductStructure;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.time.temporal.ChronoUnit.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class MyAPI {
     private JavaFXApplication mainApp;
@@ -26,6 +31,7 @@ public class MyAPI {
     private Long officeId;
     private Long addressId;
     private Long clientId;
+    private Long checkId;
     private Integer currentBonuses = 0;
     private Integer bonuses = 0;
     private HashMap<String,Integer> promocode = new HashMap<>();
@@ -38,6 +44,11 @@ public class MyAPI {
     private JSONObject jsonPromocode;
     private JSONArray jsonStoreProducts = new JSONArray();
     private JSONObject updatedCheck;
+    private ObservableList<ProductStructure> productData = FXCollections.observableArrayList();
+    private JSONArray jsonProductData = new JSONArray();
+    private String returnResult;
+    private String totalResult;
+
     public void deleteAllProducts(){
         this.checkData.clear();
         this.ListOfProducts.clear();
@@ -73,9 +84,6 @@ public class MyAPI {
     }
 
     public ObservableList<CheckStructure> getCheckData() {
-        return checkData;
-    }
-    public ObservableList<CheckStructure> getPersonData(){
         return checkData;
     }
 
@@ -236,7 +244,6 @@ public class MyAPI {
     }
     public void getStoreProduct(Integer articul,String size,String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
-
         String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul))+
                 "&productSize="+size+"&officeId="+ officeId;
         String result = HTTPRequest.Get(url);
@@ -377,15 +384,133 @@ public class MyAPI {
                 throw new ResponceStatusException(this.mainApp, "Получение клиента- нет ответа от сервера");
             }
     }
+    public void getProductsByCheckId(Long checkId) throws NoStoreProductException, ResponceStatusException, JSONException {
+        String url = this.getLocalHost()+"checks?id="+URLEncoder.encode(String.valueOf(checkId));
+        String result = HTTPRequest.Get(url);
+        if(result!=null){
+            if (!result.equals("")){
+                JSONObject jsonCheck = new JSONObject(result);
+                LocalDateTime checkDate = LocalDateTime.parse(jsonCheck.getString("dateTime"));
+                long daysBetween = DAYS.between(checkDate, LocalDateTime.now());
+                System.out.println(daysBetween);
+                if (daysBetween >30){
+                    throw new NoStoreProductException(this.mainApp,"Возврат по дате невозможен");
+                }
+            }
+            else{
+                throw new NoStoreProductException(this.mainApp,"Не найден check id");
+            }
+        }
+        else{
+            throw new ResponceStatusException(this.mainApp, "Получение чека- нет ответа от сервера");
+        }
+        url =this.getLocalHost()+"storeProducts?checkId="+URLEncoder.encode(String.valueOf(checkId));
+        result = HTTPRequest.Get(url);
+        if(result!=null){
+            if (!result.equals("[]")){
+                JSONArray jsonProducts = new JSONArray(result);
+                this.jsonProductData = jsonProducts;
+                for(int i=0;i<jsonProducts.length();i++){
+                    this.productData.add(
+                            new ProductStructure(jsonProducts.getJSONObject(i).getLong("id"),
+                                    jsonProducts.getJSONObject(i).getInt("articul"),
+                                    jsonProducts.getJSONObject(i).get("name").toString(),
+                                    jsonProducts.getJSONObject(i).get("color").toString(),
+                                    jsonProducts.getJSONObject(i).get("size").toString(),
+                                    jsonProducts.getJSONObject(i).getInt("retailPrice"),
+                                    jsonProducts.getJSONObject(i).getString("description"),
+                                    jsonProducts.getJSONObject(i).getInt("tradePrice"),
+                                    jsonProducts.getJSONObject(i).getInt("status"),
+                                    jsonProducts.getJSONObject(i).getString("type"),
+                                    jsonProducts.getJSONObject(i).get("office"),
+                                    jsonProducts.getJSONObject(i).get("supplierId"),
+                                    jsonProducts.getJSONObject(i).get("check")));
+
+                }
+            }
+            else{
+                throw new NoStoreProductException(this.mainApp,"Не найдены товары по check id");
+            }
+        }
+        else{
+            throw new ResponceStatusException(this.mainApp, "Получение товара- нет ответа от сервера");
+        }
+
+    }
+    public void returnProduct(Long check_id,Long id) throws JSONException, IOException, SellProductException {
+        Integer price = 0;
+        JSONObject jsonProduct = new JSONObject();
+        String url =this.getLocalHost()+"storeProducts/"+URLEncoder.encode(String.valueOf(id));
+        for(int i=0;i<this.jsonProductData.length();i++){
+            if (this.jsonProductData.getJSONObject(i).getLong("id") == id){
+                jsonProduct = this.jsonProductData.getJSONObject(i);
+                jsonProduct.put("status",2);
+                jsonProduct.put("check",null);
+                break;
+            }
+        }
+        String updatedProduct = HTTPRequest.Put(url,jsonProduct);
+        if(!updatedProduct.equals("")){
+            url = this.getLocalHost()+"checks?id="+URLEncoder.encode(String.valueOf(check_id));
+            String check = HTTPRequest.Get(url);
+            JSONObject jsonUpd = new JSONObject(updatedProduct);
+            if(check != null){
+                if(!check.equals("")){
+                    JSONObject jsonCheck  = new JSONObject(check);
+                    JSONObject jsonReturn = new JSONObject();
+                    jsonReturn.put("check",jsonCheck);
+                    jsonReturn.put("storeProduct",new JSONObject(updatedProduct));
+                    jsonReturn.put("employee",this.jsonEmployee);
+                    jsonReturn.put("total",jsonProduct.getInt("retailPrice")-(jsonCheck.getInt("discount")*jsonProduct.getInt("retailPrice")/100));
+                    url = this.getLocalHost()+"returns";
+                    String returns = HTTPRequest.Post(url,jsonReturn);
+
+                    if(!returns.equals("")){
+                        this.returnResult="Check ID: "+check_id+"\n";
+                        this.returnResult+="Store product ID: "+jsonUpd.getLong("id")+"\n";
+                        this.returnResult+="Store product color: "+jsonUpd.getString("color")+"\n";
+                        this.returnResult+="Store product name: "+jsonUpd.getString("name")+"\n";
+                        this.returnResult+="Employee ID: "+this.employeeId+"\n";
+                        this.totalResult ="Total to return: "+(jsonProduct.getInt("retailPrice")-(jsonCheck.getInt("discount")*jsonProduct.getInt("retailPrice")/100))+"\n";
+                    }
+                    else{
+                        MyLogger.logger.error("Не удалось сохранить информацию о возврате");
+                        throw new SellProductException(this.mainApp,"Ошибка при отправке возврата товара: "+jsonProduct.get("id").toString());
+                    }
+                }
+                else{
+                    throw new SellProductException(this.mainApp,"Ошибка при отправке возврата товара: "+jsonProduct.get("id").toString());
+                }
+            }
+            else{
+                throw new SellProductException(this.mainApp,"Ошибка при отправке возврата товара: "+jsonProduct.get("id").toString());
+            }
+
+
+        }
+        else{
+            throw new SellProductException(this.mainApp,"Ошибка при отправке возврата товара: "+jsonProduct.get("id").toString());
+        }
+
+
+
+    }
+
+    public ObservableList<ProductStructure> getProductData() {
+        return productData;
+    }
+
     public void sellProducts() throws JSONException, IOException, SellProductException {
             JSONObject jsonCheck = new JSONObject();
             jsonCheck.put("dateTime",LocalDateTime.now());
+            jsonCheck.put("discount",0);
             if(clientId !=null){
                 jsonClient.put("numberOfBonuses",this.currentBonuses);
                 String url = this.getLocalHost()+"clients/"+Long.parseLong(jsonClient.get("id").toString());
                 String updatedClient = HTTPRequest.Put(url,jsonClient);
                 if(!updatedClient.equals("")){
                     jsonCheck.put("client", new JSONObject(updatedClient));
+                    jsonCheck.put("discount",this.getLoyaltyDiscount());
                 }
                 else{
                     throw new SellProductException(this.mainApp,"Ошибка при отправке данных клиента: "+jsonClient.get("id").toString());
@@ -393,8 +518,8 @@ public class MyAPI {
 
             }
             else if(!promocode.isEmpty()){
-                System.out.println(promocode);
                 jsonCheck.put("promocode",this.jsonPromocode);
+                jsonCheck.put("discount",this.getPromocodeDiscount());
             }
             jsonCheck.put("employee",this.jsonEmployee);
             jsonCheck.put("storeProducts",this.jsonStoreProducts);
@@ -422,7 +547,31 @@ public class MyAPI {
 
         }
 
+    public String getReturnResult() {
+        return returnResult;
+    }
+
+    public void setReturnResult(String returnResult) {
+        this.returnResult = "";
+        this.jsonProductData = new JSONArray();
+        this.productData = FXCollections.observableArrayList();
+        this.checkId = null;
+        this.totalResult = "";
+    }
+
+    public String getTotalResult() {
+        return totalResult;
+    }
+
     public JSONObject getUpdatedCheck() {
         return updatedCheck;
+    }
+
+    public void setCheckId(Long checkId) {
+        this.checkId = checkId;
+    }
+
+    public Long getCheckId() {
+        return checkId;
     }
 }

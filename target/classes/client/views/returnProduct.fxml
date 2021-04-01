@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="209.0" prefWidth="298.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.ReturnController">
+    <children>
+        <Label alignment="CENTER" prefHeight="85.0" prefWidth="319.0" text="return product" textFill="#e5e3e3" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font name="Arial Black" size="22.0" />
+            </font>
+        </Label>
+        <TextField fx:id="textCheckId" focusTraversable="false" layoutX="31.0" layoutY="76.0" prefHeight="38.0" prefWidth="234.0" promptText="check id" styleClass="search" stylesheets="@../styles/AddingtoCheck.css" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="32.60000000000002" AnchorPane.topAnchor="76.0" />
+        <Button layoutX="94.0" layoutY="137.0" mnemonicParsing="false" onAction="#findCheckId" prefHeight="38.0" prefWidth="108.0" styleClass="addLabel" stylesheets="@../styles/AddingtoCheck.css" text="find" textFill="#f0e9e9" AnchorPane.leftAnchor="94.0" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="137.0" />
+    </children>
+</AnchorPane>

@@ -10,6 +10,7 @@ import server.repository.*;
 import javax.validation.Valid;
 import java.net.URLDecoder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,7 @@ public class MyController {
     private final CheckRepository checkRepository;
     private final PromocodeRepository promocodeRepository;
     private final EmployeeRepository EmployeeRepository;
+    private final ReturnsHistoryRepository returnsHistoryRepository;
 
     @Autowired
     public MyController(PositionRepository posRepository,
@@ -36,7 +38,7 @@ public class MyController {
                         StoreProductRepository storeProductRepository,
                         SupplyHistoryRepository supplyHistoryRepository,
                         ClientRepository clientRepository, ClientHistoryRepository clientHistoryRepository,
-                        CheckRepository checkRepository, PromocodeRepository promocodeRepository) {
+                        CheckRepository checkRepository,ReturnsHistoryRepository returnsHistoryRepository, PromocodeRepository promocodeRepository) {
         this.PosRepository = posRepository;
         this.EmployeeRepository = employeeRepository;
         this.addressRepository = addressRepository;
@@ -48,6 +50,7 @@ public class MyController {
         this.clientHistoryRepository = clientHistoryRepository;
         this.checkRepository = checkRepository;
         this.promocodeRepository = promocodeRepository;
+        this.returnsHistoryRepository = returnsHistoryRepository;
     }
 
     @GetMapping("/login")
@@ -113,7 +116,7 @@ public class MyController {
         Employee emp = new Employee("Дарья","Александрова","Игоревна","a@mail.ru","1","8800775543","222113 3333",
                 LocalDateTime.now(), LocalDate.of(2001,12,3));
         emp.setOfficeId(officeRepository.findByAddressId_City("Москва"));
-        emp.setPosition(PosRepository.findPositionByName("Программист"));
+        emp.setPositionId(PosRepository.findPositionByName("Программист"));
         EmployeeRepository.save(emp);
         Supplier sup = new Supplier("CalF","88007775553","CalF@mail.ru");
         supplierRepository.save(sup);
@@ -124,10 +127,12 @@ public class MyController {
          Client cl = new Client("Александр","Бибик","Васильевич","89104567756","biba@rua",LocalDate.now(),
                 LocalDate.of(2001,4,23),15000);
         clientRepository.save(cl);
-         */
 
+
+
+         */
         StoreProduct st = new StoreProduct(1,"Базовые джинсы mom fit",300,2999,"джинсы",
-                "M","голубой","Базовые джинсы mom fit",2);
+                "M","белый","Базовые джинсы mom fit",2);
         st.setOffice(officeRepository.findOfficeById(1L));
         st.setSupplierId(supplierRepository.findSupplierByName("CalF"));
         storeProductRepository.save(st);
@@ -138,12 +143,20 @@ public class MyController {
     }
     @GetMapping("/storeProducts")
     @ResponseBody
-    public ResponseEntity<List<StoreProduct>> getStoreProduct(@RequestParam Integer articul,@RequestParam Long officeId,@RequestParam String productSize){
-        List<StoreProduct> res = storeProductRepository.findStoreProductByArticulAndOffice_IdAndSizeAndStatus(articul,officeId,productSize,2);
+    public ResponseEntity<List<StoreProduct>> getStoreProduct(@RequestParam(required = false) Integer articul,@RequestParam(required = false) Long officeId,
+                                                              @RequestParam(required = false) String productSize,
+                                                              @RequestParam(required = false) Long checkId){
+        List<StoreProduct> res;
+        if(articul != null){
+            res = storeProductRepository.findStoreProductByArticulAndOffice_IdAndSizeAndStatus(articul, officeId, productSize, 2);
+        }
+        else{
+            res = storeProductRepository.findStoreProductByCheck_Id(checkId);
+
+        }
         if(res!=null){
             return new ResponseEntity<>(res,HttpStatus.OK);
         }
-        //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/promocodes")
@@ -187,10 +200,20 @@ public class MyController {
         return new ResponseEntity<>(clientRepository.save(client),HttpStatus.OK);
 
     }
+    @GetMapping("/checks")
+    @ResponseBody
+    public ResponseEntity<Check> getCheck(@RequestParam Long id){
+        Check res = checkRepository.findCheckById(id);
+        if(res!=null){
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+        //не найден такой
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @PostMapping("/checks")
     Check newCheck(@RequestBody Check newCheck){
-        System.out.println(newCheck.getPromocode());
         return checkRepository.save(newCheck);
     }
 
@@ -201,6 +224,10 @@ public class MyController {
     }
 
      */
+    @PostMapping("/returns")
+    ReturnsHistory newReturn(@RequestBody ReturnsHistory returns){
+        return returnsHistoryRepository.save(returns);
+    }
 
     @GetMapping("/clients")
     @ResponseBody
