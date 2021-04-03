@@ -392,4 +392,31 @@ public class JavaFXApplication extends Application {
             a.show();
         }
     }
+
+    public void initAddingPromocodeNew(PromocodeController promocodeController) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingPromocodeNew.fxml"));
+            Stage dialogStage = getLoader(loader);
+            AddingPromocodeNewController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setPromocodeController(promocodeController);
+            controller.setStage(dialogStage);
+            controller.setAPI(this.API);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно промокодов");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("Can't load adding promocodes");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
 }

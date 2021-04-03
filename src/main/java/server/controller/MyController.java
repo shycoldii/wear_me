@@ -266,4 +266,9 @@ public class MyController {
     Client newReturn(@RequestBody Client client){
         return clientRepository.save(client);
     }
+
+    @PostMapping("/promocodes")
+    Promocode newPromocode(@RequestBody Promocode promocode){
+        return promocodeRepository.save(promocode);
+    }
 }

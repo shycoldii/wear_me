@@ -21,6 +21,8 @@
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="121.5999892950058" text="name" />
                 <TableColumn fx:id="discountColumn" prefWidth="258.40003204345703" text="discount" />
+            <TableColumn fx:id="startColumn" prefWidth="258.40003204345703" text="start date" />
+            <TableColumn fx:id="endColumn" prefWidth="258.40003204345703" text="end date" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -31,6 +33,5 @@
                 <Font name="Arial Black" size="15.0" />
             </font></TextField>
         <Label alignment="CENTER" layoutX="182.0" layoutY="16.0" onMouseClicked="#addPromocode" prefHeight="35.0" prefWidth="154.0" styleClass="add" stylesheets="@../styles/Root.css" text="add" textFill="#343131" />
-        <Label alignment="CENTER" layoutX="363.0" layoutY="16.0" onMouseClicked="#removePromocode" prefHeight="35.0" prefWidth="154.0" styleClass="remove" stylesheets="@../styles/Root.css" text="remove" textFill="#343131" />
     </children>
 </AnchorPane>

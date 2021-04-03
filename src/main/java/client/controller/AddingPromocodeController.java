@@ -4,6 +4,7 @@ import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoPromocodeException;
 import client.exception.ResponceStatusException;
+import client.exception.TimeOutPromocodeException;
 import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.fxml.FXML;
@@ -64,7 +65,13 @@ public class AddingPromocodeController {
                a.setContentText("Product hasn't been added");
                a.show();
                this.stage.close();
-           }
+           } catch (TimeOutPromocodeException e) {
+                Alert a = AlertInfo.getWarningAlert(mainApp);
+                a.setHeaderText("This promocode is invalid");
+                MyLogger.logger.error("Промокод истек или не наступил");
+                a.setContentText("Promocode hasn't been added");
+                a.show();
+            }
         }
     }
 

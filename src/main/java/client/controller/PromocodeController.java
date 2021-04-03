@@ -23,6 +23,8 @@ public class PromocodeController {
     @FXML private TextField textField;
     @FXML private TableColumn<PromocodeStructure, String> nameColumn;
     @FXML private TableColumn<PromocodeStructure, Integer> discountColumn;
+    @FXML private TableColumn<PromocodeStructure, String> startColumn;
+    @FXML private TableColumn<PromocodeStructure, String> endColumn;
     private JavaFXApplication mainApp;
 
     private ObservableList<PromocodeStructure> promocodeData = FXCollections.observableArrayList();
@@ -43,6 +45,8 @@ public class PromocodeController {
     public void initialize() {
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         discountColumn.setCellValueFactory(cellData -> cellData.getValue().discountProperty().asObject());
+        startColumn.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
+        endColumn.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
         textField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredData.setPredicate(p -> p.getName().toLowerCase().contains(textField.getText().toLowerCase()))
         );
@@ -54,5 +58,9 @@ public class PromocodeController {
         this.sortableData = new SortedList<>(this.filteredData);
         this.promocodeTable.setItems(this.sortableData);
         this.sortableData.comparatorProperty().bind(this.promocodeTable.comparatorProperty());
+    }
+    @FXML void addPromocode() throws JSONException, NoPromocodeException {
+        this.mainApp.initAddingPromocodeNew(this);
+        this.loadData();
     }
 }

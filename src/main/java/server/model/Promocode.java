@@ -1,14 +1,17 @@
 package server.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "promocodes",uniqueConstraints = {@UniqueConstraint(columnNames={"name"})})
 public class Promocode {
     public Promocode(){};
-    public Promocode(String name, Integer discount){
+    public Promocode(String name, Integer discount, LocalDate startDate, LocalDate endDate){
         this.name = name;
         this.discount = discount;
+        this.startDate = startDate;
+        this.endDate = endDate;
     };
 
     @Id
@@ -17,6 +20,34 @@ public class Promocode {
 
     @Column(name = "discount", nullable = false)
     private Integer discount;
+    @Column(name = "startDate", nullable = false)
+    private LocalDate startDate;
+    @Column(name = "endDate", nullable = false)
+    private LocalDate endDate;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
     @Override
     public String toString() {

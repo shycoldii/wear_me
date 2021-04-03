@@ -62,7 +62,6 @@ public class Check {
     @JoinColumn(name = "client")
     private Client client;
 
-
     @Override
     public String toString() {
         return "Check{" +

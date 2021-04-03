@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,7 +30,6 @@ public class MyAPI {
     private Long checkId;
     private Integer currentBonuses = 0;
     private Integer bonuses = 0;
-    private HashMap<String,Integer> promocode = new HashMap<>();
     private List<String> listOfColors = new ArrayList<>();
     public JSONObject jsonAddress;
     public JSONObject jsonEmployee;
@@ -49,7 +49,6 @@ public class MyAPI {
     public void deleteAllProducts(){
         this.checkData.clear();
         this.ListOfProducts.clear();
-        this.promocode.clear();
         this.listOfColors.clear();
         this.jsonClient = new JSONObject();
         this.jsonPromocode = new JSONObject();
@@ -64,9 +63,7 @@ public class MyAPI {
         return currentBonuses;
     }
 
-    public HashMap<String, Integer> getPromocode() {
-        return promocode;
-    }
+
 
     public void setCurrentBonuses(Integer currentBonuses) {
         this.currentBonuses = currentBonuses;
@@ -101,7 +98,7 @@ public class MyAPI {
         }
         return z;
     }
-    public int getPriceWithDiscount(){
+    public int getPriceWithDiscount() throws JSONException {
         int disc = this.getPromocodeDiscount();
         int total = 0;
         if (disc==0){
@@ -159,9 +156,6 @@ public class MyAPI {
     public MyAPI(JavaFXApplication mainApp){
         this.mainApp = mainApp;
         MyLogger.logger.info("Инициализирован MyAPI");
-    }
-    public void removePromocode(){
-        this.promocode.clear();
     }
     public void removeLoyaltyCard(){
         this.bonuses = 0;
@@ -306,15 +300,18 @@ public class MyAPI {
         return listOfColors;
     }
 
-    public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException {
+    public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException, TimeOutPromocodeException {
         String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(name);
         String result = HTTPRequest.Get(url);
         if(result!=null){
             if(!result.equals("")){
-                this.promocode.clear();
                 JSONObject jsonPromocode = new JSONObject(result);
+                LocalDate now = LocalDate.now();
+                if(now.isBefore(LocalDate.parse(jsonPromocode.getString("startDate"))) |
+                now.isAfter(LocalDate.parse(jsonPromocode.getString("endDate")))){
+                    throw new TimeOutPromocodeException(this.mainApp,"Этот промокод недействителен");
+                }
                 this.jsonPromocode = jsonPromocode;
-                this.promocode.put(jsonPromocode.get("name").toString(),jsonPromocode.getInt("discount"));
                 MyLogger.logger.info("Промокод установлен");
             }
             else{
@@ -327,9 +324,30 @@ public class MyAPI {
         }
     }
 
-    public Integer getPromocodeDiscount() {
-        for(Integer k: this.promocode.values())
-            return k;
+    public JSONObject getJsonPromocode() {
+        return jsonPromocode;
+    }
+    public void removePromocode(){
+        this.jsonPromocode = new JSONObject();
+    }
+    public boolean postPromocode(JSONObject jsonPr) throws NoPromocodeException, JSONException, IOException, ResponceStatusException {
+        String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(jsonPr.getString("name"));
+        String promocode = HTTPRequest.Get(url);
+        if (promocode!= null) {
+            if(promocode.equals("")){
+                url = this.getLocalHost() +"promocodes";
+                promocode = HTTPRequest.Post(url,jsonPr);
+                return !promocode.equals("");
+                }
+            throw new NoPromocodeException(this.mainApp,"Промокод с таким именем уже существует");
+            }
+        throw new ResponceStatusException(this.mainApp,"Сервер не отвечает");
+        }
+
+    public Integer getPromocodeDiscount() throws JSONException {
+        if(!(this.jsonPromocode.length() == 0)) {
+            return this.jsonPromocode.getInt("discount");
+        }
         return 0;
     }
     public Integer getLoyaltyDiscount(){
@@ -514,7 +532,7 @@ public class MyAPI {
                 }
 
             }
-            else if(!promocode.isEmpty()){
+            else if(jsonPromocode.length() != 0){
                 jsonCheck.put("promocode",this.jsonPromocode);
                 jsonCheck.put("discount",this.getPromocodeDiscount());
             }
@@ -640,7 +658,9 @@ public class MyAPI {
             for(int i=0;i<this.jsonPromocodes.length();i++){
                 promocodeData.add(new PromocodeStructure(
                         this.jsonPromocodes.getJSONObject(i).getString("name"),
-                        this.jsonPromocodes.getJSONObject(i).getInt("discount")
+                        this.jsonPromocodes.getJSONObject(i).getInt("discount"),
+                        this.jsonPromocodes.getJSONObject(i).getString("startDate"),
+                        this.jsonPromocodes.getJSONObject(i).getString("endDate")
                 ));
             }
             return promocodeData;

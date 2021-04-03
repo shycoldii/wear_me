@@ -81,7 +81,7 @@ public class RootController {
     public void addCheck(){
         this.mainApp.initAddingToCheck();
     }
-    public void updateCheck(){
+    public void updateCheck() throws JSONException {
 
         this.checkTable.setItems(this.API.getCheckData());
         this.withoutDiscount.setText(String.valueOf(this.API.getTotalPrice()));
@@ -94,7 +94,7 @@ public class RootController {
         }
 
     @FXML
-    private void deleteProduct() {
+    private void deleteProduct() throws JSONException {
 
         int selectedIndex = this.checkTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
@@ -141,7 +141,7 @@ public class RootController {
     }
     @FXML
     private void addLoyaltyCard(){
-        if (this.API.getPromocodeDiscount() == 0){
+        if (this.API.getJsonPromocode().length() == 0){
             MyLogger.logger.info("Добавление карты лояльности");
             this.mainApp.initAddingLoyaltyCard();
         }
@@ -157,8 +157,8 @@ public class RootController {
 
 
     }
-    @FXML public void removePromocode(){
-        if(this.API.getPromocode().isEmpty()){
+    @FXML public void removePromocode() throws JSONException {
+        if(this.API.getJsonPromocode().length() == 0){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.setHeaderText("No promocode");
             MyLogger.logger.error("Попытка удалить несуществующий промокод");
@@ -176,7 +176,7 @@ public class RootController {
 
 
     }
-    @FXML public void removeLoaltyCard(){
+    @FXML public void removeLoaltyCard() throws JSONException {
         if(this.API.getClientId() == null){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
             alert.setHeaderText("No loyalty card");
@@ -251,7 +251,7 @@ public class RootController {
         this.mainApp.initClients();
     }
     @FXML void getPromocodes(){
-        if(this.API.getPosition().toLowerCase().equals("менеджер")){
+        if(this.API.getPosition().toLowerCase().equals("менеджер") | this.API.getPosition().toLowerCase().equals("программист")){
             MyLogger.logger.info("Запущено окно просмотра промокодов");
             this.mainApp.initPromocodes();
         }
@@ -265,5 +265,6 @@ public class RootController {
 
 
     }
+
 
 }

@@ -5,6 +5,7 @@ import client.api.MyAPI;
 import client.exception.NoClientException;
 import client.exception.ResponceStatusException;
 import client.utils.AlertInfo;
+import client.utils.ClientStructure;
 import client.utils.MyLogger;
 import client.validator.NumberValidator;
 import javafx.fxml.FXML;
@@ -58,7 +59,7 @@ public class AddingClientController {
     @FXML
     TextField birthdayField;
     @FXML
-    private void create(){
+    private void create() throws JSONException, NoClientException {
         if(!secondNameField.getText().equals("") &
                 !firstNameField.getText().equals("") &
                 !emailField.getText().equals("") &
@@ -84,6 +85,50 @@ public class AddingClientController {
               }
               }
               if(NumberValidator.isNumber(phoneField.getText())){
+                 for(ClientStructure c: this.API.getClients()){
+                     if(c.getPhoneNumber().startsWith("+")){
+                         if(c.getPhoneNumber().charAt(1) == '7' | c.getPhoneNumber().charAt(1) == '8'){
+                             if(phoneField.getText().startsWith("+")){
+                                 if(phoneField.getText().charAt(1) == '7' |phoneField.getText().charAt(1) == '8'){
+                                     if(phoneField.getText().substring(1).equals(c.getPhoneNumber().substring(1))){
+                                         Alert alert = AlertInfo.getWarningAlert(mainApp);
+                                         alert.setHeaderText("It isn't the phone number");
+                                         alert.showAndWait();
+                                         MyLogger.logger.error("Неправильный ввод номера телефона");
+                                     }
+                                 }
+                             }
+                             if(phoneField.getText().charAt(1) == '7' |phoneField.getText().charAt(1) == '8'){
+                                 if(phoneField.getText().substring(0).equals(c.getPhoneNumber().substring(1))){
+                                     Alert alert = AlertInfo.getWarningAlert(mainApp);
+                                     alert.setHeaderText("It isn't the phone number");
+                                     alert.showAndWait();
+                                     MyLogger.logger.error("Неправильный ввод номера телефона");
+                                 }
+                             }
+                         }
+                     }
+                     if(c.getPhoneNumber().charAt(0) == '7' | c.getPhoneNumber().charAt(0) == '8'){
+                         if(phoneField.getText().startsWith("+")){
+                             if(phoneField.getText().charAt(1) == '7' |phoneField.getText().charAt(1) == '8'){
+                                 if(phoneField.getText().substring(1).equals(c.getPhoneNumber())){
+                                     Alert alert = AlertInfo.getWarningAlert(mainApp);
+                                     alert.setHeaderText("It isn't the phone number");
+                                     alert.showAndWait();
+                                     MyLogger.logger.error("Неправильный ввод номера телефона");
+                                 }
+                             }
+                         }
+                         if(phoneField.getText().charAt(1) == '7' |phoneField.getText().charAt(1) == '8'){
+                             if(phoneField.getText().equals(c.getPhoneNumber())){
+                                 Alert alert = AlertInfo.getWarningAlert(mainApp);
+                                 alert.setHeaderText("It isn't the phone number");
+                                 alert.showAndWait();
+                                 MyLogger.logger.error("Неправильный ввод номера телефона");
+                             }
+                         }
+                     }
+                 }
                  if(EmailValidator.getInstance().isValid(emailField.getText())){
 
                          try{
