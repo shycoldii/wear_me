@@ -78,3 +78,7 @@
 .sell:hover{
     -fx-background-color: #a1894d;
 }
+
+.menuB:hover{
+    -fx-background-color: #c7c6cf;
+}

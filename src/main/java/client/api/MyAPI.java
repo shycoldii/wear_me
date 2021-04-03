@@ -2,21 +2,16 @@ package client.api;
 
 import client.JavaFXApplication;
 import client.exception.*;
-import client.utils.CheckStructure;
+import client.utils.*;
 
-import client.utils.HTTPRequest;
-import client.utils.MyLogger;
-import client.utils.ProductStructure;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.time.temporal.ChronoUnit.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -48,6 +43,8 @@ public class MyAPI {
     private JSONArray jsonProductData = new JSONArray();
     private String returnResult;
     private String totalResult;
+    private JSONArray jsonClients;
+    private JSONArray jsonPromocodes;
 
     public void deleteAllProducts(){
         this.checkData.clear();
@@ -310,7 +307,7 @@ public class MyAPI {
     }
 
     public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException {
-        String url = this.getLocalHost()+"promocodes?name="+URLEncoder.encode(name);
+        String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(name);
         String result = HTTPRequest.Get(url);
         if(result!=null){
             if(!result.equals("")){
@@ -356,13 +353,13 @@ public class MyAPI {
     public void getLoyaltyCard(String phoneNumber,String email) throws ResponceStatusException, NoClientException, JSONException {
         String url = "";
             if(phoneNumber==null){
-                url =this.getLocalHost()+ "clients?email="+URLEncoder.encode(email);
+                url =this.getLocalHost()+ "client?email="+URLEncoder.encode(email);
             }
             else if(email == null){
-                url = this.getLocalHost()+"clients?phone="+URLEncoder.encode(phoneNumber);
+                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber);
             }
             else{
-                url = this.getLocalHost()+"clients?phone="+URLEncoder.encode(phoneNumber)+"&email="+URLEncoder.encode(email);
+                url = this.getLocalHost()+"client?phone="+URLEncoder.encode(phoneNumber)+"&email="+URLEncoder.encode(email);
             }
             String result = HTTPRequest.Get(url);
             if(result!=null){
@@ -573,5 +570,85 @@ public class MyAPI {
 
     public Long getCheckId() {
         return checkId;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+    public void deleteClient(Long id) throws IOException {
+        String url =this.getLocalHost()+"client/"+ id;
+        HTTPRequest.Delete(url);
+    }
+    public boolean createClient(JSONObject jsonClient) throws IOException, JSONException {
+        String url = this.getLocalHost()+"client?phone="+URLEncoder.encode(jsonClient.getString("phoneNumber"));
+        String client = HTTPRequest.Get(url);
+        if (client!= null) {
+            if(client.equals("")){
+                url =this.getLocalHost() +"client?email="+URLEncoder.encode(jsonClient.getString("email"));
+                client = HTTPRequest.Get(url);
+                System.out.println(client);
+                if (client!= null) {
+                    if(client.equals("")){
+                        url =this.getLocalHost()+"clients";
+                        client = HTTPRequest.Post(url,jsonClient);
+                        return !client.equals("");
+                    }
+                    return false;
+                }
+                return false;
+
+            }
+            return false;
+        }
+        return false;
+
+    }
+
+    public ObservableList<ClientStructure> getClients() throws NoClientException, JSONException {
+        String url =this.getLocalHost()+"clients";
+        String clients = HTTPRequest.Get(url);
+        if (clients != null) {
+            this.jsonClients = new JSONArray(clients);
+            ObservableList<ClientStructure> clientData = FXCollections.observableArrayList();
+            for(int i=0;i<this.jsonClients.length();i++){
+                clientData.add(new ClientStructure(
+                        this.jsonClients.getJSONObject(i).getLong("id"),
+                        this.jsonClients.getJSONObject(i).get("birthday").toString(),
+                        this.jsonClients.getJSONObject(i).getString("email"),
+                        this.jsonClients.getJSONObject(i).getString("firstName"),
+                        this.jsonClients.getJSONObject(i).getInt("numberOfBonuses"),
+                        this.jsonClients.getJSONObject(i).getString("patronymic"),
+                        this.jsonClients.getJSONObject(i).getString("phoneNumber"),
+                        this.jsonClients.getJSONObject(i).get("regDay").toString(),
+                        this.jsonClients.getJSONObject(i).getString("secondName")
+                ));
+            }
+            return clientData;
+
+        }
+        else{
+            throw new NoClientException(this.mainApp,"Не удалось загрузить клиентов");
+        }
+
+    }
+    public ObservableList<PromocodeStructure> getPromocodes() throws NoPromocodeException, JSONException {
+        String url =this.getLocalHost()+"promocodes";
+        String promocodes = HTTPRequest.Get(url);
+        if (promocodes != null) {
+            this.jsonPromocodes = new JSONArray(promocodes);
+            ObservableList<PromocodeStructure> promocodeData = FXCollections.observableArrayList();
+            for(int i=0;i<this.jsonPromocodes.length();i++){
+                promocodeData.add(new PromocodeStructure(
+                        this.jsonPromocodes.getJSONObject(i).getString("name"),
+                        this.jsonPromocodes.getJSONObject(i).getInt("discount")
+                ));
+            }
+            return promocodeData;
+
+        }
+        else{
+            throw new NoPromocodeException(this.mainApp,"Не удалось загрузить промокоды");
+        }
+
     }
 }

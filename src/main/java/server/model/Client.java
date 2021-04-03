@@ -3,9 +3,10 @@ package server.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name = "clients",uniqueConstraints = {@UniqueConstraint(columnNames={"email","phoneNumber"})})
+@Table(name = "clients")
 public class Client {
     public Client(){};
     public Client(String FirstName, String SecondName,String Patronymic,
@@ -69,20 +70,19 @@ public class Client {
 
     @Column(name = "firstName", length = 128, nullable = false)
     private String firstName;
-
     @Column(name = "secondName", length = 128, nullable = false)
     private String secondName;
 
     @Column(name = "patronymic", length = 128)
     private String patronymic;
 
-    @Column(name = "phoneNumber", length = 128, nullable = false)
+    @Column(name = "phoneNumber", length = 128, nullable = false,unique = true)
     private String phoneNumber;
 
     @Column(name="birthday",nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "email", length = 128, nullable = false)
+    @Column(name = "email", length = 128, nullable = false,unique = true)
     private String email;
 
     @Column(name="regDay",nullable = false)

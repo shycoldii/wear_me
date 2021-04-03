@@ -23,7 +23,6 @@
                   <Font name="Arial Black" size="16.0" />
                </font>
       </Label>
-      <HBox layoutX="127.0" layoutY="-1.0" prefHeight="30.0" prefWidth="752.0" styleClass="hbox" AnchorPane.leftAnchor="127.0" AnchorPane.rightAnchor="493.0" AnchorPane.topAnchor="-1.0" />
       <HBox alignment="CENTER_LEFT" layoutX="11.0" layoutY="77.0" prefHeight="141.0" prefWidth="1134.0" spacing="20.0" AnchorPane.bottomAnchor="502.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="146.0" AnchorPane.topAnchor="77.0">
          <children>
             <VBox prefHeight="58.0" prefWidth="422.0">
@@ -94,5 +93,16 @@
       <Label alignment="CENTER" layoutX="452.0" layoutY="235.0" onMouseClicked="#getCardInfo" prefHeight="42.0" prefWidth="119.0" styleClass="info" text="card info" textFill="#343131" />
       <Label alignment="CENTER" layoutX="696.6" layoutY="655.0" onMouseClicked="#sell" prefHeight="56.0" prefWidth="554.0" styleClass="sell" text="sell" textFill="#343131" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="29.0" />
       <Label alignment="CENTER" layoutX="950.0" layoutY="235.0" onMouseClicked="#returnProduct" prefHeight="42.0" prefWidth="119.0" styleClass="return" text="return product" textFill="#343131" AnchorPane.rightAnchor="146.0" AnchorPane.topAnchor="235.0" />
+      <HBox layoutX="136.0" layoutY="-3.0" prefHeight="35.0" prefWidth="960.0" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="0.0">
+         <children>
+             <Label alignment="CENTER" layoutX="452.0" layoutY="235.0" onMouseClicked="#getClients" prefHeight="35.0" prefWidth="138.0" styleClass="check" text="clients" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" onMouseClicked="#getPromocodes" prefHeight="35.0" prefWidth="138.0" styleClass="check" text="promocodes" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="148.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="138.0" styleClass="menuB" text="clients" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="287.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="138.0" styleClass="menuB" text="clients" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="425.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="138.0" styleClass="menuB" text="clients" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="564.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="138.0" styleClass="menuB" text="clients" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="702.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="138.0" styleClass="menuB" text="clients" textFill="#343131" />
+         </children>
+      </HBox>
          </children>
 </AnchorPane>

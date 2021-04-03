@@ -246,5 +246,24 @@ public class RootController {
         MyLogger.logger.info("Запущено окно возврата");
         this.mainApp.initReturn();
     }
+    @FXML void getClients(){
+        MyLogger.logger.info("Запущено окно просмотра клиентов");
+        this.mainApp.initClients();
+    }
+    @FXML void getPromocodes(){
+        if(this.API.getPosition().toLowerCase().equals("менеджер")){
+            MyLogger.logger.info("Запущено окно просмотра промокодов");
+            this.mainApp.initPromocodes();
+        }
+        else{
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("You haven't right to view this page");
+            alert.setContentText("It's possible only for managers!");
+            MyLogger.logger.error("Попытка просмотреть страницу промокодов");
+            alert.show();
+        }
+
+
+    }
 
 }

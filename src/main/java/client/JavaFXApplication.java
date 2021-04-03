@@ -2,6 +2,7 @@ package client;
 
 import client.api.MyAPI;
 import client.controller.*;
+import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -309,5 +310,86 @@ public class JavaFXApplication extends Application {
         Scene scene = new Scene(rootLayout);
         dialogStage.setScene(scene);
         return dialogStage;
+    }
+
+    public void initClients() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/client.fxml"));
+            Stage dialogStage = getLoader(loader);
+            ClientController controller = loader.getController();
+            controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            controller.loadData();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно клиентов");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No client info");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
+    public void initAddingClient(ClientController clientController) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingClient.fxml"));
+            Stage dialogStage = getLoader(loader);
+            AddingClientController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setClientController(clientController);
+            controller.setStage(dialogStage);
+            controller.setAPI(this.API);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно клиентов");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("Can't load adding client");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
+    public void initPromocodes() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/promocode.fxml"));
+            Stage dialogStage = getLoader(loader);
+            PromocodeController controller = loader.getController();
+            controller.setAPI(this.API);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            controller.loadData();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно промокодов");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No promocodes info");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
     }
 }

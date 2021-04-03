@@ -159,7 +159,7 @@ public class MyController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/promocodes")
+    @GetMapping("/promocode")
     @ResponseBody
     public ResponseEntity<Promocode> getPromocode(@RequestParam String name){
         Promocode res = promocodeRepository.findPromocodeByName(URLDecoder.decode(name));
@@ -229,7 +229,7 @@ public class MyController {
         return returnsHistoryRepository.save(returns);
     }
 
-    @GetMapping("/clients")
+    @GetMapping("/client")
     @ResponseBody
     public ResponseEntity<Client> getClient(@RequestParam(required = false) String email,
                                             @RequestParam(required = false) String phone){
@@ -250,8 +250,20 @@ public class MyController {
         //не найден такой
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
-
+    @GetMapping("/clients")
+    public ResponseEntity<List<Client>> getAllClients(){
+        return new ResponseEntity<>(clientRepository.findAll(),HttpStatus.OK);
+    }
+    @GetMapping("/promocodes")
+    public ResponseEntity<List<Promocode>> getAllPromocodes(){
+        return new ResponseEntity<>(promocodeRepository.findAll(),HttpStatus.OK);
+    }
+    @DeleteMapping("/client/{id}")
+    void deleteClient(@PathVariable Long id) {
+        clientRepository.deleteById(id);
+    }
+    @PostMapping("/clients")
+    Client newReturn(@RequestBody Client client){
+        return clientRepository.save(client);
+    }
 }

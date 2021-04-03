@@ -58,7 +58,7 @@ public class Check {
     @JoinColumn(name = "employee",nullable = false)
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinColumn(name = "client")
     private Client client;
 
