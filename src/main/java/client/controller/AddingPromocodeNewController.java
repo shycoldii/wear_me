@@ -58,7 +58,7 @@ public class AddingPromocodeNewController {
             try{
                 int dis = Integer.parseInt(this.discount.getText());
                 if(dis>0 & dis<=100){
-                    if(endDate.getValue().isAfter(startDate.getValue())){
+                    if(endDate.getValue().isAfter(startDate.getValue()) | endDate.getValue().isEqual(startDate.getValue())){
                         JSONObject jsonpr = new JSONObject();
                         jsonpr.put("name",name.getText());
                         jsonpr.put("discount",discount.getText());

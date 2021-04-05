@@ -265,6 +265,19 @@ public class RootController {
 
 
     }
+    @FXML void getOffices(){
+        if(this.API.getPosition().toLowerCase().equals("менеджер") | this.API.getPosition().toLowerCase().equals("программист")){
+            MyLogger.logger.info("Запущено окно просмотра офисов");
+            this.mainApp.initOffices();
+        }
+        else{
+            Alert alert = AlertInfo.getWarningAlert(mainApp);
+            alert.setHeaderText("You haven't right to view this page");
+            alert.setContentText("It's possible only for managers!");
+            MyLogger.logger.error("Попытка просмотреть страницу офисов");
+            alert.show();
+        }
+    }
 
 
 }

@@ -419,4 +419,32 @@ public class JavaFXApplication extends Application {
             a.show();
         }
     }
+
+    public void initOffices() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/office.fxml"));
+            Stage dialogStage = getLoader(loader);
+            OfficeController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setAPI(this.API);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            controller.loadData();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно офисов");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No promocodes info");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
 }

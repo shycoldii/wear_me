@@ -45,6 +45,7 @@ public class MyAPI {
     private String totalResult;
     private JSONArray jsonClients;
     private JSONArray jsonPromocodes;
+    private JSONArray jsonOffices;
 
     public void deleteAllProducts(){
         this.checkData.clear();
@@ -197,7 +198,7 @@ public class MyAPI {
         this.jsonEmployee = new JSONObject(result);
         JSONObject office = (JSONObject) jsonEmployee.get("officeId");
         this.setOfficeId(Long.valueOf(office.get("id").toString()));
-        url = this.getLocalHost()+"offices?id="+URLEncoder.encode(String.valueOf(this.officeId));
+        url = this.getLocalHost()+"office?id="+URLEncoder.encode(String.valueOf(this.officeId));
         result = HTTPRequest.Get(url);
         this.jsonOffice = new JSONObject(result);
         office = (JSONObject) jsonOffice.get("addressId");
@@ -655,7 +656,7 @@ public class MyAPI {
         if (promocodes != null) {
             this.jsonPromocodes = new JSONArray(promocodes);
             ObservableList<PromocodeStructure> promocodeData = FXCollections.observableArrayList();
-            for(int i=0;i<this.jsonPromocodes.length();i++){
+            for(int i = 0; i<this.jsonPromocodes.length(); i++){
                 promocodeData.add(new PromocodeStructure(
                         this.jsonPromocodes.getJSONObject(i).getString("name"),
                         this.jsonPromocodes.getJSONObject(i).getInt("discount"),
@@ -670,5 +671,28 @@ public class MyAPI {
             throw new NoPromocodeException(this.mainApp,"Не удалось загрузить промокоды");
         }
 
+    }
+
+    public ObservableList<OfficeStructure> getOffices() throws JSONException, NoOfficeException {
+        String url =this.getLocalHost()+"offices";
+        String offices = HTTPRequest.Get(url);
+        if (offices != null) {
+            this.jsonOffices = new JSONArray(offices);
+            ObservableList<OfficeStructure> OfficeData = FXCollections.observableArrayList();
+            for(int i = 0; i<this.jsonOffices.length(); i++){
+                JSONObject address = this.jsonOffices.getJSONObject(i).getJSONObject("addressId");
+                OfficeData.add(new OfficeStructure(
+                        this.jsonOffices.getJSONObject(i).getLong("id"),
+                        this.jsonOffices.getJSONObject(i).getString("name"),
+                        this.jsonOffices.getJSONObject(i).getString("phoneNumber"),
+                        address.getString("city")+" - "+address.getString("street")
+                ));
+            }
+            return OfficeData;
+
+        }
+        else{
+            throw new NoOfficeException(this.mainApp,"Не удалось загрузить офисы");
+        }
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@../styles/Root.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.OfficeController">
+
+    <children>
+        <Label alignment="CENTER" layoutX="2.0" layoutY="-3.0" prefHeight="35.0" prefWidth="125.0" stylesheets="@../styles/Root.css" text="wear me" textFill="#d7d7d7" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="-3.0">
+            <font>
+                <Font name="Arial Black" size="23.0" />
+            </font>
+        </Label>
+        <Label alignment="CENTER" layoutX="5.0" layoutY="25.0" prefHeight="1.0" prefWidth="119.0" styleClass="labeladress" stylesheets="@../styles/Root.css" text="offices" textFill="#d7d7d7" AnchorPane.leftAnchor="5.0">
+            <font>
+                <Font name="Arial" size="12.0" />
+            </font>
+        </Label>
+        <TableView fx:id="officeTable" layoutX="-1.0" layoutY="65.0" prefHeight="581.0" prefWidth="1280.0" styleClass="TableView" stylesheets="@../styles/Root.css" AnchorPane.bottomAnchor="74.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="121.5999892950058" text="id" />
+                <TableColumn fx:id="nameColumn" prefWidth="258.40003204345703" text="name" />
+                <TableColumn fx:id="phoneColumn" minWidth="0.0" prefWidth="324.4000244140625" text="phone number" />
+                <TableColumn fx:id="addressColumn" minWidth="0.0" prefWidth="237.0" text="address" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <TextField fx:id="textField" prefHeight="43.0" prefWidth="523.0" promptText="search" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
+            <font>
+                <Font name="Arial Black" size="15.0" />
+            </font></TextField>
+    </children>
+</AnchorPane>

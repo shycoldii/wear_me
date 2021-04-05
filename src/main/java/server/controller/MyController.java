@@ -76,7 +76,7 @@ public class MyController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/offices")
+    @GetMapping("/office")
     @ResponseBody
     public ResponseEntity<Office> getOffice(@RequestParam Long id){
         Office res = officeRepository.findOfficeById(id);
@@ -257,6 +257,10 @@ public class MyController {
     @GetMapping("/promocodes")
     public ResponseEntity<List<Promocode>> getAllPromocodes(){
         return new ResponseEntity<>(promocodeRepository.findAll(),HttpStatus.OK);
+    }
+    @GetMapping("/offices")
+    public ResponseEntity<List<Office>> getAllOffices(){
+        return new ResponseEntity<>(officeRepository.findAll(),HttpStatus.OK);
     }
     @DeleteMapping("/client/{id}")
     void deleteClient(@PathVariable Long id) {
