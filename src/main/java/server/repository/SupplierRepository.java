@@ -7,4 +7,5 @@ import server.model.Supplier;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier,Long> {
     Supplier findSupplierByName(String name);
+    Supplier findSupplierByNameAndEmailAndPhoneNumber(String name,String email,String phone);
 }

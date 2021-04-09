@@ -13,4 +13,5 @@ public interface StoreProductRepository extends JpaRepository<StoreProduct,Long>
     List<StoreProduct> findStoreProductByArticulAndOffice_IdAndSizeAndStatus(Integer articul, Long officeId,String size,
                                                                              Integer status);
     List<StoreProduct> findStoreProductByCheck_Id(Long checkId);
+    List<StoreProduct> findStoreProductByArticul(Integer articul);
 }

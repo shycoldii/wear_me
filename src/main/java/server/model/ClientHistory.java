@@ -19,11 +19,11 @@ public class ClientHistory {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee")
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "client")
     private Client client;
 

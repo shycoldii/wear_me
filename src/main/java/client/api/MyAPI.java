@@ -6,6 +6,7 @@ import client.utils.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,9 @@ public class MyAPI {
     private JSONArray jsonClients;
     private JSONArray jsonPromocodes;
     private JSONArray jsonOffices;
+    private JSONArray jsonProducts;
+    private JSONArray articulProducts;
+    private JSONArray jsonSuppliers;
 
     public void deleteAllProducts(){
         this.checkData.clear();
@@ -58,6 +62,14 @@ public class MyAPI {
         this.bonuses = 0;
         this.currentBonuses = 0;
         this.clientId = null;
+    }
+
+    public JSONObject getJsonOffice() {
+        return jsonOffice;
+    }
+
+    public JSONArray getJsonSuppliers() {
+        return jsonSuppliers;
     }
 
     public Integer getCurrentBonuses() {
@@ -245,7 +257,7 @@ public class MyAPI {
                 JSONArray jsonStoreProducts = new JSONArray(result);
                 for (int i=0;i< jsonStoreProducts.length();i++){
                     Long id = Long.valueOf(jsonStoreProducts.getJSONObject(i).get("id").toString());
-                    if(this.isInProducts(id) | jsonStoreProducts.getJSONObject(i).has("checkId")){
+                    if(this.isInProducts(id)){
                         checker+=1;
                     }
                     else {
@@ -346,7 +358,7 @@ public class MyAPI {
         }
 
     public Integer getPromocodeDiscount() throws JSONException {
-        if(!(this.jsonPromocode.length() == 0)) {
+        if(!(this.jsonPromocode==null)) {
             return this.jsonPromocode.getInt("discount");
         }
         return 0;
@@ -408,7 +420,6 @@ public class MyAPI {
                 JSONObject jsonCheck = new JSONObject(result);
                 LocalDateTime checkDate = LocalDateTime.parse(jsonCheck.getString("dateTime"));
                 long daysBetween = DAYS.between(checkDate, LocalDateTime.now());
-                System.out.println(daysBetween);
                 if (daysBetween >30){
                     throw new NoStoreProductException(this.mainApp,"Возврат по дате невозможен");
                 }
@@ -533,7 +544,7 @@ public class MyAPI {
                 }
 
             }
-            else if(jsonPromocode.length() != 0){
+            else if(jsonPromocode!=null){
                 jsonCheck.put("promocode",this.jsonPromocode);
                 jsonCheck.put("discount",this.getPromocodeDiscount());
             }
@@ -605,11 +616,26 @@ public class MyAPI {
             if(client.equals("")){
                 url =this.getLocalHost() +"client?email="+URLEncoder.encode(jsonClient.getString("email"));
                 client = HTTPRequest.Get(url);
-                System.out.println(client);
+
                 if (client!= null) {
                     if(client.equals("")){
                         url =this.getLocalHost()+"clients";
                         client = HTTPRequest.Post(url,jsonClient);
+                        JSONObject jsonClientHistory = new JSONObject();
+                        jsonClientHistory.put("date",LocalDate.now());
+                        jsonClientHistory.put("employee",this.jsonEmployee);
+                        jsonClientHistory.put("client",new JSONObject(client));
+                        url = this.getLocalHost() +"clients_history";
+                        try{
+                            String ch = HTTPRequest.Post(url,jsonClientHistory);
+                            if(!ch.equals("")){
+                                MyLogger.logger.info("Успешное сохранение данных о клиенте");
+                            }
+                        }
+                       catch (IOException e){
+                           MyLogger.logger.error("Неудачное сохранение данных о клиенте");
+                       }
+
                         return !client.equals("");
                     }
                     return false;
@@ -647,6 +673,25 @@ public class MyAPI {
         }
         else{
             throw new NoClientException(this.mainApp,"Не удалось загрузить клиентов");
+        }
+
+    }
+    public ObservableList<SupplierStructure> getSuppliers() throws NoSupplierException, JSONException {
+        String url =this.getLocalHost()+"suppliers";
+        String suppliers = HTTPRequest.Get(url);
+        if (suppliers != null) {
+            this.jsonSuppliers = new JSONArray(suppliers);
+            ObservableList<SupplierStructure> supplierData = FXCollections.observableArrayList();
+            for(int i=0;i<this.jsonSuppliers.length();i++){
+                supplierData.add(new SupplierStructure(
+                        this.jsonSuppliers.getJSONObject(i).getLong("id"),
+                        this.jsonSuppliers.getJSONObject(i).getString("name")
+                ));
+            }
+            return supplierData;
+        }
+        else{
+            throw new NoSupplierException(this.mainApp,"Не удалось загрузить поставщиков");
         }
 
     }
@@ -695,4 +740,109 @@ public class MyAPI {
             throw new NoOfficeException(this.mainApp,"Не удалось загрузить офисы");
         }
     }
+
+    public JSONArray getJsonProducts() {
+        return jsonProducts;
+    }
+
+    public ObservableList<ProductStructure> getProducts() throws JSONException, NoStoreProductException{
+        String url =this.getLocalHost()+"storeProducts";
+        String products = HTTPRequest.Get(url);
+        if (products != null) {
+            this.jsonProducts = new JSONArray(products);
+            ObservableList<ProductStructure> productData = FXCollections.observableArrayList();
+            for(int i = 0; i<this.jsonProducts.length(); i++){
+                JSONObject check;
+                try{
+                    check = this.jsonProducts.getJSONObject(i).getJSONObject("check");
+                }
+                catch (JSONException e){
+                    check = null;
+                }
+                productData.add(new ProductStructure(
+                        this.jsonProducts.getJSONObject(i).getLong("id"),
+                        this.jsonProducts.getJSONObject(i).getInt("articul"),
+                        this.jsonProducts.getJSONObject(i).getString("name"),
+                        this.jsonProducts.getJSONObject(i).getString("color"),
+                        this.jsonProducts.getJSONObject(i).getString("size"),
+                        this.jsonProducts.getJSONObject(i).getInt("tradePrice"),
+                        this.jsonProducts.getJSONObject(i).getString("description"),
+                        this.jsonProducts.getJSONObject(i).getInt("retailPrice"),
+                        this.jsonProducts.getJSONObject(i).getInt("status"),
+                        this.jsonProducts.getJSONObject(i).getString("type"),
+                        this.jsonProducts.getJSONObject(i).getJSONObject("office"),
+                        this.jsonProducts.getJSONObject(i).getJSONObject("supplierId"),
+                        check
+
+                ));
+            }
+            return productData;
+
+        }
+        else{
+            throw new NoStoreProductException(this.mainApp,"Не удалось загрузить продукты");
+        }
+    }
+
+    public void changeStatusForProduct(JSONObject jsonObject,Long id) throws IOException, NoStoreProductException {
+        String url =this.getLocalHost()+"storeProducts/"+URLEncoder.encode(String.valueOf(id));
+        String updatedProduct = HTTPRequest.Put(url,jsonObject);
+        if(updatedProduct.equals("")){
+            throw new NoStoreProductException(this.mainApp,"Не удалось изменить статус");
+        }
+    }
+
+    public boolean createSupplier(JSONObject jsonSupplier) throws JSONException, IOException {
+        String url = this.getLocalHost()+"supplier?phone="+URLEncoder.encode(jsonSupplier.getString("phoneNumber"))+
+                "&email="+URLEncoder.encode(jsonSupplier.getString("email"))+
+                "&name="+URLEncoder.encode(jsonSupplier.getString("name"));
+        String supplier = HTTPRequest.Get(url);
+        if (supplier!= null) {
+            if(supplier.equals("")){
+                        url =this.getLocalHost()+"suppliers";
+                        supplier = HTTPRequest.Post(url,jsonSupplier);
+                        return !supplier.equals("");
+
+            }
+            return false;
+        }
+        return false;
+    }
+    public boolean getStoreProductByArticul(int articul) throws ResponceStatusException, JSONException {
+        String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul));
+        String result = HTTPRequest.Get(url);
+        if(result!=null){
+            if(!result.equals("[]")){
+                this.articulProducts = new JSONArray(result);
+                return true;
+            }
+            return false;
+        }
+        else{
+            throw new ResponceStatusException(this.mainApp,"Сервер не отвечает");
+        }
+    }
+
+
+    public JSONArray getArticulProducts() {
+        return articulProducts;
+    }
+
+    public boolean createProduct(JSONObject jsonProduct) throws IOException {
+        String url = this.getLocalHost()+"storeProducts";
+        String stP = HTTPRequest.Post(url,jsonProduct);
+        url = this.getLocalHost()+"supplyHistory";
+        JSONObject jsonh = new JSONObject();
+        try{
+            jsonh.put("storeProduct",new JSONObject(stP));
+            jsonh.put("date",LocalDate.now());
+            jsonh.put("employee",this.jsonEmployee);
+        }
+        catch (JSONException ignored){
+            MyLogger.logger.error("Не удалось сохранить историю поставки");
+        }
+        HTTPRequest.Post(url,jsonh);
+        return !stP.equals("");
+    }
 }
+

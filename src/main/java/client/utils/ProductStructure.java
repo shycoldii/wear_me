@@ -1,6 +1,8 @@
 package client.utils;
 
 import javafx.beans.property.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProductStructure {
     private LongProperty idLabel;
@@ -41,6 +43,36 @@ public class ProductStructure {
 
     public void setIdLabel(long idLabel) {
         this.idLabel.set(idLabel);
+    }
+
+    public SimpleStringProperty getCheckId() {
+        try{
+            JSONObject jsoncheck = new JSONObject((check.getValue().toString()));
+            return new SimpleStringProperty(jsoncheck.getString("id"));
+        }
+        catch(JSONException | NullPointerException e){
+            return new SimpleStringProperty("");
+        }
+
+
+    }
+    public SimpleLongProperty getSupplierId() {
+        try{
+            JSONObject jsonsupp = new JSONObject((supplier.get().toString()));
+            return new SimpleLongProperty(jsonsupp.getLong("id"));
+        }
+        catch(JSONException e){
+            return new SimpleLongProperty(-1L);
+        }
+    }
+    public SimpleLongProperty getOfficeId() {
+        try{
+            JSONObject jsonoffice = new JSONObject((office.get().toString()));
+            return new SimpleLongProperty(jsonoffice.getLong("id"));
+        }
+        catch(JSONException e){
+            return new SimpleLongProperty(-1L);
+        }
     }
 
     public void setArticul(int articul) {

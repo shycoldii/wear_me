@@ -300,7 +300,7 @@ public class JavaFXApplication extends Application {
     }
 
 
-    private Stage getLoader(FXMLLoader loader) throws IOException {
+    public Stage getLoader(FXMLLoader loader) throws IOException {
         AnchorPane rootLayout = loader.load();
         Stage dialogStage = new Stage();
         dialogStage.getIcons().add(new Image("client/images/icon.png"));
@@ -447,4 +447,111 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    public void initStock() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/stock.fxml"));
+            Stage dialogStage = getLoader(loader);
+            StockController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setAPI(this.API);
+            controller.setMainApp(this);
+            controller.setStage(dialogStage);
+            controller.loadData();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно склада");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No stock info");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
+    public void initAddingSupplier(StockController stockController) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingSupplier.fxml"));
+            Stage dialogStage = getLoader(loader);
+            AddingSupplierController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStockController(stockController);
+            controller.setStage(dialogStage);
+            controller.setAPI(this.API);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно поставщиков");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("Can't load adding supplier");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+    public void initSupply1(StockController stockController){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingSupply1.fxml"));
+            Stage dialogStage = this.getLoader(loader);
+            AddingSupply1Controller controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setStockController(stockController);
+            controller.setStage(dialogStage);
+            controller.setAPI(this.API);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно 1 стадии поставки");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No info about supply-1");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
+    public void initSupply2(AddingSupply1Controller addingSupplyController) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/addingSupply2.fxml"));
+            Stage dialogStage = this.getLoader(loader);
+            AddingSupply2Controller controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            controller.setMainApp(this);
+            controller.setSupply1Controller(addingSupplyController);
+            controller.setStage(dialogStage);
+            controller.setAPI(this.API);
+            controller.loadData();
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно 2 стадии поставки");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No info about supply-2");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
 }
