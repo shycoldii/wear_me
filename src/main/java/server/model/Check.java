@@ -54,11 +54,11 @@ public class Check {
         this.total = total;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee",nullable = false)
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client")
     private Client client;
 
@@ -78,7 +78,7 @@ public class Check {
     //@JoinColumn(name = "storeProducts",nullable = false)
     //private List<StoreProduct> storeProducts;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "promocode")
     private Promocode promocode;
 

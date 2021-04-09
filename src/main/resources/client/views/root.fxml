@@ -99,7 +99,7 @@
             <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" onMouseClicked="#getPromocodes" prefHeight="35.0" prefWidth="138.0" styleClass="check" text="promocodes" textFill="#343131" />
             <Label alignment="CENTER" layoutX="148.0" layoutY="10.0" onMouseClicked="#getOffices" prefHeight="35.0" prefWidth="138.0" styleClass="check" text="offices" textFill="#343131" />
             <Label alignment="CENTER" layoutX="287.0" layoutY="10.0" onMouseClicked="#getStock" prefHeight="35.0" prefWidth="138.0" styleClass="check" text="stock" textFill="#343131" />
-            <Label alignment="CENTER" layoutX="564.0" layoutY="10.0" onMouseClicked="#getCardInfo" prefHeight="35.0" prefWidth="368.0" styleClass="check" text="information" textFill="#343131" />
+            <Label alignment="CENTER" layoutX="564.0" layoutY="10.0" onMouseClicked="#getInfo" prefHeight="35.0" prefWidth="368.0" styleClass="check" text="information" textFill="#343131" />
          </children>
       </HBox>
          </children>

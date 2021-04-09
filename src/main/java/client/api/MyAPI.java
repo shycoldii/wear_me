@@ -358,7 +358,7 @@ public class MyAPI {
         }
 
     public Integer getPromocodeDiscount() throws JSONException {
-        if(!(this.jsonPromocode==null)) {
+        if(!(this.jsonPromocode.length() == 0)) {
             return this.jsonPromocode.getInt("discount");
         }
         return 0;

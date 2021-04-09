@@ -141,7 +141,7 @@ public class RootController {
     }
     @FXML
     private void addLoyaltyCard(){
-        if (this.API.getJsonPromocode() == null){
+        if (this.API.getJsonPromocode().length() == 0){
             MyLogger.logger.info("Добавление карты лояльности");
             this.mainApp.initAddingLoyaltyCard();
         }
@@ -282,6 +282,10 @@ public class RootController {
     @FXML void getStock(){
             MyLogger.logger.info("Запущено окно просмотра склада");
             this.mainApp.initStock();
+    }
+    @FXML void getInfo(){
+        MyLogger.logger.info("Запущено окно просмотра информации");
+        this.mainApp.initInfo();
     }
 
 

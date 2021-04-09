@@ -49,7 +49,7 @@ public class AddingSupplierController {
                 !phoneNumberField.getText().equals("") &
                 !emailField.getText().equals("")
         ){
-            if(NumberValidator.isNumber(phoneNumberField.getText())){
+            if(NumberValidator.isNumber(phoneNumberField.getText()) & NumberValidator.isRussianNumber(phoneNumberField.getText())){
                 if(EmailValidator.getInstance().isValid(emailField.getText())){
                     try{
                         JSONObject jsonSupplier = new JSONObject();
@@ -99,7 +99,7 @@ public class AddingSupplierController {
             }
             else{
                 Alert alert = AlertInfo.getWarningAlert(mainApp);
-                alert.setHeaderText("It isn't the phone number");
+                alert.setHeaderText("It isn't the correct phone number");
                 alert.showAndWait();
                 MyLogger.logger.error("Неправильный ввод номера телефона");
             }

@@ -26,11 +26,11 @@ public class ReturnsHistory {
     @Column(name="total", nullable = false)
     private Integer total;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
    @JoinColumn(name = "storeProduct",nullable = false)
    private StoreProduct storeProduct;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee",nullable = false)
     private Employee employee;
 
@@ -62,7 +62,7 @@ public class ReturnsHistory {
         return check;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade =CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "check_id",nullable = false)
     private Check check;
 

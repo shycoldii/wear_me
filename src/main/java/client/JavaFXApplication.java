@@ -554,4 +554,27 @@ public class JavaFXApplication extends Application {
             a.show();
         }
     }
+
+    public void initInfo() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/info.fxml"));
+            Stage dialogStage = this.getLoader(loader);
+            InfoController controller = loader.getController();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно информации");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No info about information");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
 }

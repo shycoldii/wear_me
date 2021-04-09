@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import server.model.*;
 import server.repository.*;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.net.URLDecoder;
 import java.util.List;
@@ -26,6 +27,7 @@ public class MyController {
     private final PromocodeRepository promocodeRepository;
     private final EmployeeRepository EmployeeRepository;
     private final ReturnsHistoryRepository returnsHistoryRepository;
+    protected EntityManager entityManager;
 
     @Autowired
     public MyController(PositionRepository posRepository,

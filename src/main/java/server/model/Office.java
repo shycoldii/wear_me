@@ -1,6 +1,7 @@
 package server.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "offices")
@@ -42,7 +43,7 @@ public class Office {
     @Column(name = "phoneNumber", length = 128, nullable = false,unique = true)
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "addressId",nullable = false,unique = true)
     private Address addressId;
 

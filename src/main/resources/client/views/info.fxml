@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="386.0" prefWidth="800.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.InfoController">
+    <children>
+        <Label alignment="CENTER" prefHeight="85.0" prefWidth="319.0" text="information" textFill="#e5e3e3" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font name="Arial Black" size="22.0" />
+            </font>
+        </Label>
+      <Label fx:id="info" layoutX="6.0" layoutY="141.0" prefHeight="227.0" prefWidth="778.0" text="&quot;wear me&quot; - интернет-магазин московского бренда одежды, включающий в себя модели для девушек и женщин.  &quot;wear me&quot; - это о комфорте, качестве и минимализме.Информация кассирам:При подкреплении карты клиента невозможно использовать промокод, как и в обратную сторону.Не забывайте предлагать клиентам создавать их учетные записи.Добавлять поставку можно только менеджерам. Понижение и повышение статуса товара возможно во всех случаях, кроме присутствия чека. Добавление поставщика происходит перед поставкой. Добавление промокодов доступно только менеджерам.Информация о картах:5% 500-100010% 1000-500015% 5000-1000020% &gt;10000Начисление бонусов происходит автоматически при покупке." textFill="#e5e3e3">
+         <font>
+            <Font name="Arial" size="11.0" />
+         </font>
+      </Label>
+      <Label fx:id="mainInfo" alignment="CENTER" layoutX="-2.0" layoutY="86.0" prefHeight="29.0" prefWidth="794.0" textFill="#e5e3e3">
+         <font>
+            <Font name="Arial" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="mainInfoHeader" alignment="CENTER" layoutX="100.0" layoutY="100.0" prefHeight="41.0" prefWidth="590.0" textFill="#e5e3e3">
+         <font>
+            <Font name="Arial" size="13.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

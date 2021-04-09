@@ -57,11 +57,11 @@ public class Employee {
     @Column(name="regDay",length = 60,nullable = false)
     private LocalDateTime regDay;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "positionId",nullable = false)
     private Position positionId;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "officeId",nullable = false)
     private Office officeId;
 
