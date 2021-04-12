@@ -408,7 +408,7 @@ public class JavaFXApplication extends Application {
                 MyLogger.logger.info("Окно закрыто");
                 dialogStage.close();
             });
-            MyLogger.logger.info("Открыто окно промокодов");
+            MyLogger.logger.info("Открыто окно добавления промокодов");
             dialogStage.show();
         } catch (Exception e) {
             MyLogger.logger.error(e.getMessage());

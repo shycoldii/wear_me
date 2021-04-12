@@ -32,24 +32,24 @@ public class MyAPI {
     private Integer currentBonuses = 0;
     private Integer bonuses = 0;
     private List<String> listOfColors = new ArrayList<>();
-    public JSONObject jsonAddress;
-    public JSONObject jsonEmployee;
-    public JSONObject jsonOffice;
+    public JSONObject jsonAddress= new JSONObject();
+    public JSONObject jsonEmployee= new JSONObject();
+    public JSONObject jsonOffice= new JSONObject();
     private String position;
-    private JSONObject jsonClient;
-    private JSONObject jsonPromocode;
+    private JSONObject jsonClient= new JSONObject();
+    private JSONObject jsonPromocode = new JSONObject();
     private JSONArray jsonStoreProducts = new JSONArray();
-    private JSONObject updatedCheck;
+    private JSONObject updatedCheck = new JSONObject();
     private ObservableList<ProductStructure> productData = FXCollections.observableArrayList();
     private JSONArray jsonProductData = new JSONArray();
     private String returnResult;
     private String totalResult;
-    private JSONArray jsonClients;
-    private JSONArray jsonPromocodes;
-    private JSONArray jsonOffices;
-    private JSONArray jsonProducts;
-    private JSONArray articulProducts;
-    private JSONArray jsonSuppliers;
+    private JSONArray jsonClients = new JSONArray();
+    private JSONArray jsonPromocodes = new JSONArray();
+    private JSONArray jsonOffices = new JSONArray();
+    private JSONArray jsonProducts = new JSONArray();
+    private JSONArray articulProducts = new JSONArray();
+    private JSONArray jsonSuppliers = new JSONArray();
 
     public void deleteAllProducts(){
         this.checkData.clear();
@@ -491,6 +491,18 @@ public class MyAPI {
                     jsonReturn.put("total",jsonProduct.getInt("retailPrice")-(jsonCheck.getInt("discount")*jsonProduct.getInt("retailPrice")/100));
                     url = this.getLocalHost()+"returns";
                     String returns = HTTPRequest.Post(url,jsonReturn);
+                    try{
+                        JSONObject jsonClient = jsonCheck.getJSONObject("client");
+                        int newValue = -jsonUpd.getInt("retailPrice")/100;
+                        jsonClient.put("numberOfBonuses",newValue);
+                        url = this.getLocalHost()+"clients/"+jsonClient.getLong("id");
+                        HTTPRequest.Put(url,jsonClient);
+                        MyLogger.logger.info("Бонусы сняты с карты");
+                    }
+                    catch (JSONException ignored){
+
+                    }
+
 
                     if(!returns.equals("")){
                         this.returnResult="Check ID: "+check_id+"\n";

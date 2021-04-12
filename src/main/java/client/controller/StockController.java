@@ -129,7 +129,6 @@ public class StockController {
         if(this.getRole()){
             this.mainApp.initSupply1(this);
         }
-        //todo: просроченные промокоды красным
 
     }
 

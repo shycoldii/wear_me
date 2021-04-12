@@ -9,12 +9,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.json.JSONException;
+
+import java.time.LocalDate;
 
 public class PromocodeController {
     private Stage stage;
@@ -50,17 +56,43 @@ public class PromocodeController {
         textField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredData.setPredicate(p -> p.getName().toLowerCase().contains(textField.getText().toLowerCase()))
         );
+        promocodeTable.setRowFactory(new Callback<>()
+        {
+            @Override public TableRow<PromocodeStructure> call(TableView<PromocodeStructure> personTableView)
+            {
+                return new TableRow<>()
+                {
+                    @Override protected void updateItem(PromocodeStructure person, boolean b)
+                    {
+                        super.updateItem(person, b);
+
+                        if (person == null)
+                            return;
+
+                        if(!LocalDate.now().isBefore(LocalDate.parse(person.getStartDate()))&
+                                !LocalDate.now().isAfter(LocalDate.parse(person.getEndDate())) )
+                        {
+                            getStyleClass().add("priorityLow");
+                        }
+
+                    }
+                };
+            }
+        });
+
     }
 
     public void loadData() throws JSONException, NoPromocodeException {
+        this.promocodeTable.refresh();
         this.promocodeData = this.API.getPromocodes();
         this.filteredData = new FilteredList<>(promocodeData);
         this.sortableData = new SortedList<>(this.filteredData);
         this.promocodeTable.setItems(this.sortableData);
         this.sortableData.comparatorProperty().bind(this.promocodeTable.comparatorProperty());
     }
-    @FXML void addPromocode() throws JSONException, NoPromocodeException {
+    @FXML void addPromocode() {
         this.mainApp.initAddingPromocodeNew(this);
-        this.loadData();
+       // promocodeData.clear();
+        //this.loadData();
     }
 }

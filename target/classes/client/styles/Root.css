@@ -42,6 +42,10 @@
 .TableView{
     -fx-font-family: "Arial Black";
 }
+.priorityLow {
+    -fx-background-color: #9eada4;
+}
+
 .logout{
     -fx-text-fill: #b0b0b0;
     -fx-font-size: 15px;

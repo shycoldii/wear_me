@@ -7,6 +7,7 @@ import client.utils.AlertInfo;
 import client.utils.CheckStructure;
 import client.utils.MyLogger;
 
+import client.utils.ProductStructure;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,8 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class RootController {
-    @FXML
-    private Label address;
+    @FXML private Label address;
     @FXML private TableColumn<CheckStructure, Integer> articulColumn;
     @FXML private TableColumn<CheckStructure,String> nameColumn;
     @FXML private TableColumn<CheckStructure,Integer> priceColumn;
@@ -88,7 +88,11 @@ public class RootController {
         int discount = this.API.getPriceWithDiscount();
         this.discount.setText(Integer.toString(discount));
         this.withDiscount.setText(String.valueOf(this.API.getTotalPrice()-Integer.parseInt(this.discount.getText())));
-        this.API.setCurrentBonuses(Integer.parseInt(this.withoutDiscount.getText())/100);
+        int summ = 0;
+        for(CheckStructure s:this.checkTable.getItems()){
+            summ+=s.getPrice()/100;
+        }
+        this.API.setCurrentBonuses(summ);
         this.bonuses.setText(String.valueOf(this.API.getCurrentBonuses()));
         MyLogger.logger.info("Обновлен чек");
         }

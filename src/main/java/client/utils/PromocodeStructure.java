@@ -68,4 +68,14 @@ public class PromocodeStructure {
     public void setDiscount(int discount) {
         this.discount.set(discount);
     }
+
+    @Override
+    public String toString() {
+        return "PromocodeStructure{" +
+                "name=" + name +
+                ", discount=" + discount +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }
