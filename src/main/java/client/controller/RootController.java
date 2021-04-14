@@ -291,6 +291,14 @@ public class RootController {
         MyLogger.logger.info("Запущено окно просмотра информации");
         this.mainApp.initInfo();
     }
+    @FXML void getStat(){
+        MyLogger.logger.info("Запущено окно просмотра статистики");
+        this.mainApp.initStat();
+    }
+    @FXML void getAboutMe(){
+        MyLogger.logger.info("Запущено окно просмотра страницы об авторе");
+        this.mainApp.initAboutMe();
+    }
 
 
 }

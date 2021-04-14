@@ -577,4 +577,54 @@ public class JavaFXApplication extends Application {
             a.show();
         }
     }
+
+    public void initStat() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/stats.fxml"));
+            Stage dialogStage = this.getLoader(loader);
+            StatController controller = loader.getController();
+
+            controller.setAPI(this.API);
+            controller.setStage(dialogStage);
+            controller.setMainApp(this);
+            controller.loadData();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно статистики");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No info about stat");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
+
+    public void initAboutMe() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(JavaFXApplication.class.getResource("views/aboutMe.fxml"));
+            Stage dialogStage = this.getLoader(loader);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setOnCloseRequest(we -> {
+                MyLogger.logger.info("Окно закрыто");
+                dialogStage.close();
+            });
+            MyLogger.logger.info("Открыто окно об авторе");
+            dialogStage.show();
+        } catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("No info about author");
+            a.setContentText(e.getMessage());
+            e.printStackTrace();
+            a.show();
+        }
+    }
 }

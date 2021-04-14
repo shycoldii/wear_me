@@ -101,7 +101,7 @@ public class StockController {
         int spent = 0;
         for(ProductStructure p: this.productData){
             if (p.getStatus() == 3 & !p.getCheckId().getValue().isEmpty()){
-                earned+=p.getRetail_price();
+                earned+=p.getRetail_price()*(100-p.getDiscountCheck())/100;
             }
             spent+=p.getPrice();
         }

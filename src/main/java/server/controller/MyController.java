@@ -27,7 +27,6 @@ public class MyController {
     private final PromocodeRepository promocodeRepository;
     private final EmployeeRepository EmployeeRepository;
     private final ReturnsHistoryRepository returnsHistoryRepository;
-    protected EntityManager entityManager;
 
     @Autowired
     public MyController(PositionRepository posRepository,
@@ -60,7 +59,7 @@ public class MyController {
                                                  Integer password){
         Employee res = EmployeeRepository.findEmployeeByEmail(email);
         if(password != null){
-            return res != null && res.getPassword().hashCode() == password ? new ResponseEntity<>(res.getId(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.OK);
+            return res != null && res.getPassword().equals(password.toString()) ? new ResponseEntity<>(res.getId(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.OK);
         }
         else{
             return res != null ? new ResponseEntity<>(res.getId(), HttpStatus.OK) :
@@ -251,9 +250,9 @@ public class MyController {
     public ResponseEntity<List<Office>> getAllOffices(){
         return new ResponseEntity<>(officeRepository.findAll(),HttpStatus.OK);
     }
-    @DeleteMapping("/client/{id}")
-    void deleteClient(@PathVariable Long id) {
-        clientRepository.deleteById(id);
+    @DeleteMapping("/returns/{id}")
+    void deleteReturn(@PathVariable Long id) {
+        returnsHistoryRepository.deleteById(id);
     }
     @PostMapping("/clients")
     Client newReturn(@RequestBody Client client){

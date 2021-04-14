@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="840.0" prefWidth="551.0" styleClass="vBox" stylesheets="@../styles/AddingtoCheck.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.StatController">
+    <children>
+        <Label alignment="CENTER" layoutX="62.0" layoutY="28.0" prefHeight="58.0" prefWidth="463.0" text="profit statistics" textFill="#e5e3e3" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
+            <font>
+                <Font name="Arial Black" size="22.0" />
+            </font>
+        </Label>
+      <LineChart fx:id="stat" layoutX="23.0" layoutY="72.0" prefHeight="292.0" prefWidth="502.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <LineChart fx:id="stat1" layoutX="23.0" layoutY="364.0" prefHeight="238.0" prefWidth="502.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </LineChart>
+      <LineChart fx:id="stat11" layoutX="23.0" layoutY="602.0" prefHeight="238.0" prefWidth="502.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </LineChart>
+    </children>
+</AnchorPane>

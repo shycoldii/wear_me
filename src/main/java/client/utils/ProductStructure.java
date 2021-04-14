@@ -56,6 +56,15 @@ public class ProductStructure {
 
 
     }
+    public int getDiscountCheck(){
+        try{
+            JSONObject jsoncheck = new JSONObject((check.getValue().toString()));
+            return jsoncheck.getInt("discount");
+        } catch (JSONException e) {
+            return 0;
+        }
+
+    }
     public SimpleLongProperty getSupplierId() {
         try{
             JSONObject jsonsupp = new JSONObject((supplier.get().toString()));
