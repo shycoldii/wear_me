@@ -100,10 +100,14 @@ public class StockController {
         int earned = 0;
         int spent = 0;
         for(ProductStructure p: this.productData){
-            if (p.getStatus() == 3 & !p.getCheckId().getValue().isEmpty()){
+            if (p.getStatus() == 3 & !p.getCheckId().getValue().isEmpty() &
+                    p.getOfficeId().getValue().equals(this.API.getOfficeId())){
                 earned+=p.getRetail_price()*(100-p.getDiscountCheck())/100;
             }
-            spent+=p.getPrice();
+            if(p.getOfficeId().getValue().equals(this.API.getOfficeId())){
+                spent+=p.getPrice();
+            }
+
         }
 
         this.earned.setText("EARNED: "+earned);
@@ -139,7 +143,7 @@ public class StockController {
         }
     }
     @FXML public void upStatus() throws JSONException {
-        if(getSelectedIndex() & getRole()){
+        if(getSelectedIndex() && getRole()){
             int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
             int status = this.productTable.getItems().get(selectedIndex).getStatus();
             if(status == 3){
@@ -204,7 +208,7 @@ public class StockController {
         }
     }
     @FXML public void downStatus() throws JSONException {
-        if(getSelectedIndex() & getRole()){
+        if(getSelectedIndex() && getRole()){
             int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
             int status = this.productTable.getItems().get(selectedIndex).getStatus();
             if(status == 1){

@@ -1,0 +1,10 @@
+client
+client.api
+client.controller
+client.exception
+client.utils
+client.validator
+server
+server.controller
+server.model
+server.repository

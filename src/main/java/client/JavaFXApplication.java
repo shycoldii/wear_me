@@ -2,6 +2,7 @@ package client;
 
 import client.api.MyAPI;
 import client.controller.*;
+import client.exception.NoStoreProductException;
 import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.application.Application;
@@ -329,7 +330,8 @@ public class JavaFXApplication extends Application {
             });
             MyLogger.logger.info("Открыто окно клиентов");
             dialogStage.show();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             MyLogger.logger.error(e.getMessage());
             Alert a = AlertInfo.getWarningAlert(this);
             a.setHeaderText("No client info");
@@ -440,7 +442,7 @@ public class JavaFXApplication extends Application {
         } catch (Exception e) {
             MyLogger.logger.error(e.getMessage());
             Alert a = AlertInfo.getWarningAlert(this);
-            a.setHeaderText("No promocodes info");
+            a.setHeaderText("No offices info");
             a.setContentText(e.getMessage());
             e.printStackTrace();
             a.show();
@@ -596,10 +598,19 @@ public class JavaFXApplication extends Application {
             });
             MyLogger.logger.info("Открыто окно статистики");
             dialogStage.show();
-        } catch (Exception e) {
+        }
+        catch(NoStoreProductException e){
             MyLogger.logger.error(e.getMessage());
             Alert a = AlertInfo.getWarningAlert(this);
-            a.setHeaderText("No info about stat");
+            a.setHeaderText("No info about stats");
+            a.setContentText("Server not responding");
+            e.printStackTrace();
+            a.show();
+        }
+        catch (Exception e) {
+            MyLogger.logger.error(e.getMessage());
+            Alert a = AlertInfo.getWarningAlert(this);
+            a.setHeaderText("Client Error");
             a.setContentText(e.getMessage());
             e.printStackTrace();
             a.show();

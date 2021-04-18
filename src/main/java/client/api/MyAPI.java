@@ -177,7 +177,7 @@ public class MyAPI {
 
 
     public String getLocalHost(){
-        return "http://localhost:8282/shop/";
+        return "http://localhost:8283/shop/";
     }
 
     //блок SIGN IN
@@ -246,7 +246,12 @@ public class MyAPI {
         }
         return false;
     }
-    public void getStoreProduct(Integer articul,String size,String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
+
+    public Long getOfficeId() {
+        return officeId;
+    }
+
+    public void getStoreProduct(Integer articul, String size, String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
         String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul))+
                 "&productSize="+size+"&officeId="+ officeId;
@@ -262,11 +267,11 @@ public class MyAPI {
                     }
                     else {
                         String color1 = jsonStoreProducts.getJSONObject(i).get("color").toString();
-                        if(color1.equals(color)){
+                        if(color1.toLowerCase().equals(color.toLowerCase())){
                             String name = jsonStoreProducts.getJSONObject(i).get("name").toString();
                             ArrayList<String> s = new ArrayList<>();
                             s.add(articul.toString());
-                            s.add(color);
+                            s.add(color1);
                             Integer retailPrice =  Integer.parseInt(jsonStoreProducts.getJSONObject(i).get("retailPrice").toString());
                             this.ListOfProducts.put(id,s);
                             this.listOfColors.clear();
@@ -556,7 +561,9 @@ public class MyAPI {
                 }
 
             }
-            else if(jsonPromocode!=null){
+
+            else if(jsonPromocode.length() !=0){
+                System.out.println(jsonPromocode);
                 jsonCheck.put("promocode",this.jsonPromocode);
                 jsonCheck.put("discount",this.getPromocodeDiscount());
             }

@@ -3,6 +3,7 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoStoreProductException;
+import javafx.application.Platform;
 import javafx.beans.binding.ObjectExpression;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -77,14 +78,15 @@ public class StatController {
         map.put("OCTOBER",0);
         map.put("NOVEMBER",0);
         map.put("DECEMBER",0);
-
+        LocalDateTime date = null;
         for (int i = 0; i < data.length(); i++) {
             try {
                 String j = data.getJSONObject(i).getJSONObject("check").
                         getString("dateTime");
-                LocalDateTime date = LocalDateTime.parse(j);
-                if (date.getYear() == LocalDate.now().getYear()) {
-                    int month = date.getMonthValue();
+                date = LocalDateTime.parse(j);
+                if (date.getYear() == LocalDate.now().getYear() &
+                        data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                this.API.getOfficeId()) {
                     int discount = data.getJSONObject(i).getJSONObject("check").getInt("discount");
                     int value = (data.getJSONObject(i).getInt("retailPrice") * (100 - discount) / 100 -
                             data.getJSONObject(i).getInt("tradePrice"));
@@ -100,6 +102,12 @@ public class StatController {
 
                 }
             } catch (JSONException ignored) {
+                if (date!=null & data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                        this.API.getOfficeId()){
+                    map.merge(date.getMonth().toString(),
+                            -data.getJSONObject(i).getInt("tradePrice"),Integer::sum);
+                }
+
             }
         }
 
@@ -107,44 +115,65 @@ public class StatController {
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             series.getData().add(new XYChart.Data<String, Integer>(entry.getKey(), entry.getValue()));
         }
-        System.out.println(map.toString());
-        series.setName("income/months");
+        series.setName("months");
         return series;
     }
 
     public void loadData() throws JSONException, NoStoreProductException {
         stat.getData().add(loadMonths());
-        stat.setStyle(" -fx-stroke: black;" +
-                "-fx-font-family: \"Arial Black\";" +
-                "    -fx-text-fill: #2d2d30;");
-
+        Set<Node> nodes = stat.lookupAll(".series" + 0);
+        for (Node n : nodes) {
+            n.setStyle("-fx-stroke: #7f7182;\n"+"-fx-background-color: black, white;"
+                    );
+        }
+        stat.setStyle("-fx-font-family: 'Arial Black'");
+        stat1.setStyle("-fx-font-family: 'Arial Black'");
+        stat11.setStyle("-fx-font-family: 'Arial Black'");
         stat1.getData().add(loadDays());
-        stat1.setStyle(" -fx-stroke: black;" +
-                "-fx-font-family: \"Arial Black\";" +
-                "    -fx-text-fill: #2d2d30;");
         stat11.getData().add(loadYears());
-        stat11.setStyle(" -fx-stroke: black;" +
-                "-fx-font-family: \"Arial Black\";" +
-                "    -fx-text-fill: #2d2d30;");
+        nodes = stat11.lookupAll(".series" + 0);
+        Platform.runLater(()->{
+            Node ns = stat11.lookup(".default-color0.chart-legend-item-symbol");
+            ns.setStyle("-fx-background-color: black, white");
+            ns = stat.lookup(".default-color0.chart-legend-item-symbol");
+            ns.setStyle("-fx-background-color: black, white");
+        });
+        for (Node n : nodes) {
+            n.setStyle("-fx-stroke: #9bb1ba;\n"+"-fx-background-color: black, white;\n"+"" +
+                    "chart-legend-item-symbol: #9bb1ba"
+            );
+        }
     }
 
 
-    private XYChart.Series<String, Integer> loadYears()  {
+    private XYChart.Series<String, Integer> loadYears() throws JSONException {
         JSONArray data = this.API.getJsonProducts();
         HashMap<String, Integer> map = new HashMap<>();
+        int year1 = 0;
         for (int i = 0; i < data.length(); i++) {
             try {
-                String j = data.getJSONObject(i).getJSONObject("check").
-                        getString("dateTime");
-                LocalDateTime date = LocalDateTime.parse(j);
-                int year = date.getYear();
-                int discount = data.getJSONObject(i).getJSONObject("check").getInt("discount");
-                int value = (data.getJSONObject(i).getInt("retailPrice") * (100 - discount) / 100 -
-                        data.getJSONObject(i).getInt("tradePrice"));
-                map.merge(Integer.toString(year),
-                        value, Integer::sum);
+                if(  data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                        this.API.getOfficeId()){
+                    String j = data.getJSONObject(i).getJSONObject("check").
+                            getString("dateTime");
+                    LocalDateTime date = LocalDateTime.parse(j);
+                    int year = date.getYear();
+                    year1 = year;
+                    int discount = data.getJSONObject(i).getJSONObject("check").getInt("discount");
+                    int value = (data.getJSONObject(i).getInt("retailPrice") * (100 - discount) / 100 -
+                            data.getJSONObject(i).getInt("tradePrice"));
+                    map.merge(Integer.toString(year),
+                            value, Integer::sum);
+                }
 
-            } catch (JSONException ignored) {
+
+            }catch (JSONException ignored) {
+                if (year1!=0 & data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                        this.API.getOfficeId()){
+                    map.merge(Integer.toString(year1),
+                            -data.getJSONObject(i).getInt("tradePrice"),Integer::sum);
+                }
+
             }
         }
 
@@ -153,21 +182,25 @@ public class StatController {
         for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
-        series.setName("income/years");
+        series.setName("years");
         return series;
     }
 
-    private XYChart.Series<String, Integer> loadDays() {
+    private XYChart.Series<String, Integer> loadDays() throws JSONException {
         JSONArray data = this.API.getJsonProducts();
         String name = "";
         HashMap<Integer, Integer> map = new HashMap<>();
+        LocalDateTime date1 = null;
         for (int i = 0; i < data.length(); i++) {
             try {
                 String j = data.getJSONObject(i).getJSONObject("check").
                         getString("dateTime");
                 LocalDateTime date = LocalDateTime.parse(j);
+                date1=date;
                 if (date.getYear() == LocalDate.now().getYear() & date.getMonthValue() ==
-                        LocalDate.now().getMonthValue()) {
+                        LocalDate.now().getMonthValue() & data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                        this.API.getOfficeId()
+                ) {
                     name = date.getMonth().toString();
                     int discount = data.getJSONObject(i).getJSONObject("check").getInt("discount");
                     int value = (data.getJSONObject(i).getInt("retailPrice") * (100 - discount) / 100 -
@@ -178,6 +211,12 @@ public class StatController {
 
                 }
             } catch (JSONException ignored) {
+                if (date1!=null & data.getJSONObject(i).getJSONObject("office").getLong("id") ==
+                        this.API.getOfficeId()){
+                    map.merge(date1.getDayOfMonth(),
+                            -data.getJSONObject(i).getInt("tradePrice"),Integer::sum);
+                }
+
             }
         }
         for(int i=1;i<32;i++){
@@ -193,7 +232,7 @@ public class StatController {
             series.getData().add(new XYChart.Data<>(entryk, entry.getValue()));
 
         }
-        series.setName("income/days");
+        series.setName(name.toLowerCase());
         return series;
     }
 

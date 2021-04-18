@@ -56,6 +56,8 @@ public class PromocodeController {
         textField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredData.setPredicate(p -> p.getName().toLowerCase().contains(textField.getText().toLowerCase()))
         );
+        
+        //tODO;  изменить валидацию номера и подтягивать обращение к хосту
         promocodeTable.setRowFactory(new Callback<>()
         {
             @Override public TableRow<PromocodeStructure> call(TableView<PromocodeStructure> personTableView)
@@ -66,14 +68,21 @@ public class PromocodeController {
                     {
                         super.updateItem(person, b);
 
-                        if (person == null)
-                            return;
 
+                        if (person == null){
+                            getStyleClass().clear();
+                            return;
+                        }
                         if(!LocalDate.now().isBefore(LocalDate.parse(person.getStartDate()))&
-                                !LocalDate.now().isAfter(LocalDate.parse(person.getEndDate())) )
+                                !LocalDate.now().isAfter(LocalDate.parse(person.getEndDate()))&
+                                (person.getName().toLowerCase().contains(textField.getText().toLowerCase())| textField.getText().isEmpty()))
                         {
                             getStyleClass().add("priorityLow");
                         }
+                        else{
+                            getStyleClass().clear();
+                        }
+
 
                     }
                 };

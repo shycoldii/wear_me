@@ -17,3 +17,6 @@
 .addLabel:hover{
     -fx-background-color: #c7c6cf;
 }
+.series-months *.chart-series-area-fill{
+    -fx-fill: #aab597;
+}

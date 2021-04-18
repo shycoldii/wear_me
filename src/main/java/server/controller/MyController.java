@@ -10,6 +10,7 @@ import server.repository.*;
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.net.URLDecoder;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -228,6 +229,13 @@ public class MyController {
     public ResponseEntity<List<Client>> getAllClients(){
         return new ResponseEntity<>(clientRepository.findAll(),HttpStatus.OK);
     }
+    @PostMapping("/employees")
+    Employee newEmployee(@RequestBody Employee employee){
+        employee.setPassword(Integer.toString(employee.getPassword().hashCode()));
+        employee.setRegDay(LocalDateTime.now());
+        return EmployeeRepository.save(employee);
+    }
+
     @GetMapping("/suppliers")
     public ResponseEntity<List<Supplier>> getAllSuppliers(){
         return new ResponseEntity<>(supplierRepository.findAll(),HttpStatus.OK);
