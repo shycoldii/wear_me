@@ -1,11 +1,23 @@
 package server.model;
 
 import javax.persistence.*;
-
+/**
+ * Сущность адресов
+ */
 @Entity
 @Table(name = "addresses")
 public class Address {
     public Address(){}
+
+    /**
+     * Конструктор для создания адресов
+     * @param city - город
+     * @param street - улица
+     * @param porch - подъезд
+     * @param floor - этаж
+     * @param street_code - код улицы
+     * @param apartment - номер квартиры
+     */
     public Address(String city, String street, String porch, String floor,
                    Integer street_code, Integer apartment){
         this.city = city;

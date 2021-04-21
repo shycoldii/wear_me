@@ -12,28 +12,43 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import server.model.Promocode;
 
-import java.io.IOException;
-
+/**
+ * Контроллер для создания нового промокода
+ */
 public class AddingPromocodeNewController {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
     private PromocodeController promocodeController;
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
 
     @FXML
     public void initialize() {}
-
+    /**
+     * Устанавливает значение контроллеру промокодов
+     * @param promocodeController - контроллер
+     */
     public void setPromocodeController(PromocodeController promocodeController) {
         this.promocodeController = promocodeController;
     }
@@ -46,6 +61,9 @@ public class AddingPromocodeNewController {
     @FXML
     DatePicker endDate;
 
+    /**
+     * Создает промокод при нажатии кнопки
+     */
     @FXML void add(){
         if(name.getText().equals("") | discount.getText().equals("") |
         startDate.getValue() == null | endDate.getValue() == null ){

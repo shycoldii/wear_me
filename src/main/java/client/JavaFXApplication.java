@@ -18,25 +18,42 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-
+/**
+ * Java FX Application
+ */
 public class JavaFXApplication extends Application {
     private Stage primaryStage;
     private RootController rootController;
     private MyAPI API;
 
-
+    /**
+     * Устанавливает значение API
+     * @param API - экземпляр класса MyAPI
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
 
+    /**
+     * Получает значение API
+     * @return MyAPI - значение API
+     */
     public MyAPI getAPI() {
         return API;
     }
 
+    /**
+     * Получает главную сцену
+     * @return Stage primaryStage
+     */
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
+    /**
+     * Запускает приложение и основную сцену,запускает окно авторизации
+     * @param primaryStage - основная сцена
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -45,6 +62,9 @@ public class JavaFXApplication extends Application {
         initSignIn();
     }
 
+    /**
+     * Инициализирует сцену авторизации сотрудников
+     */
     public void initSignIn() {
         try {
             this.primaryStage.setMaximized(false);
@@ -63,10 +83,17 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Возвращает значение rootController
+     * @return RootController rootController
+     */
     public RootController getRootController() {
         return rootController;
     }
 
+    /**
+     * Инициализирует корневую часть приложения
+     */
     public void initRoot() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -85,12 +112,15 @@ public class JavaFXApplication extends Application {
             controller.setView();
             this.rootController = controller;
 
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             MyLogger.logger.error("Ошибка при загрузке основной сцены");
             e.printStackTrace();
         }
     }
 
+    /**
+     * Инициализирует сцену при отсутствии соединения с сервером
+     */
     public void connectionError() {
         try {
             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -110,6 +140,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену при отсутствии данных при подключении к серверу
+     */
     public void noDataError() {
         try {
             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -130,7 +163,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
-
+    /**
+     * Инициализирует сцену добавления товаров в чек
+     */
     public void initAddingToCheck() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -155,13 +190,19 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Точка входа в программу
+     * @param args - аргументы
+     */
     public static void main(String[] args) {
         MyLogger log = new MyLogger();
         if (log.deploy())
             launch(args);
     }
 
+    /**
+     * Инициализирует сцену добавления промокода
+     */
     public void initAddingPromocode() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -185,6 +226,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену добавления карты лояльности
+     */
     public void initAddingLoyaltyCard() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -208,6 +252,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену чека
+     */
     public void initCheck() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -231,6 +278,10 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Инициализирует сцену возврата
+     */
     public void initReturn() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -252,6 +303,10 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Инициализирует сцену информации о возврате
+     */
     public void initReturnInfo() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -276,6 +331,10 @@ public class JavaFXApplication extends Application {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Инициализирует сцену успешного возврата
+     */
     public void initSucReturn() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -300,7 +359,12 @@ public class JavaFXApplication extends Application {
         }
     }
 
-
+    /**
+     * Создает новую диалоговую сцену с предзагрузками
+     * @param loader - лоадер
+     * @return dialogStage
+     * @throws IOException - может возникнуть исключение
+     */
     public Stage getLoader(FXMLLoader loader) throws IOException {
         AnchorPane rootLayout = loader.load();
         Stage dialogStage = new Stage();
@@ -313,6 +377,9 @@ public class JavaFXApplication extends Application {
         return dialogStage;
     }
 
+    /**
+     * Инициализирует сцену клиентов
+     */
     public void initClients() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -341,6 +408,10 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену добавления клиента
+     * @param clientController - контроллер клиента
+     */
     public void initAddingClient(ClientController clientController) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -368,17 +439,21 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену промокодов
+     */
     public void initPromocodes() {
         try {
             FXMLLoader loader = new FXMLLoader();
+
             loader.setLocation(JavaFXApplication.class.getResource("views/promocode.fxml"));
             Stage dialogStage = getLoader(loader);
             PromocodeController controller = loader.getController();
             controller.setAPI(this.API);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setMainApp(this);
             controller.setStage(dialogStage);
             controller.loadData();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setOnCloseRequest(we -> {
                 MyLogger.logger.info("Окно закрыто");
                 dialogStage.close();
@@ -395,6 +470,10 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену добавления промокода
+     * @param promocodeController - контроллер промокодов
+     */
     public void initAddingPromocodeNew(PromocodeController promocodeController) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -422,6 +501,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену офисов
+     */
     public void initOffices() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -449,15 +531,18 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену складов
+     */
     public void initStock() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/stock.fxml"));
             Stage dialogStage = getLoader(loader);
             StockController controller = loader.getController();
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setAPI(this.API);
             controller.setMainApp(this);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setStage(dialogStage);
             controller.loadData();
             dialogStage.setOnCloseRequest(we -> {
@@ -476,6 +561,10 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует сцену добавления поставщика
+     * @param stockController - контроллер склада
+     */
     public void initAddingSupplier(StockController stockController) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -502,15 +591,20 @@ public class JavaFXApplication extends Application {
             a.show();
         }
     }
+
+    /**
+     * Инициализирует первую сцену поставки
+     * @param stockController - контроллер склада
+     */
     public void initSupply1(StockController stockController){
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/addingSupply1.fxml"));
             Stage dialogStage = this.getLoader(loader);
             AddingSupply1Controller controller = loader.getController();
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setMainApp(this);
             controller.setStockController(stockController);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
             controller.setStage(dialogStage);
             controller.setAPI(this.API);
             dialogStage.setOnCloseRequest(we -> {
@@ -529,6 +623,10 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует вотрую сцену  поставки
+     * @param addingSupplyController - контроллер первой стадии поставки
+     */
     public void initSupply2(AddingSupply1Controller addingSupplyController) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -557,12 +655,14 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует информацию для сотрудников
+     */
     public void initInfo() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(JavaFXApplication.class.getResource("views/info.fxml"));
             Stage dialogStage = this.getLoader(loader);
-            InfoController controller = loader.getController();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setOnCloseRequest(we -> {
                 MyLogger.logger.info("Окно закрыто");
@@ -580,6 +680,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует окно статистики
+     */
     public void initStat() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -617,6 +720,9 @@ public class JavaFXApplication extends Application {
         }
     }
 
+    /**
+     * Инициализирует окно информации об авторе
+     */
     public void initAboutMe() {
         try {
             FXMLLoader loader = new FXMLLoader();

@@ -4,25 +4,16 @@ import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoStoreProductException;
 import javafx.application.Platform;
-import javafx.beans.binding.ObjectExpression;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.chart.XYChart;;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
-import scala.Int;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,15 +23,25 @@ public class StatController {
     private JavaFXApplication mainApp;
     private MyAPI API;
     ObservableList<String> observableList = FXCollections.observableArrayList();
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
 
     public void setAPI(MyAPI API) {
         this.API = API;
     }
-
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
-
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -62,6 +63,12 @@ public class StatController {
 
     }
 
+    /**
+     * Загружает статистику отделения по месяцам
+     * @return статистика по отделениям
+     * @throws JSONException
+     * @throws NoStoreProductException
+     */
     public XYChart.Series<String, Integer> loadMonths() throws JSONException, NoStoreProductException {
         this.API.getProducts();
         JSONArray data = this.API.getJsonProducts();
@@ -119,6 +126,11 @@ public class StatController {
         return series;
     }
 
+    /**
+     * Загружает данные статистик отделения
+     * @throws JSONException
+     * @throws NoStoreProductException
+     */
     public void loadData() throws JSONException, NoStoreProductException {
         stat.getData().add(loadMonths());
         Set<Node> nodes = stat.lookupAll(".series" + 0);
@@ -145,7 +157,11 @@ public class StatController {
         }
     }
 
-
+    /**
+     * Загружает статистику отделения по годам
+     * @return XYChart.Series<String, Integer>
+     * @throws JSONException
+     */
     private XYChart.Series<String, Integer> loadYears() throws JSONException {
         JSONArray data = this.API.getJsonProducts();
         HashMap<String, Integer> map = new HashMap<>();
@@ -186,6 +202,11 @@ public class StatController {
         return series;
     }
 
+    /**
+     * Загружает статистику отделения по дням
+     * @return XYChart.Series<String, Integer>
+     * @throws JSONException
+     */
     private XYChart.Series<String, Integer> loadDays() throws JSONException {
         JSONArray data = this.API.getJsonProducts();
         String name = "";

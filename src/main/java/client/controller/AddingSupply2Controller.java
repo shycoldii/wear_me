@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import scala.scalajs.js.JSON;
 
 import java.io.IOException;
 
@@ -34,18 +33,32 @@ public class AddingSupply2Controller {
     @FXML private ComboBox<String> typeField;
     @FXML private ComboBox<String> supplierField;
 
-
+    /**
+     * Устанавливает значение контроллеру поставки 1
+     * @param addingSupply1Controller - контроллер
+     */
 
     public void setSupply1Controller(AddingSupply1Controller addingSupply1Controller) {
         this.addingSupply1Controller = addingSupply1Controller;
     }
-
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -53,6 +66,11 @@ public class AddingSupply2Controller {
     @FXML
     public void initialize()  {
     }
+
+    /**
+     * Загружает первоначальные данные с учетом первоначального артикула
+     * @throws JSONException
+     */
     @FXML public void loadData() throws JSONException {
         if (this.addingSupply1Controller.getStatus()){
             this.nameField.setText(this.API.getArticulProducts().getJSONObject(0).getString("name"));
@@ -88,6 +106,10 @@ public class AddingSupply2Controller {
 
     }
 
+    /**
+     * Получает данные поставщиков
+     * @return  ObservableList<String> - список поставщиков
+     */
     private ObservableList<String> getSuppliers() {
         try{
             ObservableList<String> observableList = FXCollections.observableArrayList();
@@ -111,6 +133,10 @@ public class AddingSupply2Controller {
         return null;
     }
 
+    /**
+     * Создает список типов товаров
+     * @return список типов
+     */
     public ObservableList<String> getTypes(){
         ObservableList<String> type = FXCollections.observableArrayList();
         type.add("джинсы");
@@ -132,11 +158,14 @@ public class AddingSupply2Controller {
         type.add("шорты");
         type.add("юбка");
         type.add("костюм");
-        type.add("обувь");
         type.add("сумка");
         type.add("аксессуар");
         return type;
     }
+
+    /**
+     * Создает поставку при нажатии кнопки
+     */
     @FXML
     public void supply(){
         if(!colorField.getText().equals("") & sizeField.getValue() != null &

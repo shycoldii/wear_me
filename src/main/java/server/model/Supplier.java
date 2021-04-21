@@ -1,7 +1,9 @@
 package server.model;
 
 import javax.persistence.*;
-
+/**
+ * Сущность поставщиков
+ */
 @Entity
 @Table(name = "suppliers")
 public class Supplier {
@@ -21,6 +23,12 @@ public class Supplier {
         return email;
     }
 
+    /**
+     * Конструктор для поставщиков
+     * @param name - имя поставщика
+     * @param phoneNumber - телефонный номер
+     * @param email - электронная почта
+     */
     public Supplier(String name, String phoneNumber, String email){
         this.name = name;
         this.phoneNumber = phoneNumber;

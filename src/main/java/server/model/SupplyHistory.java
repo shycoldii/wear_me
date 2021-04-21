@@ -3,10 +3,18 @@ package server.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Сущность истории поставок
+ */
 @Entity
 @Table(name = "supplyHistory")
 public class SupplyHistory {
     public SupplyHistory(){};
+
+    /**
+     * Конструктор для истории поставок
+     * @param date - дата поставки
+     */
     public SupplyHistory(LocalDate date){
         this.date = date;
     };

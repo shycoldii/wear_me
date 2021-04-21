@@ -9,23 +9,37 @@ import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONException;
 
+/**
+ * Контроллер для добавления промокода
+ */
 public class AddingPromocodeController {
     @FXML
     TextField textPromocode;
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -33,6 +47,9 @@ public class AddingPromocodeController {
     @FXML
     public void initialize() {}
 
+    /**
+     * Добавляет промокод при нажатии кнопки
+     */
     @FXML public void addPr() {
         if(textPromocode.getText().equals("")){
             Alert alert = AlertInfo.getWarningAlert(mainApp);

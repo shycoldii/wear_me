@@ -5,27 +5,21 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Класс для структуризации поставщиков
+ */
 public class SupplierStructure {
-    private StringProperty email;
-    private StringProperty name;
-    private StringProperty phone;
-    private LongProperty id;
+    private final StringProperty name;
+    private final LongProperty id;
 
+    /**
+     * Инициализирует данные поставщика
+     * @param id - идентификатор
+     * @param name - название
+     */
     public SupplierStructure(Long id,String name){
         this.id = new SimpleLongProperty(id);
         this.name = new SimpleStringProperty(name);
-    }
-
-    public String getEmail() {
-        return email.get();
-    }
-
-    public StringProperty emailProperty() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email.set(email);
     }
 
     public String getName() {
@@ -40,25 +34,10 @@ public class SupplierStructure {
         this.name.set(name);
     }
 
-    public String getPhone() {
-        return phone.get();
-    }
-
-    public StringProperty phoneProperty() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone.set(phone);
-    }
-
     public long getId() {
         return id.get();
     }
 
-    public LongProperty idProperty() {
-        return id;
-    }
 
     public void setId(long id) {
         this.id.set(id);

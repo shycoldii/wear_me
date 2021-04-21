@@ -9,27 +9,35 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 import org.json.JSONException;
-
-import javax.swing.text.TableView;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
+/**
+ * Контроллер для чека
+ */
 public class CheckController {
     @FXML private Label checkInfo;
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
 
-
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
@@ -42,6 +50,9 @@ public class CheckController {
     @FXML private TableColumn<CheckStructure,Integer> total;
     @FXML private javafx.scene.control.TableView<CheckStructure> checkTable;
 
+    /**
+     * Инициализация первичных объектов
+     */
     @FXML
     public void initialize() {
         articul.setCellValueFactory(cellData -> cellData.getValue().articulProperty().asObject());
@@ -51,6 +62,11 @@ public class CheckController {
         price.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
         amount.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
     }
+
+    /**
+     * Устанавливает значения в таблице при нажатии кнопки
+     * @throws JSONException
+     */
     public void setItems() throws JSONException {
         this.checkTable.setItems(this.API.getCheckData());
         StringBuilder text = new StringBuilder("Office: " + this.API.getAddress() + "\n");
@@ -85,6 +101,10 @@ public class CheckController {
         this.checkInfo.setText(text.toString());
         MyLogger.logger.info("Выведена информация о покупке");
     }
+
+    /**
+     * Закрывает окно печати чека при нажатии кнопки
+     */
     @FXML
     public void okClicked(){
         this.mainApp.getRootController().createCheck();

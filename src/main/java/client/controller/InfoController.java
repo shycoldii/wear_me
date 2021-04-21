@@ -6,20 +6,38 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+/**
+ * Контроллер для информации сотрудникам
+ */
 public class InfoController {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
 
+    /**
+     * Инициализирует данные
+     */
     @FXML
     public void initialize() {
         this.mainInfo.setText("\"wear me\" - интернет-магазин московского бренда одежды, включающий в себя модели для девушек и женщин. \n "

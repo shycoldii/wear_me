@@ -16,6 +16,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Контроллер для главного окна приложения
+ */
 public class RootController {
     @FXML private Label address;
     @FXML private TableColumn<CheckStructure, Integer> articulColumn;
@@ -33,15 +36,24 @@ public class RootController {
 
     private JavaFXApplication mainApp;
     private MyAPI API;
-
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
-
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
 
+    /**
+     * Инициализирует первичные значения
+     */
     @FXML
     public void initialize() {
         articulColumn.setCellValueFactory(cellData -> cellData.getValue().articulProperty().asObject());
@@ -51,6 +63,10 @@ public class RootController {
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
         amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
     }
+
+    /**
+     * Реализует выход из учетной записи при нажатии кнопки
+     */
     @FXML
     public void logout(){
         this.mainApp.getRootController().createCheck();
@@ -63,7 +79,10 @@ public class RootController {
         return address;
     }
 
-    public void setView() throws JSONException {
+    /**
+     * Устанавливает данные клиентской среды сотрудника
+     */
+    public void setView()  {
         try{
             API.getData();
             this.address.setText(API.getAddress());
@@ -77,10 +96,19 @@ public class RootController {
            MyLogger.logger.error("Ошибка при инициализации главного слоя");
        }
     }
+
+    /**
+     * Создает добавление товара при нажатии кнопки
+     */
     @FXML
     public void addCheck(){
         this.mainApp.initAddingToCheck();
     }
+
+    /**
+     * Обновляет состояние таблицы
+     * @throws JSONException
+     */
     public void updateCheck() throws JSONException {
 
         this.checkTable.setItems(this.API.getCheckData());
@@ -97,6 +125,10 @@ public class RootController {
         MyLogger.logger.info("Обновлен чек");
         }
 
+    /**
+     * Удаляет товар из таблицы
+     * @throws JSONException
+     */
     @FXML
     private void deleteProduct() throws JSONException {
 
@@ -118,6 +150,9 @@ public class RootController {
         }
     }
 
+    /**
+     * Создает новый чек
+     */
     @FXML
     public void createCheck(){
         this.API.deleteAllProducts();
@@ -128,6 +163,10 @@ public class RootController {
         this.bonuses.setText("0");
         MyLogger.logger.info("Создан новый чек");
     }
+
+    /**
+     * Добавляет промокод
+     */
     @FXML
     private void addPromocode(){
         if(this.API.getLoyaltyDiscount() ==0){
@@ -143,6 +182,10 @@ public class RootController {
             MyLogger.logger.error("Попытка ввести промокод при карте лояльности");
         }
     }
+
+    /**
+     * Добавляет карту лояльности
+     */
     @FXML
     private void addLoyaltyCard(){
         if (this.API.getJsonPromocode().length() == 0){
@@ -161,6 +204,11 @@ public class RootController {
 
 
     }
+
+    /**
+     * Удаляет промокод
+     * @throws JSONException
+     */
     @FXML public void removePromocode() throws JSONException {
         if(this.API.getJsonPromocode().length() == 0){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
@@ -180,6 +228,11 @@ public class RootController {
 
 
     }
+
+    /**
+     * Удаляет карту лояльности
+     * @throws JSONException
+     */
     @FXML public void removeLoaltyCard() throws JSONException {
         if(this.API.getClientId() == null){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
@@ -198,6 +251,10 @@ public class RootController {
         }
 
     }
+
+    /**
+     * Получает информацию о карте лояльности
+     */
     @FXML public void getCardInfo(){
         if(this.API.getClientId() == null){
             Alert alert = AlertInfo.getWarningAlert(mainApp);
@@ -214,6 +271,10 @@ public class RootController {
             MyLogger.logger.info("Информация о клиенте");
         }
     }
+
+    /**
+     * Отправляет товары на продажу
+     */
     @FXML public void sell(){
         MyLogger.logger.info("Запущено окно расчета");
         if(this.API.getEmployeeId() ==null || this.API.getCheckData().isEmpty() ||
@@ -246,14 +307,25 @@ public class RootController {
         }
 
     }
+
+    /**
+     * Реализует возврат товара
+     */
     @FXML void returnProduct(){
         MyLogger.logger.info("Запущено окно возврата");
         this.mainApp.initReturn();
     }
+
+    /**
+     * Реализует отображение клиентов
+     */
     @FXML void getClients(){
         MyLogger.logger.info("Запущено окно просмотра клиентов");
         this.mainApp.initClients();
     }
+    /**
+     * Реализует отображение промокодов
+     */
     @FXML void getPromocodes(){
         if(this.API.getPosition().toLowerCase().equals("менеджер") | this.API.getPosition().toLowerCase().equals("программист")){
             MyLogger.logger.info("Запущено окно просмотра промокодов");
@@ -269,6 +341,9 @@ public class RootController {
 
 
     }
+    /**
+     * Реализует отображение офисов
+     */
     @FXML void getOffices(){
         if(this.API.getPosition().toLowerCase().equals("менеджер") | this.API.getPosition().toLowerCase().equals("программист")){
             MyLogger.logger.info("Запущено окно просмотра офисов");
@@ -282,19 +357,30 @@ public class RootController {
             alert.show();
         }
     }
-
+    /**
+     * Реализует отображение склада
+     */
     @FXML void getStock(){
             MyLogger.logger.info("Запущено окно просмотра склада");
             this.mainApp.initStock();
     }
+    /**
+     * Реализует отображение информации сотрудникам
+     */
     @FXML void getInfo(){
         MyLogger.logger.info("Запущено окно просмотра информации");
         this.mainApp.initInfo();
     }
+    /**
+     * Реализует отображение статистики
+     */
     @FXML void getStat(){
         MyLogger.logger.info("Запущено окно просмотра статистики");
         this.mainApp.initStat();
     }
+    /**
+     * Реализует отображение информации об авторе
+     */
     @FXML void getAboutMe(){
         MyLogger.logger.info("Запущено окно просмотра страницы об авторе");
         this.mainApp.initAboutMe();

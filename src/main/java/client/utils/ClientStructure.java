@@ -2,19 +2,32 @@ package client.utils;
 
 import javafx.beans.property.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+/**
+ * Класс для структуризации клиента
+ */
 public class ClientStructure {
-    private LongProperty id;
-    private StringProperty birthday;
-    private StringProperty email;
-    private StringProperty firstName;
-    private StringProperty secondName;
-    private StringProperty patronymic;
-    private StringProperty phoneNumber;
-    private StringProperty regday;
-    private IntegerProperty bonuses;
+    private final LongProperty id;
+    private final StringProperty birthday;
+    private final StringProperty email;
+    private final StringProperty firstName;
+    private final StringProperty secondName;
+    private final StringProperty patronymic;
+    private final StringProperty phoneNumber;
+    private final StringProperty regday;
+    private final IntegerProperty bonuses;
+
+    /**
+     * Инициализирует данные клиента
+     * @param id - идентификатор
+     * @param birthday - день рождения
+     * @param email - электронная почта
+     * @param firstName - имя
+     * @param bonuses - количество бонусов
+     * @param patronymic - отчество
+     * @param phoneNumber - телефонный номер
+     * @param regday - дата регистрации
+     * @param secondName - фамилия
+     */
     public  ClientStructure(Long id, String birthday, String email, String firstName,
                             Integer bonuses, String patronymic, String phoneNumber, String regday,
                             String secondName){

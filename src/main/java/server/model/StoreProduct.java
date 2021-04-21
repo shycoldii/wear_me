@@ -1,14 +1,26 @@
 package server.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-
+/**
+ * Сущность товаров
+ */
 @Entity
 @Table(name = "storeProducts")
 public class StoreProduct {
     public StoreProduct(){};
 
+    /**
+     * Конструктор для товаров
+     * @param articul - артикул
+     * @param name - название
+     * @param tradePrice - цена покупки у поставщика
+     * @param retailPrice - цена продажи в магазине
+     * @param type - тип
+     * @param size - размер
+     * @param color - цвет
+     * @param description - описание
+     * @param status - статус(состояние) товара. Принимает значения
+     *               1 - поставка, 2 - на складе, 3 - списан
+     */
     public StoreProduct(Integer articul,String name,Integer tradePrice,Integer retailPrice,
                         String type,String size,String color,String description,Integer status){
         this.articul = articul;

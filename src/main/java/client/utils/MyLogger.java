@@ -8,9 +8,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Класс логирования приложения
+ */
 public class MyLogger  {
     public static Logger logger;
 
+    /**
+     * Инициализирует логер
+     * @return состояние инициализации
+     */
     public boolean deploy() {
         String s = File.separator;
         String log4jConfigFile = String.format(System.getProperty("user.dir") + "%ssrc%smain%sresources%sclient%sxml%slog4j2.xml", s,s,  s, s,s, s);

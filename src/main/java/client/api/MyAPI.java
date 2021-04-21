@@ -3,27 +3,25 @@ package client.api;
 import client.JavaFXApplication;
 import client.exception.*;
 import client.utils.*;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
 import static java.time.temporal.ChronoUnit.DAYS;
 
+/**
+ * АПИ приложения
+ */
 public class MyAPI {
-    private JavaFXApplication mainApp;
-    private boolean isAuthenticated=false;
-    private ObservableList<CheckStructure> checkData = FXCollections.observableArrayList();
-    private HashMap<Long,ArrayList<String>> ListOfProducts = new HashMap<>();
+    private final JavaFXApplication mainApp;
+    private final ObservableList<CheckStructure> checkData = FXCollections.observableArrayList();
+    private final HashMap<Long,ArrayList<String>> ListOfProducts = new HashMap<>();
     private Long employeeId;
     private Long officeId;
     private Long addressId;
@@ -31,7 +29,7 @@ public class MyAPI {
     private Long checkId;
     private Integer currentBonuses = 0;
     private Integer bonuses = 0;
-    private List<String> listOfColors = new ArrayList<>();
+    private final List<String> listOfColors = new ArrayList<>();
     public JSONObject jsonAddress= new JSONObject();
     public JSONObject jsonEmployee= new JSONObject();
     public JSONObject jsonOffice= new JSONObject();
@@ -51,6 +49,9 @@ public class MyAPI {
     private JSONArray articulProducts = new JSONArray();
     private JSONArray jsonSuppliers = new JSONArray();
 
+    /**
+     * Очищает информацию о всех сохраненных товарах во время сессии
+     */
     public void deleteAllProducts(){
         this.checkData.clear();
         this.ListOfProducts.clear();
@@ -104,6 +105,11 @@ public class MyAPI {
     public String getEmployeeInfo() throws JSONException {
         return position+" "+jsonEmployee.get("secondName").toString()+" "+jsonEmployee.get("firstName").toString();
     }
+
+    /**
+     * Получает сумму чека
+     * @return int -  сумма чека
+     */
     public int getTotalPrice(){
         int z = 0;
         for(CheckStructure i: checkData){
@@ -111,6 +117,12 @@ public class MyAPI {
         }
         return z;
     }
+
+    /**
+     * Получает сумму чека с учетом скидки
+     * @return int - сумма чека с учетом скидки
+     * @throws JSONException
+     */
     public int getPriceWithDiscount() throws JSONException {
         int disc = this.getPromocodeDiscount();
         int total = 0;
@@ -129,6 +141,12 @@ public class MyAPI {
         }
         return total;
     }
+
+    /**
+     * Удаляет товар из сохраненной сессии
+     * @param articul - артикул
+     * @param color - цвет
+     */
     public void deleteProduct(Integer articul,String color){
         for(CheckStructure i: checkData){
            if(i.getArticul() == articul & i.getColor().equals(color)){
@@ -170,17 +188,29 @@ public class MyAPI {
         this.mainApp = mainApp;
         MyLogger.logger.info("Инициализирован MyAPI");
     }
+
+    /**
+     * Удаляет карту лояльности из сессии
+     */
     public void removeLoyaltyCard(){
         this.bonuses = 0;
         this.clientId = null;
     }
 
-
+    /**
+     * Возвращает адрес подключения к серверу
+     * @return String - адрес сервера
+     */
     public String getLocalHost(){
         return "http://localhost:8283/shop/";
     }
 
-    //блок SIGN IN
+    /**
+     * Проверяет, существует ли такая почта у сотрудника
+     * @param email - почта
+     * @return Boolean
+     * @throws ResponceStatusException
+     */
     public Boolean isEmail(String email) throws ResponceStatusException {
         String url = this.getLocalHost()+"login?email="+ URLEncoder.encode(email);
         String response = HTTPRequest.Get(url);
@@ -188,22 +218,33 @@ public class MyAPI {
             return !response.equals("");
 
         }
-        this.isAuthenticated = false;
         throw  new ResponceStatusException(this.mainApp, "Проверка на email - пустой ответ от сервера");
     }
+
+    /**
+     * Проверяет пароль на корректность
+     * @param email - почта
+     * @param password - пароль
+     * @return Long - id сотрудника
+     * @throws ResponceStatusException
+     */
     public  Long isPassword(String email, String password) throws ResponceStatusException {
-        String url = this.getLocalHost()+"login?email="+URLEncoder.encode(email)+"&password="+password.hashCode();
+        String url = this.getLocalHost()+"login?email="+URLEncoder.encode(email)+"&password="+HashUtil.convert(password);
         String response = HTTPRequest.Get(url);
         if(response!=null){
             if(response.equals("")){
                 return null;
             }
-            this.isAuthenticated = true;
             return Long.parseLong(response);
         }
-        this.isAuthenticated = false;
         throw new ResponceStatusException(this.mainApp, "Проверка на password - пустой ответ от сервера");
     }
+
+    /**
+     * Получает информацию для главного окна приложения
+     * @throws JSONException
+     * @throws NoAppDataException
+     */
     public void getData() throws JSONException, NoAppDataException {
         String url = this.getLocalHost()+"employees?id="+URLEncoder.encode(String.valueOf(employeeId));
         String result = HTTPRequest.Get(url);
@@ -226,6 +267,15 @@ public class MyAPI {
             throw new NoAppDataException(mainApp,"Данные не были загружены");
         }
     }
+
+    /**
+     * Проверяет, есть ли товар в чеке
+     * @param articul - артикул
+     * @param name - название
+     * @param retailPrice - цена
+     * @param color - цвет
+     * @return true/false
+     */
     public boolean isInCheckData(Integer articul,String name,Integer retailPrice,String color){
         for(CheckStructure c: this.checkData){
             if(c.articulProperty().getValue().equals(articul) &&
@@ -237,6 +287,12 @@ public class MyAPI {
         return false;
 
     }
+
+    /**
+     * Проверяет, есть ли товар в листе товаров
+     * @param id - идентификатор
+     * @return true/false
+     */
     public boolean isInProducts(Long id){
         for(Long i: ListOfProducts.keySet()){
             if (i.equals(id)){
@@ -251,6 +307,16 @@ public class MyAPI {
         return officeId;
     }
 
+    /**
+     * Получает информацию о товаре по заданным критериям
+     * @param articul - артикул
+     * @param size - размер
+     * @param color - цвет
+     * @throws ResponceStatusException
+     * @throws JSONException
+     * @throws NoStoreProductException
+     * @throws NoColorException
+     */
     public void getStoreProduct(Integer articul, String size, String color) throws ResponceStatusException, JSONException, NoStoreProductException, NoColorException {
         this.listOfColors.clear();
         String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul))+
@@ -318,6 +384,14 @@ public class MyAPI {
         return listOfColors;
     }
 
+    /**
+     * Получает информацию о промокоде по названию
+     * @param name - название
+     * @throws ResponceStatusException
+     * @throws JSONException
+     * @throws NoPromocodeException
+     * @throws TimeOutPromocodeException
+     */
     public void getPromocode(String name) throws ResponceStatusException, JSONException, NoPromocodeException, TimeOutPromocodeException {
         String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(name);
         String result = HTTPRequest.Get(url);
@@ -348,6 +422,16 @@ public class MyAPI {
     public void removePromocode(){
         this.jsonPromocode = new JSONObject();
     }
+
+    /**
+     * Отправляет данные о новом промокоде на сервер
+     * @param jsonPr - JSONObject промокода
+     * @return true/false
+     * @throws NoPromocodeException
+     * @throws JSONException
+     * @throws IOException
+     * @throws ResponceStatusException
+     */
     public boolean postPromocode(JSONObject jsonPr) throws NoPromocodeException, JSONException, IOException, ResponceStatusException {
         String url = this.getLocalHost()+"promocode?name="+URLEncoder.encode(jsonPr.getString("name"));
         String promocode = HTTPRequest.Get(url);
@@ -362,12 +446,22 @@ public class MyAPI {
         throw new ResponceStatusException(this.mainApp,"Сервер не отвечает");
         }
 
+    /**
+     * Получает информацию о скидке промокода
+     * @return integer - сумму скидки
+     * @throws JSONException
+     */
     public Integer getPromocodeDiscount() throws JSONException {
         if(!(this.jsonPromocode.length() == 0)) {
             return this.jsonPromocode.getInt("discount");
         }
         return 0;
     }
+
+    /**
+     * Получает информацию о скидке по карте лояльности
+     * @return discount - скидка товара
+     */
     public Integer getLoyaltyDiscount(){
             int discount = 0;
             int bonuses = this.getBonuses();
@@ -386,6 +480,14 @@ public class MyAPI {
             return discount;
     }
 
+    /**
+     * Получает информацию о карте лояльности
+     * @param phoneNumber - номер телефона
+     * @param email - почта
+     * @throws ResponceStatusException
+     * @throws NoClientException
+     * @throws JSONException
+     */
     public void getLoyaltyCard(String phoneNumber,String email) throws ResponceStatusException, NoClientException, JSONException {
         String url = "";
             if(phoneNumber==null){
@@ -417,6 +519,14 @@ public class MyAPI {
                 throw new ResponceStatusException(this.mainApp, "Получение клиента- нет ответа от сервера");
             }
     }
+
+    /**
+     * Получает информацию о товарах в заданном чеке
+     * @param checkId - идентификатор чека
+     * @throws NoStoreProductException
+     * @throws ResponceStatusException
+     * @throws JSONException
+     */
     public void getProductsByCheckId(Long checkId) throws NoStoreProductException, ResponceStatusException, JSONException {
         String url = this.getLocalHost()+"checks?id="+URLEncoder.encode(String.valueOf(checkId));
         String result = HTTPRequest.Get(url);
@@ -469,6 +579,15 @@ public class MyAPI {
         }
 
     }
+
+    /**
+     * Возвращает товар по заданному идентификатору в чеке
+     * @param check_id - идентификатор чека
+     * @param id - идентификатор товара
+     * @throws JSONException
+     * @throws IOException
+     * @throws SellProductException
+     */
     public void returnProduct(Long check_id,Long id) throws JSONException, IOException, SellProductException {
         Integer price = 0;
         JSONObject jsonProduct = new JSONObject();
@@ -544,6 +663,12 @@ public class MyAPI {
         return productData;
     }
 
+    /**
+     * Отправляет информацию об успешной продаже товара на сервер
+     * @throws JSONException
+     * @throws IOException
+     * @throws SellProductException
+     */
     public void sellProducts() throws JSONException, IOException, SellProductException {
             JSONObject jsonCheck = new JSONObject();
             jsonCheck.put("dateTime",LocalDateTime.now());
@@ -597,6 +722,10 @@ public class MyAPI {
         return returnResult;
     }
 
+    /**
+     * Сбрасывает состояние возврата товаров
+     * @param returnResult - строка возврата
+     */
     public void setReturnResult(String returnResult) {
         this.returnResult = "";
         this.jsonProductData = new JSONArray();
@@ -624,10 +753,24 @@ public class MyAPI {
     public String getPosition() {
         return position;
     }
+
+    /**
+     * Удаляет клиента по идентификатору
+     * @param id - идентификатор
+     * @throws IOException
+     */
     public void deleteClient(Long id) throws IOException {
         String url =this.getLocalHost()+"client/"+ id;
         HTTPRequest.Delete(url);
     }
+
+    /**
+     * Отправляет данные на сервер о новом клиенте
+     * @param jsonClient - JSONObject клиента
+     * @return true/false
+     * @throws IOException
+     * @throws JSONException
+     */
     public boolean createClient(JSONObject jsonClient) throws IOException, JSONException {
         String url = this.getLocalHost()+"client?phone="+URLEncoder.encode(jsonClient.getString("phoneNumber"));
         String client = HTTPRequest.Get(url);
@@ -668,6 +811,12 @@ public class MyAPI {
 
     }
 
+    /**
+     * Получает информацию о клиентах
+     * @return - список клиентов
+     * @throws NoClientException
+     * @throws JSONException
+     */
     public ObservableList<ClientStructure> getClients() throws NoClientException, JSONException {
         String url =this.getLocalHost()+"clients";
         String clients = HTTPRequest.Get(url);
@@ -695,6 +844,13 @@ public class MyAPI {
         }
 
     }
+
+    /**
+     * Получает информацию о поставщиках
+     * @return список поставщиков
+     * @throws NoSupplierException
+     * @throws JSONException
+     */
     public ObservableList<SupplierStructure> getSuppliers() throws NoSupplierException, JSONException {
         String url =this.getLocalHost()+"suppliers";
         String suppliers = HTTPRequest.Get(url);
@@ -714,6 +870,13 @@ public class MyAPI {
         }
 
     }
+
+    /**
+     * Получает информацию о промокодах
+     * @return список промокодов
+     * @throws NoPromocodeException
+     * @throws JSONException
+     */
     public ObservableList<PromocodeStructure> getPromocodes() throws NoPromocodeException, JSONException {
         String url =this.getLocalHost()+"promocodes";
         String promocodes = HTTPRequest.Get(url);
@@ -737,6 +900,12 @@ public class MyAPI {
 
     }
 
+    /**
+     * Получает информацию об офисах
+     * @return список офисов
+     * @throws JSONException
+     * @throws NoOfficeException
+     */
     public ObservableList<OfficeStructure> getOffices() throws JSONException, NoOfficeException {
         String url =this.getLocalHost()+"offices";
         String offices = HTTPRequest.Get(url);
@@ -764,6 +933,12 @@ public class MyAPI {
         return jsonProducts;
     }
 
+    /**
+     * Получает информацию о товарах
+     * @return список товаров
+     * @throws JSONException
+     * @throws NoStoreProductException
+     */
     public ObservableList<ProductStructure> getProducts() throws JSONException, NoStoreProductException{
         String url =this.getLocalHost()+"storeProducts";
         String products = HTTPRequest.Get(url);
@@ -803,6 +978,13 @@ public class MyAPI {
         }
     }
 
+    /**
+     * Меняет состояние товара (статус)
+     * @param jsonObject - обновленный объект товара
+     * @param id - идентификатор товара
+     * @throws IOException
+     * @throws NoStoreProductException
+     */
     public void changeStatusForProduct(JSONObject jsonObject,Long id) throws IOException, NoStoreProductException {
         String url =this.getLocalHost()+"storeProducts/"+URLEncoder.encode(String.valueOf(id));
         String updatedProduct = HTTPRequest.Put(url,jsonObject);
@@ -811,6 +993,13 @@ public class MyAPI {
         }
     }
 
+    /**
+     * Отправляет данные о новом поставщике на сервер
+     * @param jsonSupplier - JSONObject поставщика
+     * @return true/false
+     * @throws JSONException
+     * @throws IOException
+     */
     public boolean createSupplier(JSONObject jsonSupplier) throws JSONException, IOException {
         String url = this.getLocalHost()+"supplier?phone="+URLEncoder.encode(jsonSupplier.getString("phoneNumber"))+
                 "&email="+URLEncoder.encode(jsonSupplier.getString("email"))+
@@ -827,6 +1016,14 @@ public class MyAPI {
         }
         return false;
     }
+
+    /**
+     * Проверяет, существует ли товар с заданным артикулом
+     * @param articul - артикул
+     * @return true/false
+     * @throws ResponceStatusException
+     * @throws JSONException
+     */
     public boolean getStoreProductByArticul(int articul) throws ResponceStatusException, JSONException {
         String url =this.getLocalHost()+"storeProducts?articul="+URLEncoder.encode(String.valueOf(articul));
         String result = HTTPRequest.Get(url);
@@ -847,6 +1044,12 @@ public class MyAPI {
         return articulProducts;
     }
 
+    /**
+     * Отправляет данные на сервер о новой поставке
+     * @param jsonProduct - JSONObject товара
+     * @return true/false
+     * @throws IOException
+     */
     public boolean createProduct(JSONObject jsonProduct) throws IOException {
         String url = this.getLocalHost()+"storeProducts";
         String stP = HTTPRequest.Post(url,jsonProduct);

@@ -7,17 +7,17 @@ import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
 
+/**
+ * Контроллер добавления поставки (стадия 1)
+ */
 public class AddingSupply1Controller {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
     private StockController stockController;
-    @FXML private TextField colorField;
     private boolean status;
     public boolean getStatus(){
         return this.status;
@@ -26,13 +26,24 @@ public class AddingSupply1Controller {
     public void setStockController(StockController stockController) {
         this.stockController = stockController;
     }
-
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -40,6 +51,10 @@ public class AddingSupply1Controller {
     @FXML
     public void initialize() {}
     @FXML private TextField articulField;
+
+    /**
+     * Переводит состояние добавления поставки во 2 с учетом данных при нажатии кнопки
+     */
     @FXML
     public void continueSupply(){
         if(!this.articulField.getText().equals("")){

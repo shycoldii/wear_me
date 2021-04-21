@@ -2,11 +2,7 @@ package client.controller;
 
 import client.JavaFXApplication;
 import client.api.MyAPI;
-import client.exception.NoClientException;
 import client.exception.NoOfficeException;
-import client.utils.AlertInfo;
-import client.utils.ClientStructure;
-import client.utils.MyLogger;
 import client.utils.OfficeStructure;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +13,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.json.JSONException;
 
+/**
+ * Контроллер офиса
+ */
 public class OfficeController {
     private Stage stage;
     @FXML private TableView<OfficeStructure> officeTable;
@@ -32,16 +31,31 @@ public class OfficeController {
     private FilteredList<OfficeStructure> filteredData = new FilteredList<>(officeData);
     private SortedList<OfficeStructure> sortableData = new SortedList<>(filteredData);
     private MyAPI API;
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
 
+    /**
+     * Инициализация первичных объектов контроллера
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
@@ -56,6 +70,11 @@ public class OfficeController {
         );
     }
 
+    /**
+     * Загружает данные об офисах
+     * @throws JSONException
+     * @throws NoOfficeException
+     */
     public void loadData() throws JSONException, NoOfficeException {
         this.officeData = this.API.getOffices();
         this.filteredData = new FilteredList<>(officeData);

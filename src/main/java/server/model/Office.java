@@ -2,11 +2,19 @@ package server.model;
 
 import javax.persistence.*;
 import java.util.List;
-
+/**
+ * Сущность офисов
+ */
 @Entity
 @Table(name = "offices")
 public class Office {
     public Office(){}
+
+    /**
+     * Конструктор для сущности офиса
+     * @param name - название офиса
+     * @param phone_number - телефонный номер офиса
+     */
     public Office(String name,String phone_number){
         this.phoneNumber = phone_number;
         this.name = name;

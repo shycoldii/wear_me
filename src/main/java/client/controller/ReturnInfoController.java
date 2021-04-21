@@ -15,6 +15,9 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Контроллер для информации о возврате
+ */
 public class ReturnInfoController {
     private Stage stage;
     private JavaFXApplication mainApp;
@@ -29,16 +32,32 @@ public class ReturnInfoController {
     @FXML private TableColumn<ProductStructure,String> colorColumn;
     @FXML private TableColumn<ProductStructure,String> sizeColumn;
     @FXML private Label confReturn;
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
 
+    /**
+     * Устанавливает значения в таблице
+     * @param productTable - список товаров
+     */
     public void setTable(
             ObservableList<ProductStructure> productTable) {
         this.productTable.setItems(productTable);
@@ -53,6 +72,10 @@ public class ReturnInfoController {
     @FXML
     public void initialize() {
     }
+
+    /**
+     * Возвращает товар при нажатии кнопки
+     */
     @FXML
     private void returnProduct() {
         int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
@@ -99,6 +122,10 @@ public class ReturnInfoController {
             MyLogger.logger.error("Ошибка при возврате продукта. Не выделено!");
         }
     }
+
+    /**
+     * Возвращает информацию об успешном возврате
+     */
     public void getSuccessfullReturn(){
 
         this.confReturn.setText(this.API.getReturnResult());

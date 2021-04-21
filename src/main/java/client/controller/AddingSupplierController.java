@@ -13,25 +13,41 @@ import javafx.stage.Stage;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 
+/**
+ * Контроллер добавления поставщика
+ */
 public class AddingSupplierController {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
     private StockController stockController;
-
+    /**
+     * Устанавливает значение контроллеру склада
+     * @param stockControllerr - контроллер
+     */
     public void setStockController(StockController stockControllerr) {
         this.stockController = stockControllerr;
     }
-
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -44,6 +60,9 @@ public class AddingSupplierController {
     @FXML
     public void initialize() {}
 
+    /**
+     * Создает поставщика при нажатии кнопки
+     */
     @FXML void create(){
         if(!nameField.getText().equals("") &
                 !phoneNumberField.getText().equals("") &

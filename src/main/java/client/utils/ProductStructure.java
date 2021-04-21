@@ -4,25 +4,45 @@ import javafx.beans.property.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Класс для структуризации товаров
+ */
 public class ProductStructure {
-    private LongProperty idLabel;
-    private IntegerProperty articul;
-    private SimpleStringProperty name;
-    private SimpleStringProperty color;
-    private SimpleStringProperty size;
-    private SimpleStringProperty type;
-    private SimpleStringProperty description;
-    private IntegerProperty price;
-    private IntegerProperty retail_price;
-    private IntegerProperty status;
-    private ObjectProperty office;
-    private ObjectProperty supplier;
-    private ObjectProperty check;
+    private final LongProperty idLabel;
+    private final IntegerProperty articul;
+    private final SimpleStringProperty name;
+    private final SimpleStringProperty color;
+    private final SimpleStringProperty size;
+    private final SimpleStringProperty type;
+    private final SimpleStringProperty description;
+    private final IntegerProperty price;
+    private final IntegerProperty retail_price;
+    private final IntegerProperty status;
+    private final ObjectProperty office;
+    private final ObjectProperty supplier;
+    private final ObjectProperty check;
 
     public ProductStructure(){
         this(null,null,null,null,null,null,
                 null,null,null,null,null,null,null);
     }
+
+    /**
+     * Инициализирует данные товара
+     * @param id - идентификатор
+     * @param articul - артикул
+     * @param name - название
+     * @param color - цвет
+     * @param size - размер
+     * @param price - цена закупки
+     * @param description - описание
+     * @param retail_price - цена в магазине
+     * @param status - статус
+     * @param type - тип
+     * @param office - офис
+     * @param supplier - поставщик
+     * @param check - прикрепленный чек
+     */
     public ProductStructure(Long id,Integer articul,String name,String color,String size,Integer price,
                             String description,Integer retail_price,Integer status,
                             String type,Object office,Object supplier,Object check){

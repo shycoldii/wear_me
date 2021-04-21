@@ -4,6 +4,9 @@ import javafx.beans.property.*;
 
 import java.time.LocalDate;
 
+/**
+ * Класс для структуризации чеков
+ */
 public class CheckStructure {
     private IntegerProperty articul;
     private SimpleStringProperty name;
@@ -15,6 +18,15 @@ public class CheckStructure {
         this(null,null,null,null,null,null);
     }
 
+    /**
+     * Инициализирует чек
+     * @param articul - артикул
+     * @param name - название
+     * @param color - цвет
+     * @param amount - количество
+     * @param price - цена
+     * @param total - сумма
+     */
     public CheckStructure(Integer articul,String name,String color,Integer amount,Integer price,Integer total){
         this.articul = new SimpleIntegerProperty(articul);
         this.name = new SimpleStringProperty(name);

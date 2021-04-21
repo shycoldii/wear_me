@@ -3,26 +3,38 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoStoreProductException;
-import client.exception.SellProductException;
 import client.utils.AlertInfo;
 import client.utils.MyLogger;
-import client.utils.ProductStructure;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Контроллер для возвратов
+ */
 public class ReturnController {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
@@ -31,6 +43,10 @@ public class ReturnController {
     public void initialize() {
     }
     @FXML private TextField textCheckId;
+
+    /**
+     * Ищет чек по идентификатору при нажатии кнпоки
+     */
     @FXML private void findCheckId(){
         if (textCheckId.getText().equals("")){
             Alert alert = AlertInfo.getWarningAlert(mainApp);

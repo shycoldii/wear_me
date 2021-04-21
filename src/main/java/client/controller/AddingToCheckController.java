@@ -7,19 +7,14 @@ import client.exception.NoStoreProductException;
 import client.exception.ResponceStatusException;
 import client.utils.AlertInfo;
 import client.utils.MyLogger;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class AddingToCheckController {
@@ -35,21 +30,41 @@ public class AddingToCheckController {
                     "S",
                     "M", "L","XL"
             );
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+
+    /**
+     * Устанавливает значение комбобоксу
+     */
     public void setCombobox(){
         this.combobox.setItems(options);
     }
 
     @FXML
     public void initialize() {}
+
+    /**
+     * Добавляет товар в чек при запросе
+     */
     @FXML
     public void add() {
         if (textArticul.getText().equals("")) {

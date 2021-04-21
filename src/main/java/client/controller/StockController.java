@@ -2,9 +2,7 @@ package client.controller;
 
 import client.JavaFXApplication;
 import client.api.MyAPI;
-import client.exception.NoOfficeException;
 import client.exception.NoStoreProductException;
-import client.exception.ResponceStatusException;
 import client.utils.AlertInfo;
 import client.utils.MyLogger;
 import client.utils.ProductStructure;
@@ -13,9 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Контроллер склада
+ */
 public class StockController {
     private Stage stage;
     @FXML private TableView<ProductStructure> productTable;
@@ -53,16 +52,31 @@ public class StockController {
     private FilteredList<ProductStructure> filteredData = new FilteredList<>(productData);
     private SortedList<ProductStructure> sortableData = new SortedList<>(filteredData);
     private MyAPI API;
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
 
+    /**
+     * Инициализирует первичные установки для контроллера
+     */
     @FXML
     public void initialize() {
         id.setCellValueFactory(cellData -> cellData.getValue().idLabelProperty().asObject());
@@ -89,6 +103,11 @@ public class StockController {
         observableList.add("WRITTEN OFF");
     }
 
+    /**
+     * Загружает данные по складу
+     * @throws JSONException
+     * @throws NoStoreProductException
+     */
     public void loadData() throws JSONException, NoStoreProductException {
         this.productData = this.API.getProducts();
         this.filteredData = new FilteredList<>(productData);
@@ -113,6 +132,10 @@ public class StockController {
         this.earned.setText("EARNED: "+earned);
         this.spent.setText("SPENT: "+spent);
     }
+
+    /**
+     * Сортирует таблицу по требованию
+     */
     @FXML
     public void sortTable(){
         if(combobox.getValue().equals("SUPPLYING")){
@@ -128,6 +151,10 @@ public class StockController {
             filteredData.setPredicate(p -> p.getStatus() == 3);
         }
     }
+
+    /**
+     * Запускает процесс добавления поставки
+     */
     @FXML
     public void addSupply(){
         if(this.getRole()){
@@ -136,12 +163,22 @@ public class StockController {
 
     }
 
+    /**
+     * Запускает процесс добавления поставщика
+     * @throws JSONException
+     * @throws NoStoreProductException
+     */
     @FXML public void addSupplier() throws JSONException, NoStoreProductException {
         if(getRole()){
             this.mainApp.initAddingSupplier(this);
             this.loadData();
         }
     }
+
+    /**
+     * Повышает статус товару
+     * @throws JSONException
+     */
     @FXML public void upStatus() throws JSONException {
         if(getSelectedIndex() && getRole()){
             int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
@@ -207,6 +244,11 @@ public class StockController {
             }
         }
     }
+
+    /**
+     * Понижает статус товару
+     * @throws JSONException
+     */
     @FXML public void downStatus() throws JSONException {
         if(getSelectedIndex() && getRole()){
             int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
@@ -282,6 +324,11 @@ public class StockController {
             }
         }
     }
+
+    /**
+     * Получает состояние выбранной строки в таблицы
+     * @return true/false
+     */
     private boolean getSelectedIndex(){
         int selectedIndex = this.productTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
@@ -297,6 +344,11 @@ public class StockController {
             return false;
         }
     }
+
+    /**
+     * Определяет, обладает ли сотрудник необходимым рангом
+     * @return
+     */
     private boolean getRole(){
         if(this.API.getPosition().toLowerCase().equals("менеджер") |
                 this.API.getPosition().toLowerCase().equals("программист")){
@@ -309,6 +361,11 @@ public class StockController {
         MyLogger.logger.error("Ошибка при изменении статуса продукта. Невозможно!");
         return false;
     }
+
+    /**
+     * Получает статус вспомогательного окна подтверждения
+     * @return true/false - согласие или нет
+     */
     private boolean getConfirm(){
         Alert alert = AlertInfo.getConfirmationAlert(mainApp);
         alert.setHeaderText("Update status");

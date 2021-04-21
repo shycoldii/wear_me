@@ -5,14 +5,22 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.time.LocalDate;
-
+/**
+ * Класс для структуризации промокодов
+ */
 public class PromocodeStructure {
     private StringProperty name;
     private IntegerProperty discount;
     private StringProperty startDate;
     private StringProperty endDate;
 
+    /**
+     * Инициализирует данные промокода
+     * @param name - название
+     * @param discount - скидка
+     * @param startDate - начальная дата
+     * @param endDate - конечная дата
+     */
     public PromocodeStructure(String name, Integer discount, String startDate,
                               String endDate){
         this.name = new SimpleStringProperty(name);

@@ -2,11 +2,18 @@ package server.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+/**
+ * Сущность истории клиентов
+ */
 @Entity
 @Table(name = "clientsHistory")
 public class ClientHistory {
     public ClientHistory(){};
+
+    /**
+     * Конструктор для истории регистрации клиентов
+     * @param date - дата создания клиента
+     */
     public ClientHistory(LocalDate date){
         this.date = date;
     };

@@ -4,21 +4,35 @@ package server.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-
+/**
+ * Сущность истории клиентов
+ */
 @Entity
 @Table(name = "clients")
 public class Client {
     public Client(){};
-    public Client(String FirstName, String SecondName,String Patronymic,
-                    String PhoneNumber, String Email,LocalDate regday,LocalDate birthday,
+
+    /**
+     * Конструктор для сущности клиента
+     * @param firstName - имя
+     * @param secondName - фамилия
+     * @param patronymic - отчество
+     * @param phoneNumber - телефонный номер
+     * @param email - почта
+     * @param regday - дата регистрации
+     * @param birthday - дата дня рождения
+     * @param numberOfBonuses - количество бонусов
+     */
+    public Client(String firstName, String secondName,String patronymic,
+                    String phoneNumber, String email,LocalDate regday,LocalDate birthday,
                   Integer numberOfBonuses){
-        this.firstName = FirstName;
-        this.secondName = SecondName;
-        this.phoneNumber = PhoneNumber;
-        this.email = Email;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.regDay = regday;
         this.birthday = birthday;
-        this.patronymic = Patronymic;
+        this.patronymic = patronymic;
         this.numberOfBonuses = numberOfBonuses;
 
     }

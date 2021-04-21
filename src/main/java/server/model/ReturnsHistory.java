@@ -1,16 +1,20 @@
 package server.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
-
+/**
+ * Сущность истории возвратов
+ */
 @Entity
 @Table(name = "returnsHistory")
 public class ReturnsHistory {
     public ReturnsHistory(){};
+
+    /**
+     * Конструктор для истории возвратов
+     * @param total - сумма возврата чека
+     */
     public ReturnsHistory(Integer total){
         this.total = total;
     };

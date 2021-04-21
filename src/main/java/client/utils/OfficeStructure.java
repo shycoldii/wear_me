@@ -5,12 +5,22 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Класс для структуризации офисов
+ */
 public class OfficeStructure {
     private LongProperty id;
     private StringProperty name;
     private StringProperty phone;
     private StringProperty address;
 
+    /**
+     * Инициализирует данные офиса
+     * @param id - идентификатор
+     * @param name - название
+     * @param phone - телефонный номер
+     * @param address - адрес
+     */
     public OfficeStructure(Long id, String name, String phone, String address){
         this.id = new SimpleLongProperty(id);
         this.name = new SimpleStringProperty(name);

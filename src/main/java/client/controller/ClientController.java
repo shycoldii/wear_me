@@ -12,10 +12,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Контроллер клиента
+ */
 public class ClientController {
     private Stage stage;
     @FXML private TableView<ClientStructure> clientTable;
@@ -33,16 +34,31 @@ public class ClientController {
     private FilteredList<ClientStructure> filteredData = new FilteredList<>(clientData);
     private SortedList<ClientStructure> sortableData = new SortedList<>(filteredData);
     private MyAPI API;
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
 
+    /**
+     * Инициализирует объекты контроллера
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
@@ -61,6 +77,11 @@ public class ClientController {
         );
     }
 
+    /**
+     * Загружает и отображает всех клиентов
+     * @throws JSONException
+     * @throws NoClientException
+     */
     public void loadData() throws JSONException, NoClientException {
         this.clientData = this.API.getClients();
         this.filteredData = new FilteredList<>(clientData);
@@ -68,11 +89,21 @@ public class ClientController {
         this.clientTable.setItems(this.sortableData);
         this.sortableData.comparatorProperty().bind(this.clientTable.comparatorProperty());
     }
+
+    /**
+     * Добавляет нового клиента при нажатии кнопки
+     * @throws JSONException
+     * @throws NoClientException
+     */
     @FXML
     public void addClient() throws JSONException, NoClientException {
           this.mainApp.initAddingClient(this);
           this.loadData();
     }
+
+    /**
+     * Удаляет клиента при нажатии кнопки
+     */
     @FXML
     public void removeClient()  {
       if(this.API.getPosition().toLowerCase().equals("менеджер") | this.API.getPosition().toLowerCase().equals("программист")){

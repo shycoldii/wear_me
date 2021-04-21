@@ -2,6 +2,9 @@ package client.validator;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.base.ValidatorBase;
 
+/**
+ * Вспомогательный валидатор
+ */
 public class CustomValidator extends ValidatorBase{
     public CustomValidator(String message) {
         super(message);

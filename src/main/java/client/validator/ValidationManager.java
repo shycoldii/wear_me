@@ -3,6 +3,10 @@ import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.base.ValidatorBase;
 
 import javafx.scene.Node;
+
+/**
+ * Менеджер для валидации
+ */
 public class ValidationManager {
     public static void addValidator(Boolean attachListener, ValidatorBase validator, IFXValidatableControl... nodes) {
         for (IFXValidatableControl node : nodes) {

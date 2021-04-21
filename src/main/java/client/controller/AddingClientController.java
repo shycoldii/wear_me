@@ -3,42 +3,58 @@ package client.controller;
 import client.JavaFXApplication;
 import client.api.MyAPI;
 import client.exception.NoClientException;
-import client.exception.ResponceStatusException;
 import client.utils.AlertInfo;
-import client.utils.ClientStructure;
 import client.utils.MyLogger;
 import client.validator.NumberValidator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Контроллер для добавления клиента
+ */
 public class AddingClientController {
     private Stage stage;
     private JavaFXApplication mainApp;
     private MyAPI API;
     private ClientController clientController;
 
+    /**
+     * Устанавливает значение контроллеру клиента
+     * @param clientController - контроллер
+     */
     public void setClientController(ClientController clientController) {
         this.clientController = clientController;
     }
 
+    /**
+     * Устанавливает значение API
+     * @param API - апи
+     */
     public void setAPI(MyAPI API) {
         this.API = API;
     }
+
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
+
+    /**
+     * Устанавливает значение сцены
+     * @param dialogStage - сцена
+     */
     public void setStage(Stage dialogStage) {
         this.stage = dialogStage;
     }
@@ -58,8 +74,12 @@ public class AddingClientController {
     TextField patronymicField;
     @FXML
     TextField birthdayField;
+
+    /**
+     * Создает клиента при нажатии кнопки create
+     */
     @FXML
-    private void create() throws JSONException, NoClientException {
+    private void create() {
         if(!secondNameField.getText().equals("") &
                 !firstNameField.getText().equals("") &
                 !emailField.getText().equals("") &

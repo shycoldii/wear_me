@@ -3,7 +3,9 @@ package server.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-
+/**
+ * Сущность чеков
+ */
 @Entity
 @Table(name = "checks")
 public class Check {
@@ -17,6 +19,12 @@ public class Check {
         this.discount = discount;
     }
 
+    /**
+     * Конструктор для сущности чека
+     * @param dateTime - дата создания
+     * @param total - общая сумма чека
+     * @param discount - скидка чека
+     */
     public Check(LocalDateTime dateTime, Integer total, Integer discount){
 
         this.dateTime = dateTime;
@@ -73,10 +81,6 @@ public class Check {
                 ", promocode=" + promocode +
                 '}';
     }
-
-    //@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE,mappedBy = "check")
-    //@JoinColumn(name = "storeProducts",nullable = false)
-    //private List<StoreProduct> storeProducts;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "promocode")

@@ -12,6 +12,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import com.jfoenix.validation.RequiredFieldValidator;
 
+/**
+ * Контроллер авторизации
+ */
 public class SignInController {
     @FXML private JFXTextField emailField;
     @FXML private JFXPasswordField passwordField;
@@ -21,6 +24,9 @@ public class SignInController {
     private JavaFXApplication mainApp;
     private MyAPI API;
 
+    /**
+     * Инициализация объектов для авторизации
+     */
     @FXML
     public void initialize() {
         this.requiredValidator = new RequiredFieldValidator();
@@ -31,6 +37,9 @@ public class SignInController {
         ValidationManager.addValidator(true, passwordValidator, passwordField);
     }
 
+    /**
+     * Авторизовывает сотрудника при нажатии кнопки
+     */
     @FXML
     public void handleSignInButtonAction() {
         this.API = new MyAPI(this.mainApp);
@@ -65,11 +74,17 @@ public class SignInController {
             }
         }
     }
+    /**
+     * Устанавливает значение главному приложению
+     * @param mainApp - главное приложение
+     */
     public void setMainApp(JavaFXApplication mainApp) {
         this.mainApp = mainApp;
     }
 
-
+    /**
+     * Сбрасывает поля пароля и почты
+     */
     private void resetSignInView() {
         emailField.setText(null);
         passwordField.setText(null);

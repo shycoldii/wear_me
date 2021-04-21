@@ -1,13 +1,13 @@
 package server.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import server.model.StoreProduct;
 
-import javax.persistence.EntityManager;
 import java.util.List;
-
+/**
+ * Интерфейс JpaRepository для работы с товарами
+ */
 @Repository
 public interface StoreProductRepository extends JpaRepository<StoreProduct,Long> {
     StoreProduct findStoreProductById(Long id);

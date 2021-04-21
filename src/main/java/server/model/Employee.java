@@ -3,23 +3,37 @@ package server.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+/**
+ * Сущность работников
+ */
 @Entity
 @Table(name = "employees",uniqueConstraints = {@UniqueConstraint(columnNames={"email","phoneNumber","passport"})})
 public class Employee {
     public Employee(){};
 
-    public Employee(String FirstName, String SecondName, String Patronymic,String Email, String Password,
-                    String PhoneNumber, String Passport, LocalDateTime regday,LocalDate birthday){
-        this.firstName = FirstName;
-        this.secondName = SecondName;
-        this.password = Password;
-        this.phoneNumber = PhoneNumber;
-        this.passport = Passport;
-        this.email = Email;
+    /**
+     * Конструктор для работников
+     * @param firstName - имя
+     * @param secondName - фамилия
+     * @param patronymic - отчество
+     * @param email - электронная почта
+     * @param password - пароль (хешкод)
+     * @param phoneNumber - телефонный номер
+     * @param passport - паспорт
+     * @param regday - дата регистрации
+     * @param birthday - дата дня рождения
+     */
+    public Employee(String firstName, String secondName, String patronymic,String email, String password,
+                    String phoneNumber, String passport, LocalDateTime regday,LocalDate birthday){
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.passport = passport;
+        this.email = email;
         this.regDay = regday;
         this.birthday = birthday;
-        this.patronymic = Patronymic;
+        this.patronymic = patronymic;
 
     }
 
@@ -51,8 +65,6 @@ public class Employee {
 
     @Column(name = "email", length = 128, nullable = false)
     private String email;
-
-    //photo
 
     @Column(name="regDay",length = 60,nullable = false)
     private LocalDateTime regDay;

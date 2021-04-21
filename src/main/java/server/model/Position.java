@@ -1,23 +1,25 @@
 package server.model;
 import javax.persistence.*;
-
+/**
+ * Сущность позиций (рангов) работников
+ */
 @Entity
 @Table(name = "positions",uniqueConstraints = {@UniqueConstraint(columnNames={"name"})})
 public class Position {
     public Position() {}
 
-    public Position(String lastName) {
-        this.name = lastName;
+    /**
+     * Конструктор для позиций работников
+     * @param name - название позиции
+     */
+    public Position(String name) {
+        this.name = name;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    //@OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Employee> employees;
-
 
     @Column(name = "name", length = 128, nullable = false)
     private String name;
